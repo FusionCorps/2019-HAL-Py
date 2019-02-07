@@ -10,3 +10,4 @@ env:
 script: 
   - pip install -r requirements.txt
   - python robot.py coverage test
+  - bash <(curl -s https://codecov.io/bash)
