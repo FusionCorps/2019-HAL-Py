@@ -1,25 +1,22 @@
-import commands
 import logging
 
 import wpilib
 from commandbased import CommandBasedRobot
 from wpilib.command import Scheduler
 
-import oi
-import subsystems
-
 
 class Hal(CommandBasedRobot):
 
     def robotInit(self):
+        import subsystems, oi, commands, dashboard
         self.logger = logging.getLogger("Core")
+
         oi.init()
         subsystems.init()
         commands.init()
-        self.logger.info("Robot initialized")
+        dashboard.init()
 
-    def robotPeriodic(self):
-        Scheduler().getInstance().run()
+        self.logger.info('Robot initialized')
 
 
 if __name__ == '__main__':

@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+tests/
+__pycache__/
+.pytest_cache/
+.vscode/
+.deploy_cfg
+coverage.xml
+.coverage

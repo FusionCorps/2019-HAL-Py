@@ -9,6 +9,7 @@ logger, joystick, A, B, X, Y, bumper_L, bumper_R, back, start, stick_L, stick_R 
 
 
 def init():
+    """Creates joystick and buttons"""
     global logger, joystick, A, B, X, Y, bumper_L, bumper_R, back, start, stick_L, stick_R
 
     logger = logging.getLogger("Outside Input")

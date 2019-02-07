@@ -5,7 +5,7 @@ import robotmap
 import subsystems
 
 
-class Joystick_Drive(InstantCommand):
+class JoystickDrive(InstantCommand):
 
     def __init__(self):
         super().__init__('Joystick_Drive')
