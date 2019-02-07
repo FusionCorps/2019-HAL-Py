@@ -3,6 +3,8 @@ matrix:
   include:
     - python: 3.7
       dist: xenial
+env: 
+  - CODECOV_TOKEN="9aa1f22b-d6ca-4a57-87f8-d507d3a6e7e6"
 
 script: 
   - pip install -r requirements.txt
