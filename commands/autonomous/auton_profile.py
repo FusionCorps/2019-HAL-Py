@@ -1,6 +1,5 @@
 import csv
 
-from ctre import TalonSRX
 from ctre._impl.motionprofilestatus import MotionProfileStatus
 from ctre.trajectorypoint import TrajectoryPoint
 from wpilib import Notifier
@@ -76,7 +75,9 @@ class Auton_Profile(Command):
         with open(self.trajectory_R_name, newline="") as file_1, open(
             self.trajectory_L_name, newline=""
         ) as file_2:
-            for values in file_1:
+            csv_file_1 = csv.reader(file_1, delimiter=",", quotechar="|")
+            csv_file_2 = csv.reader(file_2, delimiter=",", quotechar="|")
+            for values in csv_file_1:
                 point_L.time_step = int(values[0])
                 point_L.position = float(values[1])
                 point_L.velocity = float(values[2])
@@ -92,7 +93,7 @@ class Auton_Profile(Command):
                 self._talon_FR.pushMotionProfileTrajectory()
                 self._talon_BR.pushMotionProfileTrajectory()
 
-            for values in file_2:
+            for values in csv_file_2:
                 point_R.time_step = int(values[0])
                 point_R.position = float(values[1])
                 point_R.velocity = float(values[2])

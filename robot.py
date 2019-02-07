@@ -2,12 +2,14 @@ import logging
 
 import wpilib
 from commandbased import CommandBasedRobot
-from wpilib.command import Scheduler
 
 
 class Hal(CommandBasedRobot):
     def robotInit(self):
-        import subsystems, oi, commands, dashboard
+        import subsystems
+        import oi
+        import commands
+        import dashboard
 
         self.logger = logging.getLogger("Core")
 

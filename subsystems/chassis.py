@@ -5,7 +5,6 @@ from wpilib import SpeedControllerGroup
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
 
-import oi
 import robotmap
 
 
