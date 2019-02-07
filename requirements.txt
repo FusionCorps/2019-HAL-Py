@@ -1,4 +1,5 @@
 
 pyfrc
+coverage
 robotpy-ctre
 numpy
