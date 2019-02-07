@@ -5,5 +5,5 @@ matrix:
       dist: xenial
 
 script: 
-  - py -3 robot.py coverage test
   - pip install -r requirements.txt
+  - python robot.py coverage test
