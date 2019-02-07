@@ -9,8 +9,7 @@ from wpilib.command import Command
 import subsystems
 
 
-class Process_Buffer():
-
+class Process_Buffer:
     def run(self):
         subsystems._chassis._talon_FL.processMotionProfileBuffer()
         subsystems._chassis._talon_FR.processMotionProfileBuffer()
@@ -19,9 +18,15 @@ class Process_Buffer():
 
 
 class Auton_Profile(Command):
-
-    def __init__(self, trajectory_R_name, trajectory_L_name):
+    def __init__(self, trajectory_name_prefix):
         super().__init__()
+
+        self._talon_FL = subsystems._chassis._talon_FL
+        self._talon_FR = subsystems._chassis._talon_FR
+        self._talon_BL = subsystems._chassis._talon_BL
+        self._talon_BR = subsystems._chassis._talon_BR
+
+        self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         self._state = 0
         self._loop_timeout = -1
@@ -29,15 +34,19 @@ class Auton_Profile(Command):
         self.k_min_points_talon = 5
         self.k_num_loops_timeout = 10
 
-        self.trajectory_R_name = trajectory_R_name
-        self.trajectory_L_name = trajectory_L_name
+        self.trajectory_L_name = trajectory_name_prefix + "_left"
+        self.trajectory_R_name = trajectory_name_prefix + "_right"
 
         self.notifier = Notifier(Process_Buffer().run())
 
-        subsystems._chassis._talon_FL.changeMotionControlFramePeriod(5)
-        subsystems._chassis._talon_FR.changeMotionControlFramePeriod(5)
-        subsystems._chassis._talon_BL.changeMotionControlFramePeriod(5)
-        subsystems._chassis._talon_BR.changeMotionControlFramePeriod(5)
+        for talon in self._talons:
+            talon.changeMotionControlFramePeriod(5)
+
+        # self._talon_FL.changeMotionControlFramePeriod(5)
+        # self._talon_FR.changeMotionControlFramePeriod(5)
+        # self._talon_BL.changeMotionControlFramePeriod(5)
+        # self._talon_BR.changeMotionControlFramePeriod(5)
+
         self.motion_profile_status = MotionProfileStatus()
         self.notifier.startPeriodic(0.005)
 
@@ -64,7 +73,9 @@ class Auton_Profile(Command):
         point_L = TrajectoryPoint()
         point_R = TrajectoryPoint()
 
-        with open(self.trajectory_R_name, newline='') as file_1, open(self.trajectory_L_name, newline='') as file_2:
+        with open(self.trajectory_R_name, newline="") as file_1, open(
+            self.trajectory_L_name, newline=""
+        ) as file_2:
             for values in file_1:
                 point_L.time_step = int(values[0])
                 point_L.position = float(values[1])
@@ -78,8 +89,8 @@ class Auton_Profile(Command):
                 if values == file_1[-1]:
                     point_L.isLastPoint = True
 
-                subsystems._chassis._talon_FR.pushMotionProfileTrajectory()
-                subsystems._chassis._talon_BR.pushMotionProfileTrajectory()
+                self._talon_FR.pushMotionProfileTrajectory()
+                self._talon_BR.pushMotionProfileTrajectory()
 
             for values in file_2:
                 point_R.time_step = int(values[0])
@@ -94,14 +105,17 @@ class Auton_Profile(Command):
                 if values == file_1[-1]:
                     point_R.isLastPoint = True
 
-                subsystems._chassis._talon_FL.pushMotionProfileTrajectory()
-                subsystems._chassis._talon_BL.pushMotionProfileTrajectory()
+                self._talon_FL.pushMotionProfileTrajectory()
+                self._talon_BL.pushMotionProfileTrajectory()
 
     def start_motion_profile(self):
         self.start = True
 
     def clear_trajectories(self):
-        subsystems._chassis._talon_FL.clearMotionProfileTrajectories()
-        subsystems._chassis._talon_FR.clearMotionProfileTrajectories()
-        subsystems._chassis._talon_BL.clearMotionProfileTrajectories()
-        subsystems._chassis._talon_BR.clearMotionProfileTrajectories()
+        for talon in self._talons:
+            talon.clearMotionProfileTrajectories()
+
+        # subsystems._chassis._talon_FL.clearMotionProfileTrajectories()
+        # subsystems._chassis._talon_FR.clearMotionProfileTrajectories()
+        # subsystems._chassis._talon_BL.clearMotionProfileTrajectories()
+        # subsystems._chassis._talon_BR.clearMotionProfileTrajectories()
