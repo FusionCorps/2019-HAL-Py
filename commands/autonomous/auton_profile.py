@@ -18,7 +18,7 @@ class Process_Buffer:
 
 class Auton_Profile(Command):
     def __init__(self, trajectory_name_prefix):
-        super().__init__()
+        super().__init__("Auton_Profile" + trajectory_name_prefix)
 
         self._talon_FL = subsystems._chassis._talon_FL
         self._talon_FR = subsystems._chassis._talon_FR
@@ -90,8 +90,8 @@ class Auton_Profile(Command):
                 if values == file_1[-1]:
                     point_L.isLastPoint = True
 
-                self._talon_FR.pushMotionProfileTrajectory()
-                self._talon_BR.pushMotionProfileTrajectory()
+                self._talon_FL.pushMotionProfileTrajectory(point_L)
+                self._talon_BL.pushMotionProfileTrajectory(point_L)
 
             for values in csv_file_2:
                 point_R.time_step = int(values[0])
@@ -106,8 +106,8 @@ class Auton_Profile(Command):
                 if values == file_1[-1]:
                     point_R.isLastPoint = True
 
-                self._talon_FL.pushMotionProfileTrajectory()
-                self._talon_BL.pushMotionProfileTrajectory()
+                self._talon_FR.pushMotionProfileTrajectory(point_R)
+                self._talon_BR.pushMotionProfileTrajectory(point_R)
 
     def start_motion_profile(self):
         self.start = True

@@ -20,6 +20,9 @@ class Hal(CommandBasedRobot):
 
         self.logger.info("Robot initialized")
 
+    def autonomousInit(self):
+        pass
+
 
 if __name__ == "__main__":
     wpilib.run(Hal)
