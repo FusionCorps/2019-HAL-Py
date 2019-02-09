@@ -23,6 +23,9 @@ class Hal(CommandBasedRobot):
     def autonomousInit(self):
         pass
 
+    def teleopPeriodic(self):
+        pass
+
 
 if __name__ == "__main__":
     wpilib.run(Hal)

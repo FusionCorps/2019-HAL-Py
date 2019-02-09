@@ -1,5 +1,4 @@
 import logging
-
 import oi
 
 from .joystick_drive import JoystickDrive

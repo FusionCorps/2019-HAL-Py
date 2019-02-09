@@ -20,7 +20,8 @@ class Process_Buffer:
 
 class Auton_Profile(Command):
     def __init__(self, trajectory_name_prefix):
-        super().__init__("Auton_Profile" + trajectory_name_prefix)
+        super().__init__("Auton_Profile " + trajectory_name_prefix)
+        self.requires(subsystems._chassis)
 
         # Speed Controllers
         self._talon_FL = subsystems._chassis._talon_FL
@@ -102,7 +103,7 @@ class Auton_Profile(Command):
             for status in self._statuses:
                 if status.isUnderrun == False:
                     self._loop_timeout = self.k_num_loops_timeout
-                elif status.activePointValid and status.activePoint.isLastPoint:
+                elif status.activePointValid and status.isLast:
                     self._state = 0
                     self._loop_timeout = -1
 
@@ -127,7 +128,7 @@ class Auton_Profile(Command):
                     point_R.isLastPoint = True
 
                 self._talon_FR.pushMotionProfileTrajectory(point_R)
-                self._talon_BR.pushMotionProfileTrajectory(point_R)
+                self._talon_BR.follow(self._talon_FR)
 
             for values in file_2:
                 point_L.time_step = int(values[0])
@@ -143,7 +144,7 @@ class Auton_Profile(Command):
                     point_L.isLastPoint = True
 
                 self._talon_FL.pushMotionProfileTrajectory(point_L)
-                self._talon_BL.pushMotionProfileTrajectory(point_L)
+                self._talon_BL.follow(self._talon_FL)
 
     def start_motion_profile(self):
         self.start = True
