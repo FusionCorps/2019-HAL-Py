@@ -1,5 +1,4 @@
 import logging
-
 import oi
 
 from .intake.halt import Halt

@@ -19,6 +19,7 @@ class Chassis(Subsystem):
         self._talon_FR = WPI_TalonSRX(robotmap.talon_front_right)
         self._talon_BL = WPI_TalonSRX(robotmap.talon_back_left)
         self._talon_BR = WPI_TalonSRX(robotmap.talon_back_right)
+        self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         # Speed Controller Groups
         self._group_L = SpeedControllerGroup(self._talon_BL, self._talon_FL)
