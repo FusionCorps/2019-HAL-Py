@@ -4,9 +4,9 @@ import robotmap
 import subsystems
 
 
-class Shoot(InstantCommand):
+class IntakeShoot(InstantCommand):
     def __init__(self):
-        super().__init__("Shoot")
+        super().__init__("IntakeShoot")
         self.requires(subsystems._intake)
 
     def execute(self):

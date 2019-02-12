@@ -3,7 +3,7 @@ import csv
 from ctre import ControlMode, WPI_TalonSRX
 from ctre._impl.motionprofilestatus import MotionProfileStatus
 from ctre.trajectorypoint import TrajectoryPoint
-from wpilib import Notifier
+from wpilib import Notifier, SmartDashboard
 from wpilib.command import Command
 
 import subsystems
@@ -44,6 +44,9 @@ class Auton_Profile(Command):
         # Trajectory .csv file names
         self.trajectory_L_name = trajectory_name_prefix + "_left"
         self.trajectory_R_name = trajectory_name_prefix + "_right"
+
+        self.csv_points1 = []
+        self.csv_points2 = []
 
         # Periodically runs processMotionProfileBuffer
         self.notifier = Notifier(Process_Buffer().run())
@@ -111,26 +114,48 @@ class Auton_Profile(Command):
         point_L = TrajectoryPoint()
         point_R = TrajectoryPoint()
 
+        # Set Back Talons to follower mode so points get pushed to front ones only
+        if self._talon_BR.getControlMode() != WPI_TalonSRX.ControlMode.Follower:
+            self._talon_BR.follow(self._talon_FR)
+        elif self._talon_BL.getControlMode() != WPI_TalonSRX.ControlMode.Follower:
+            self._talon_BL.follow(self._talon_FL)
+        else:
+            pass
+
         with open(self.trajectory_R_name, newline="") as file_1, open(
             self.trajectory_L_name, newline=""
         ) as file_2:
+
+            # Fill point values for master point list
             for values in file_1:
+                self.csv_points1.append(values)
+            for values in file_2:
+                self.csv_points2.append(values)
+
+            for values in self.csv_points1:
+                # For the first file, skip the header
+                if "".join(values) == "Delta Time Position Velocity ":
+                    continue
+
+                # Fill point data from master list point
                 point_R.time_step = int(values[0])
                 point_R.position = float(values[1])
                 point_R.velocity = float(values[2])
                 point_R.zeroPos = False
 
-                if values == file_1[0]:
+                # Check if point is first point
+                if values == self.csv_points1[1]:
                     point_R.zeroPos = True
 
+                # Check if point is last point
                 point_R.isLastPoint = False
-                if values == file_1[-1]:
+                if values == self.csv_points1[-1]:
                     point_R.isLastPoint = True
 
+                # Pushes points to MPB on Talon
                 self._talon_FR.pushMotionProfileTrajectory(point_R)
-                self._talon_BR.follow(self._talon_FR)
 
-            for values in file_2:
+            for values in self.csv_points2:
                 point_L.time_step = int(values[0])
                 point_L.position = float(values[1])
                 point_L.velocity = float(values[2])
@@ -144,7 +169,6 @@ class Auton_Profile(Command):
                     point_L.isLastPoint = True
 
                 self._talon_FL.pushMotionProfileTrajectory(point_L)
-                self._talon_BL.follow(self._talon_FL)
 
     def start_motion_profile(self):
         self.start = True

@@ -3,9 +3,9 @@ from wpilib.command import InstantCommand
 import subsystems
 
 
-class Halt(InstantCommand):
+class IntakeHalt(InstantCommand):
     def __init__(self):
-        super().__init__("Halt")
+        super().__init__("IntakeHalt")
 
     def execute(self):
-        subsystems._intake.stop()
+        subsystems._intake._talon.set(0.0)
