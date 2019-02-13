@@ -1,0 +1,60 @@
+===============================================================================
+EXTENSION NAME : linecount
+EXTENSION VERSION : 0.1.7
+-------------------------------------------------------------------------------
+count time : 2019-02-12 18:31:06
+count workspace : c:\Users\winst\Documents\Code\2019-Hal-Py
+total files : 48
+total code lines : 1179
+total comment lines : 38
+total blank lines : 145
+
+.coverage, code is 1, comment is 0, blank is 0.
+.deploy_cfg, code is 2, comment is 0, blank is 1.
+.gitignore, code is 90, comment is 0, blank is 21.
+.travis.yml, code is 11, comment is 1, blank is 2.
+__pycache__\dashboard.cpython-37.pyc, it is a binary file.
+__pycache__\oi.cpython-37.pyc, it is a binary file.
+__pycache__\robotmap.cpython-37.pyc, it is a binary file.
+commands\__init__.py, code is 13, comment is 0, blank is 7.
+commands\__pycache__\__init__.cpython-37.pyc, it is a binary file.
+commands\__pycache__\joystick_drive.cpython-37.pyc, it is a binary file.
+commands\autonomous\__init__.py, code is 0, comment is 0, blank is 0.
+commands\autonomous\__pycache__\__init__.cpython-37.pyc, it is a binary file.
+commands\autonomous\__pycache__\auton_profile.cpython-37.pyc, it is a binary file.
+commands\autonomous\auton_profile.py, code is 127, comment is 18, blank is 33.
+commands\autonomous\example_left.csv, code is 373, comment is 0, blank is 0.
+commands\autonomous\example_right.csv, code is 372, comment is 0, blank is 0.
+commands\intake\__pycache__\eject.cpython-37.pyc, it is a binary file.
+commands\intake\__pycache__\halt.cpython-37.pyc, it is a binary file.
+commands\intake\__pycache__\intake.cpython-37.pyc, it is a binary file.
+commands\intake\__pycache__\reverse.cpython-37.pyc, it is a binary file.
+commands\intake\__pycache__\run.cpython-37.pyc, it is a binary file.
+commands\intake\__pycache__\shoot.cpython-37.pyc, it is a binary file.
+commands\intake\eject.py, code is 9, comment is 0, blank is 4.
+commands\intake\halt.py, code is 8, comment is 0, blank is 4.
+commands\intake\intake.py, code is 9, comment is 0, blank is 4.
+commands\intake\shoot.py, code is 9, comment is 0, blank is 4.
+commands\joystick_drive.py, code is 15, comment is 0, blank is 5.
+dashboard.py, code is 6, comment is 0, blank is 4.
+oi.py, code is 20, comment is 0, blank is 7.
+README.md, code is 2, comment is 1, blank is 1.
+requirements.txt, code is 4, comment is 0, blank is 1.
+robot.py, code is 21, comment is 0, blank is 10.
+robotmap.py, code is 21, comment is 5, blank is 4.
+subsystems\__init__.py, code is 13, comment is 0, blank is 9.
+subsystems\__pycache__\__init__.cpython-37.pyc, it is a binary file.
+subsystems\__pycache__\chassis.cpython-37.pyc, it is a binary file.
+subsystems\__pycache__\intake.cpython-37.pyc, it is a binary file.
+subsystems\__pycache__\pneumatics.cpython-37.pyc, it is a binary file.
+subsystems\chassis.py, code is 21, comment is 3, blank is 9.
+subsystems\intake.py, code is 14, comment is 6, blank is 10.
+subsystems\pneumatics.py, code is 5, comment is 0, blank is 2.
+tests\.pytest_cache\.gitignore, code is 2, comment is 0, blank is 0.
+tests\.pytest_cache\README.md, code is 2, comment is 0, blank is 1.
+tests\.pytest_cache\v\cache\lastfailed, code is 1, comment is 0, blank is 0.
+tests\.pytest_cache\v\cache\nodeids, code is 6, comment is 0, blank is 1.
+tests\.pytest_cache\v\cache\stepwise, code is 1, comment is 0, blank is 0.
+tests\__pycache__\pyfrc_test.cpython-37-PYTEST.pyc, it is a binary file.
+tests\pyfrc_test.py, code is 1, comment is 4, blank is 1.
+===============================================================================

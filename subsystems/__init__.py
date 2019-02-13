@@ -1,5 +1,7 @@
 import logging
 
+import robotmap
+
 from .chassis import Chassis
 from .intake import Intake
 from .pneumatics import Pneumatics
@@ -14,7 +16,7 @@ def init():
     global _chassis, _intake, _pneumatics
 
     _chassis = Chassis()
-    _intake = Intake()
+    _intake = Intake(robotmap.intake_p, robotmap.intake_i, robotmap.intake_d)
     _pneumatics = Pneumatics()
 
     logger.info("Subsystems initialized")

@@ -10,4 +10,7 @@ class IntakeShoot(InstantCommand):
         self.requires(subsystems._intake)
 
     def execute(self):
-        subsystems._intake._talon.set(robotmap.spd_intake_shoot)
+        if subsystems._intake.getSetpoint() == robotmap.spd_intake_shoot:
+            pass
+        else:
+            subsystems._intake.setSetpoint(robotmap.spd_intake_shoot)

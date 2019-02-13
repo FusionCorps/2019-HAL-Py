@@ -21,7 +21,10 @@ class Hal(CommandBasedRobot):
         self.logger.info("Robot initialized")
 
     def autonomousInit(self):
-        pass
+        from commands.autonomous.auton_profile import Auton_Profile
+
+        self.auton = Auton_Profile("example")
+        self.scheduler.add(self.auton)
 
     def teleopPeriodic(self):
         self.scheduler.run()

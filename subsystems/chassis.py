@@ -9,9 +9,8 @@ import robotmap
 
 
 class Chassis(Subsystem):
-
     def __init__(self):
-        super().__init__('Chassis')
+        super().__init__("Chassis")
         self.logger = logging.getLogger("Chassis")
 
         # Motor objects
@@ -30,4 +29,5 @@ class Chassis(Subsystem):
 
     def initDefaultCommand(self):
         from commands import JoystickDrive
+
         self.setDefaultCommand(JoystickDrive())

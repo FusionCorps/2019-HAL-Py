@@ -1,4 +1,5 @@
 import csv
+import logging
 
 from ctre import ControlMode, WPI_TalonSRX
 from ctre._impl.motionprofilestatus import MotionProfileStatus
@@ -22,6 +23,7 @@ class Auton_Profile(Command):
     def __init__(self, trajectory_name_prefix):
         super().__init__("Auton_Profile " + trajectory_name_prefix)
         self.requires(subsystems._chassis)
+        self.logger = logging.getLogger("Auton_Profile")
 
         # Speed Controllers
         self._talon_FL = subsystems._chassis._talon_FL
@@ -29,10 +31,12 @@ class Auton_Profile(Command):
         self._talon_BL = subsystems._chassis._talon_BL
         self._talon_BR = subsystems._chassis._talon_BR
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
+        self.logger.info("Talons constructed")
 
         # Change Motion Control Frame Period for all Talons
         for talon in self._talons:
             talon.changeMotionControlFramePeriod(5)
+        self.logger.info("Talon motionControlFramePeriod changed")
 
         # Control variables
         self._state = 0
@@ -51,21 +55,24 @@ class Auton_Profile(Command):
         # Periodically runs processMotionProfileBuffer
         self.notifier = Notifier(Process_Buffer().run())
         self.notifier.startPeriodic(0.005)
+        self.logger.info("Notifier started")
 
         # Motion Profile Status List
-        self._status_FL = MotionProfileStatus()
-        self._status_FR = MotionProfileStatus()
-        self._status_BL = MotionProfileStatus()
-        self._status_BR = MotionProfileStatus()
+        self._status_FL = self._talon_FL.getMotionProfileStatus()
+        self._status_FR = self._talon_FR.getMotionProfileStatus()
+        self._status_BL = self._talon_BL.getMotionProfileStatus()
+        self._status_BR = self._talon_BR.getMotionProfileStatus()
         self._statuses = [
             self._status_FL,
             self._status_FR,
             self._status_BL,
             self._status_BR,
         ]
+        self.logger.info("Statuses constructed")
 
     # Resets all trajectories and control variables
     def reset(self):
+        self.logger.info("Clearing trajectory")
         self.clear_trajectories()
         self._state = 0
         self._loop_timeout = -1
@@ -73,6 +80,7 @@ class Auton_Profile(Command):
 
     # Determines state of motion profile
     def control(self):
+        self.logger.info("Controlling...")
         # Populates and updates profile statuses every control loop
         for talon in self._talons:
             index = self._talons.index(talon)
@@ -95,6 +103,7 @@ class Auton_Profile(Command):
 
         # Control loop
         if self._state == 0 and self.start:
+            self.logger.info("Status 0, Start True")
             self.start = False
             self.startFilling()
             self._state = 1
@@ -111,7 +120,8 @@ class Auton_Profile(Command):
                     self._loop_timeout = -1
 
     def startFilling(self):
-        point_L = TrajectoryPoint()
+        self.logger.info("Started Filling")
+        point_L = TrajectoryPoint("position"=0, "velocity"=0, "auxiliaryPos"=0, "profileSlotSelect0"=0. "profileSlotSelect1"=0, "isLastPoint"=0, "zeroPos"=0, "timeDur"=0)
         point_R = TrajectoryPoint()
 
         # Set Back Talons to follower mode so points get pushed to front ones only
@@ -176,3 +186,10 @@ class Auton_Profile(Command):
     def clear_trajectories(self):
         for talon in self._talons:
             talon.clearMotionProfileTrajectories()
+
+    def initialize(self):
+        self.start_motion_profile()
+
+    def execute(self):
+        self.logger.info("Starting Profile")
+        self.control()

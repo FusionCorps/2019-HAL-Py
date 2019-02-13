@@ -13,9 +13,8 @@ def init():
     """Adds all commands to controller"""
     logger = logging.getLogger("Commands")
 
-    oi.A.whenPressed(IntakeHalt())
-    oi.B.whenPressed(IntakeIntake())
-    oi.X.whenPressed(IntakeEject())
-    oi.Y.whenPressed(IntakeShoot())
+    oi.B.whileHeld(IntakeIntake())
+    oi.X.whileHeld(IntakeEject())
+    oi.Y.whileHeld(IntakeShoot())
 
     logger.info("Commands initialized")
