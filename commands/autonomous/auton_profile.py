@@ -132,6 +132,7 @@ class Auton_Profile(Command):
 
     def startFilling(self):
         self.logger.info("Started Filling")
+        # TODO Change how trajectoryPoint is used after updated in robotpy-ctre
         point_L = TrajectoryPoint(0, 0, 0, 0, 0, False, False, 0)
         point_R = TrajectoryPoint(0, 0, 0, 0, 0, False, False, 0)
 
@@ -212,13 +213,19 @@ class Auton_Profile(Command):
     def initialize(self):
         self.logger.info("Initialiing Motion Profile " + self.trajectory_name_prefix)
         self.start_motion_profile()
+        self._talon_FL.set(demand0=ControlMode.MotionProfile)
+        self._talon_FR.set(demand0=ControlMode.MotionProfile)
 
     def execute(self):
         self.logger.info("Starting Profile " + self.trajectory_name_prefix)
         self.control()
 
     def interrupted(self):
-        pass
+        self.logger.warning(
+            "Auton Profile (" + self.trajectory_name_prefix + ") was interrupted"
+        )
 
     def end(self):
-        pass
+        self.start = False
+        self.state = 0
+        self._loop_timeout = -1
