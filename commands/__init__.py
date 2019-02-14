@@ -10,6 +10,7 @@ from .joystick_drive import JoystickDrive
 from .pneumatics.extend import Extend
 from .pneumatics.halt import Halt
 from .pneumatics.retract import Retract
+from .switch_control_mode import SwitchControlMode
 
 
 def init():
@@ -17,7 +18,9 @@ def init():
     logger = logging.getLogger("Commands")
 
     oi.X.whenPressed(Extend())
-    oi.B.whenPressed(Retract())
+    oi.X.whenReleased(Retract())
     oi.A.whenPressed(Halt())
+    oi.bumper_L.whenPressed(SwitchControlMode(0))
+    oi.bumper_R.whenPressed(SwitchControlMode(1))
 
     logger.info("Commands initialized")

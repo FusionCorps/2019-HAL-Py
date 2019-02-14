@@ -2,6 +2,7 @@ import logging
 
 import wpilib
 from commandbased import CommandBasedRobot
+from wpilib import Watchdog
 
 import subsystems
 
@@ -22,22 +23,23 @@ class Hal(CommandBasedRobot):
         # dashboard.init()
 
         self.logger.info("Robot initialized")
+        self.watchdog.setTimeout(1)
 
     def autonomousInit(self):
-        # from commands.autonomous.auton_profile import Auton_Profile
-
-        # self.auton = Auton_Profile("example")
-        # self.scheduler.add(self.auton)
-        subsystems._pneumatics.extend()
-
-    def teleopInit(self):
-        subsystems._pneumatics.retract()
+        self.scheduler.run()
 
     def autonomousPeriodic(self):
         self.scheduler.run()
 
+    def teleopInit(self):
+        self.scheduler.run()
+
     def teleopPeriodic(self):
         self.scheduler.run()
+        print(
+            str(subsystems._pneumatics.solenoid_L.get())
+            + str(subsystems._pneumatics.solenoid_R.get())
+        )
 
 
 if __name__ == "__main__":

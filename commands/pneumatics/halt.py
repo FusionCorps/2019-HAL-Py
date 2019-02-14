@@ -1,5 +1,6 @@
 from wpilib.command import InstantCommand
 
+import robotmap
 import subsystems
 
 
@@ -9,4 +10,7 @@ class Halt(InstantCommand):
         self.requires(subsystems._pneumatics)
 
     def execute(self):
-        subsystems._pneumatics.halt()
+        if robotmap.control_mode == 0:
+            subsystems._pneumatics.halt()
+        else:
+            pass
