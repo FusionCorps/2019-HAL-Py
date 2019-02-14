@@ -16,6 +16,7 @@ class Intake(PIDSubsystem):
         self._talon.pidWrite(output)
 
     def initDefaultCommand(self):
-        from commands.intake.halt import IntakeHalt
+        # from commands.intake.halt import IntakeHalt
 
-        self.setDefaultCommand(IntakeHalt())
+        # self.setDefaultCommand(IntakeHalt())
+        pass
