@@ -17,6 +17,7 @@ def init():
 
     _chassis = Chassis()
     _intake = Intake(robotmap.intake_p, robotmap.intake_i, robotmap.intake_d)
+    _intake.controller.enable()
     _pneumatics = Pneumatics()
 
     logger.info("Subsystems initialized")

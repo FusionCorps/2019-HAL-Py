@@ -9,6 +9,12 @@ class IntakeEject(InstantCommand):
         super().__init__("IntakeEject")
         self.requires(subsystems._intake)
 
+    def initialize(self):
+        if subsystems._intake.getPIDController().isEnabled():
+            pass
+        else:
+            subsystems._intake.enable()
+
     def execute(self):
         if subsystems._intake.getSetpoint() == -robotmap.spd_intake:
             pass

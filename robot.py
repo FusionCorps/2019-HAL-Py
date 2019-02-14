@@ -26,6 +26,9 @@ class Hal(CommandBasedRobot):
         self.auton = Auton_Profile("example")
         self.scheduler.add(self.auton)
 
+    def autonomousPeriodic(self):
+        self.scheduler.run()
+
     def teleopPeriodic(self):
         self.scheduler.run()
 
