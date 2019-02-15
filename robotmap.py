@@ -6,8 +6,10 @@ talon_back_right = 10
 talon_intake = 4
 
 # Solenoid Port IDs
-solenoid_L = 0
-solenoid_R = 1
+solenoid_venturi_L = 0
+solenoid_venturi_R = 1
+solenoid_piston_L = 2
+solenoid_piston_R = 3
 
 # Joystick
 joystick = 0

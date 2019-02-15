@@ -9,37 +9,39 @@ import robotmap
 class Pneumatics(Subsystem):
     def __init__(self):
         super().__init__("Pneumatics")
-        self.solenoid_L = Solenoid(robotmap.solenoid_L)
-        self.solenoid_R = Solenoid(robotmap.solenoid_R)
+        self.solenoid_venturi_R = Solenoid(robotmap.solenoid_venturi_R)
+        self.solenoid_venturi_L = Solenoid(robotmap.solenoid_venturi_L)
+        self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)
+        self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_R)
+
         self.logger = logging.getLogger("Pneumatics")
 
-    def extend(self):
-        if self.solenoid_L.get() and not self.solenoid_R.get():
-            pass
-        elif not self.solenoid_L.get() and not self.solenoid_R.get():
-            self.solenoid_L.set(True)
-        elif not self.solenoid_L.get() and self.solenoid_R.get():
-            self.solenoid_R.set(False)
-            self.solenoid_L.set(True)
-        elif self.solenoid_L.get() and self.solenoid_R.get():
-            self.solenoid_R.set(False)
+    def set_venturi(self, state):
+        if state == True:
+            self.solenoid_venturi_L.set(False)
+            self.solenoid_venturi_R.set(True)
+        elif state == False:
+            self.solenoid_venturi_R.set(False)
+            self.solenoid_venturi_L.set(True)
 
-    def retract(self):
-        if self.solenoid_R.get() and not self.solenoid_L.get():
-            pass
-        elif not self.solenoid_R.get() and not self.solenoid_L.get():
-            self.solenoid_R.set(True)
-        elif not self.solenoid_R.get() and self.solenoid_L.get():
-            self.solenoid_L.set(False)
-            self.solenoid_R.set(True)
-        elif self.solenoid_R.get() and self.solenoid_L.get():
-            self.solenoid_L.set(False)
+    def set_piston(self, state):
+        if state == True:
+            self.solenoid_piston_R.set(False)
+            self.solenoid_piston_L.set(True)
+        elif state == False:
+            self.solenoid_piston_L.set(False)
+            self.solenoid_piston_R.set(True)
 
-    def halt(self):
-        if self.solenoid_L.get():
-            self.solenoid_L.set(False)
-        if self.solenoid_R.get():
-            self.solenoid_R.set(False)
+    def set_state(self, target):
+        if target == 0:
+            self.set_venturi(False)
+            self.set_piston(False)
+        elif target == 1:
+            self.set_venturi(True)
+            self.set_piston(False)
+        elif target == 2:
+            self.set_venturi(False)
+            self.set_piston(True)
 
     def initDefaultCommand(self):
         from commands.pneumatics.halt import Halt

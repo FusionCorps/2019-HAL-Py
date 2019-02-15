@@ -10,7 +10,4 @@ class Halt(InstantCommand):
         self.requires(subsystems._pneumatics)
 
     def execute(self):
-        if robotmap.control_mode == 0:
-            subsystems._pneumatics.halt()
-        else:
-            pass
+        subsystems._pneumatics.set_state(0)

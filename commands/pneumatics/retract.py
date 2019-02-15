@@ -10,8 +10,7 @@ class Retract(Command):
         self.requires(subsystems._pneumatics)
 
     def execute(self):
-        if robotmap.control_mode == 0:
-            subsystems._pneumatics.retract()
+        subsystems._pneumatics.set_state(1)
 
     def isFinished(self):
         return False

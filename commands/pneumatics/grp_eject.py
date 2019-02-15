@@ -15,7 +15,7 @@ class GrpEject(Command):
 
         self.extend = Extend()
         self.retract = Retract()
-        self.halt = Halt()
+        self.halt = Halt(0)
 
         self.is_finished = False
 
