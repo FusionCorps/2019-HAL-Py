@@ -9,6 +9,7 @@ import robotmap
 class Pneumatics(Subsystem):
     def __init__(self):
         super().__init__("Pneumatics")
+
         self.solenoid_venturi_R = Solenoid(robotmap.solenoid_venturi_R)
         self.solenoid_venturi_L = Solenoid(robotmap.solenoid_venturi_L)
         self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)
@@ -44,6 +45,6 @@ class Pneumatics(Subsystem):
             self.set_piston(True)
 
     def initDefaultCommand(self):
-        from commands.pneumatics.halt import Halt
+        from commands.pneumatics.close import PneumaticsClose
 
-        self.setDefaultCommand(Halt())
+        self.setDefaultCommand(PneumaticsClose())

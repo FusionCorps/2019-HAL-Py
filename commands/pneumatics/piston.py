@@ -4,13 +4,13 @@ import robotmap
 import subsystems
 
 
-class Retract(Command):
+class PneumaticsPiston(Command):
     def __init__(self):
-        super().__init__("Retract")
+        super().__init__("PneumaticsPiston")
         self.requires(subsystems._pneumatics)
 
     def execute(self):
-        subsystems._pneumatics.set_state(1)
+        subsystems._pneumatics.set_state(2)
 
     def isFinished(self):
         return False

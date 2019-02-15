@@ -4,9 +4,9 @@ import robotmap
 import subsystems
 
 
-class Halt(InstantCommand):
+class PneumaticsClose(InstantCommand):
     def __init__(self):
-        super().__init__("Halt")
+        super().__init__("PneumaticsClose")
         self.requires(subsystems._pneumatics)
 
     def execute(self):

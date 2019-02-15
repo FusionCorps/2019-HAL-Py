@@ -4,13 +4,13 @@ import robotmap
 import subsystems
 
 
-class Extend(Command):
+class PneumaticsVenturi(Command):
     def __init__(self):
-        super().__init__("Extend")
+        super().__init__("PneumaticsVenturi")
         self.requires(subsystems._pneumatics)
 
     def execute(self):
-        subsystems._pneumatics.set_state(2)
+        subsystems._pneumatics.set_state(1)
 
     def isFinished(self):
         return False

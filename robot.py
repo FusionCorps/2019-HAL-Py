@@ -30,6 +30,10 @@ class Hal(CommandBasedRobot):
 
     def autonomousInit(self):
         self.update_smartdashboard.start()
+        from commands.autonomous.auton_profile import Auton_Profile
+
+        self.auton_profile = Auton_Profile("example")
+        self.auton_profile.start()
         self.scheduler.run()
 
     def autonomousPeriodic(self):

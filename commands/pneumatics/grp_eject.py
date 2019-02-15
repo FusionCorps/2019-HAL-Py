@@ -8,14 +8,14 @@ import subsystems
 class GrpEject(Command):
     def __init__(self):
         super().__init__("GrpEject")
-        from commands import Extend, Halt, Retract
+        from commands import PneumaticsPiston, PneumaticsClose, PneumaticsVenturi
 
         self.requires(subsystems._pneumatics)
         self.timer = Timer()
 
-        self.extend = Extend()
-        self.retract = Retract()
-        self.halt = Halt(0)
+        self.extend = PneumaticsPiston()
+        self.retract = PneumaticsVenturi()
+        self.halt = PneumaticsClose()
 
         self.is_finished = False
 

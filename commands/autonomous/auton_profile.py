@@ -3,7 +3,7 @@ import logging
 
 from ctre import ControlMode, SetValueMotionProfile, WPI_TalonSRX
 from ctre._impl.motionprofilestatus import MotionProfileStatus
-from ctre.trajectorypoint import TrajectoryPoint
+from ctre.btrajectorypoint import BTrajectoryPoint
 from wpilib import Notifier, SmartDashboard
 from wpilib.command import Command
 
@@ -45,13 +45,20 @@ class Auton_Profile(Command):
         # Control variables
         self._state = 0
         self._loop_timeout = -1
-        self.start = False
+        self._start = False
         self.k_min_points_talon = 5
         self.k_num_loops_timeout = 10
 
-        # Trajectory .csv file names
-        self.trajectory_L_name = trajectory_name_prefix + "_left"
-        self.trajectory_R_name = trajectory_name_prefix + "_right"
+        self.trajectory_L_name = (
+            "/home/lvuser/py/commands/autonomous/"
+            + trajectory_name_prefix
+            + "_left.csv"
+        )
+        self.trajectory_R_name = (
+            "/home/lvuser/py/commands/autonomous/"
+            + trajectory_name_prefix
+            + "_right.csv"
+        )
 
         self.csv_points1 = []
         self.csv_points2 = []
@@ -81,7 +88,7 @@ class Auton_Profile(Command):
         self._set_value = SetValueMotionProfile.Disable
         self._state = 0
         self._loop_timeout = -1
-        self.start = False
+        self._start = False
 
     # Determines state of motion profile
     def control(self):
@@ -110,7 +117,7 @@ class Auton_Profile(Command):
         # Control loop
         if self._state == 0 and self.start:
             self.logger.info("State 0, Start True")
-            self.start = False
+            self._start = False
             self._set_value = SetValueMotionProfile.Disable
             self.startFilling()
             self._state = 1
@@ -132,9 +139,10 @@ class Auton_Profile(Command):
 
     def startFilling(self):
         self.logger.info("Started Filling")
+        self.state = 1
         # TODO Change how trajectoryPoint is used after updated in robotpy-ctre
-        point_L = TrajectoryPoint(0, 0, 0, 0, 0, False, False, 0)
-        point_R = TrajectoryPoint(0, 0, 0, 0, 0, False, False, 0)
+        point_L = BTrajectoryPoint()
+        point_R = BTrajectoryPoint()
 
         self.clear_trajectories()
 
@@ -149,61 +157,66 @@ class Auton_Profile(Command):
         with open(self.trajectory_R_name, newline="") as file_1, open(
             self.trajectory_L_name, newline=""
         ) as file_2:
-
+            csv_file1 = csv.reader(file_1, delimiter=",", quotechar="|")
+            csv_file2 = csv.reader(file_2, delimiter=",", quotechar="|")
             # Fill point values for master point list
-            for values in file_1:
+            for values in csv_file1:
                 self.csv_points1.append(values)
-            for values in file_2:
+            for values in csv_file2:
                 self.csv_points2.append(values)
+
             self.logger.info("Master point list filling done")
 
             for values in self.csv_points1:
-                # For the first file, skip the header
-                if "".join(values) == "Delta Time Position Velocity ":
-                    self.logger.info("Skipping headers")
-                    continue
-
                 # Fill point data from master list point
-                point_R.time_step = int(values[0])
-                point_R.position = float(values[1])
-                point_R.velocity = float(values[2])
-                point_R.zeroPos = False
+                point_R = point_R._replace(timeDur=int(values[0]))
+                point_R = point_R._replace(position=float(values[1]))
+                point_R = point_R._replace(velocity=float(values[2]))
+                point_R = point_R._replace(zeroPos=False)
 
                 # Check if point is first point
                 if values == self.csv_points1[1]:
-                    point_R.zeroPos = True
+                    point_R = point_R._replace(zeroPos=True)
 
                 # Check if point is last point
-                point_R.isLastPoint = False
+                point_R = point_R._replace(isLastPoint=False)
                 if values == self.csv_points1[-1]:
-                    point_R.isLastPoint = True
+                    point_R = point_R._replace(isLastPoint=True)
 
                 # Pushes points to MPB on Talon
                 self._talon_FR.pushMotionProfileTrajectory(point_R)
 
-                index = self.csv_points1.index(values)
-                self.logger.info("Pushing R " + index + " to Talon")
+                self.r_index = self.csv_points1.index(values)
+                SmartDashboard().putNumber("Current R Point", self.r_index)
+                if values == self.csv_points1[-1]:
+                    break
 
             for values in self.csv_points2:
-                point_L.time_step = int(values[0])
-                point_L.position = float(values[1])
-                point_L.velocity = float(values[2])
-                point_L.zeroPos = False
+                if "".join(values) == "Delta Time Position Velocity ":
+                    self.logger.info("Skipping headers")
+                    continue
 
-                if values == file_1[0]:
-                    point_L.zeroPos = True
+                point_L = point_L._replace(timeDur=int(values[0]))
+                point_L = point_L._replace(position=float(values[1]))
+                point_L = point_L._replace(velocity=float(values[2]))
+                point_L = point_L._replace(zeroPos=False)
 
-                point_L.isLastPoint = False
-                if values == file_1[-1]:
-                    point_L.isLastPoint = True
+                if values == self.csv_points2[0]:
+                    point_L = point_L._replace(zeroPos=True)
+
+                point_L = point_L._replace(isLastPoint=False)
+                if values == self.csv_points2[-1]:
+                    point_L = point_L._replace(isLastPoint=True)
 
                 self._talon_FL.pushMotionProfileTrajectory(point_L)
 
-                index = self.csv_points2.index(values)
-                self.logger.info("Pushing L " + index + " to Talon")
+                self.l_index = self.csv_points2.index(values)
+                SmartDashboard().putNumber("Current L Point", self.l_index)
+                if values == self.csv_points2[-1]:
+                    break
 
     def start_motion_profile(self):
-        self.start = True
+        self._start = True
 
     def clear_trajectories(self):
         self.logger.info("Clearing trajectories")
@@ -213,8 +226,6 @@ class Auton_Profile(Command):
     def initialize(self):
         self.logger.info("Initialiing Motion Profile " + self.trajectory_name_prefix)
         self.start_motion_profile()
-        self._talon_FL.set(demand0=ControlMode.MotionProfile)
-        self._talon_FR.set(demand0=ControlMode.MotionProfile)
 
     def execute(self):
         self.logger.info("Starting Profile " + self.trajectory_name_prefix)
@@ -226,6 +237,6 @@ class Auton_Profile(Command):
         )
 
     def end(self):
-        self.start = False
+        self._start = False
         self.state = 0
         self._loop_timeout = -1
