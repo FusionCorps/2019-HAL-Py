@@ -23,8 +23,8 @@ spd_intake = -0.5
 spd_intake_shoot = -0.8
 spd_slapper_hold = 0.2
 spd_slapper_slap = 0.2
-spd_slapper_raise1 = -0.8
-spd_slapper_raise2 = -0.2
+spd_slapper_raise1 = -0.7
+spd_slapper_raise2 = -0.6
 
 # PID Loop variables
 intake_p = 1.0

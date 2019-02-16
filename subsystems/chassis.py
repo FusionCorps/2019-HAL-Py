@@ -28,7 +28,6 @@ class Chassis(Subsystem):
         self._drive = DifferentialDrive(self._group_L, self._group_R)
 
     def initDefaultCommand(self):
-        # from commands import JoystickDrive
+        from commands import JoystickDrive
 
-        # self.setDefaultCommand(JoystickDrive())
-        pass
+        self.setDefaultCommand(JoystickDrive())
