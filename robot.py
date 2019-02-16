@@ -5,6 +5,7 @@ from commandbased import CommandBasedRobot
 from wpilib import Watchdog
 
 import subsystems
+from cscore import CameraServer, UsbCamera
 
 
 class Hal(CommandBasedRobot):
@@ -27,6 +28,12 @@ class Hal(CommandBasedRobot):
         from commands.update_sd import UpdateSD
 
         self.update_smartdashboard = UpdateSD()
+        CameraServer().getInstance().addServer(
+            name="Front", port=5800, server="10.66.72.11"
+        )
+        cam_back = UsbCamera(0)
+        CameraServer().getInstance().addCamera(cam_back)
+        CameraServer().startAutomaticCapture()
 
     def autonomousInit(self):
         self.update_smartdashboard.start()
@@ -48,6 +55,7 @@ class Hal(CommandBasedRobot):
         self.scheduler.run()
 
     def teleopPeriodic(self):
+        subsystems._chassis._drive.feedWatchdog()
         self.update_smartdashboard.start()
         self.scheduler.run()
 

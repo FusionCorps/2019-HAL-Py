@@ -1,3 +1,4 @@
+from wpilib import Timer
 from wpilib.command import InstantCommand
 
 import robotmap
@@ -7,16 +8,32 @@ import subsystems
 class SlapperHold(InstantCommand):
     def __init__(self):
         super().__init__("SlapperHold")
-        if robotmap.control_mode == 1:
-            self.requires(subsystems._slapper)
-        else:
-            pass
+        self.requires(subsystems._slapper)
+        self.timer = Timer()
+        self.error = robotmap.slapper_error
 
     def initialize(self):
-        if robotmap.control_mode == 1:
-            if subsystems._slapper.slapper.get() == robotmap.spd_slapper_hold:
-                pass
-            else:
-                subsystems._slapper.slapper.set(robotmap.spd_slapper_hold)
-        else:
+        self.timer.reset()
+        self.timer.start()
+
+    def execute(self):
+        if (
+            subsystems._slapper.slapper.getQuadraturePosition()
+            < robotmap.slapper_hold_position
+        ):
             pass
+        elif (
+            subsystems._slapper.slapper.getQuadraturePosition()
+            >= robotmap.slapper_hold_position
+        ):
+            pass
+
+    def interrupted(self):
+        self.end()
+
+    def isFinished(self):
+        return False
+
+    def end(self):
+        self.timer.stop()
+        self.timer.reset()

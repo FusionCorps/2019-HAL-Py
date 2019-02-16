@@ -1,6 +1,6 @@
 import logging
 
-from wpilib import Solenoid
+from wpilib import Compressor, Solenoid
 from wpilib.command import Subsystem
 
 import robotmap
@@ -14,7 +14,7 @@ class Pneumatics(Subsystem):
         self.solenoid_venturi_L = Solenoid(robotmap.solenoid_venturi_L)
         self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)
         self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_R)
-
+        self.compressor = Compressor()
         self.logger = logging.getLogger("Pneumatics")
 
     def set_venturi(self, state):
@@ -45,7 +45,6 @@ class Pneumatics(Subsystem):
             self.set_piston(True)
 
     def initDefaultCommand(self):
-        # from commands.pneumatics.close import PneumaticsClose
+        from commands.pneumatics.close import PneumaticsClose
 
-        # self.setDefaultCommand(PneumaticsClose())
-        pass
+        self.setDefaultCommand(PneumaticsClose())

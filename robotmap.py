@@ -17,11 +17,11 @@ joystick = 0
 control_mode = 1  # 0 is Left, 1 is Right
 
 # Speed Constants
-spd_chassis_drive = 1.0
+spd_chassis_drive = 0.8
 spd_chassis_rotate = 0.4
 spd_intake = -0.5
 spd_intake_shoot = -0.8
-spd_slapper_hold = 0.2
+spd_slapper_hold = 0.6
 spd_slapper_slap = 0.2
 spd_slapper_raise1 = -0.7
 spd_slapper_raise2 = -0.6
@@ -40,3 +40,5 @@ chassis_y_i = 0.2
 chassis_y_d = 0.3
 
 slapper_limit = 9
+slapper_hold_position = 2
+slapper_error = 2

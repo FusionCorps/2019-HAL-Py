@@ -25,3 +25,6 @@ def init():
     SmartDashboard().putNumber("Slap", robotmap.spd_slapper_slap)
     SmartDashboard().putNumber("Hold", robotmap.spd_slapper_hold)
     SmartDashboard().putBoolean("Limit Switch", subsystems._slapper.limit_switch.get())
+    SmartDashboard().putNumber(
+        "Compressor", subsystems._pneumatics.compressor.getPressureSwitchValue()
+    )
