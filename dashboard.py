@@ -22,3 +22,6 @@ def init():
         "Piston R", subsystems._pneumatics.solenoid_piston_R.get()
     )
     SmartDashboard().putNumber("Control Mode", robotmap.control_mode)
+    SmartDashboard().putNumber("Slap", robotmap.spd_slapper_slap)
+    SmartDashboard().putNumber("Hold", robotmap.spd_slapper_hold)
+    SmartDashboard().putBoolean("Limit Switch", subsystems._slapper.limit_switch.get())

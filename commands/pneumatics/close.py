@@ -11,3 +11,12 @@ class PneumaticsClose(InstantCommand):
 
     def execute(self):
         subsystems._pneumatics.set_state(0)
+
+    def isFinished(self):
+        if robotmap.control_mode == 0:
+            return False
+        if robotmap.control_mode == 1:
+            return True
+
+    def end(self):
+        pass

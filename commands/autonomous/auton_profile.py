@@ -159,6 +159,7 @@ class Auton_Profile(Command):
         ) as file_2:
             csv_file1 = csv.reader(file_1, delimiter=",", quotechar="|")
             csv_file2 = csv.reader(file_2, delimiter=",", quotechar="|")
+
             # Fill point values for master point list
             for values in csv_file1:
                 self.csv_points1.append(values)
@@ -182,7 +183,7 @@ class Auton_Profile(Command):
                 point_R = point_R._replace(isLastPoint=False)
                 if values == self.csv_points1[-1]:
                     point_R = point_R._replace(isLastPoint=True)
-
+ 
                 # Pushes points to MPB on Talon
                 self._talon_FR.pushMotionProfileTrajectory(point_R)
 

@@ -6,11 +6,14 @@ import robotmap
 
 
 class SwitchControlMode(InstantCommand):
-    def __init__(self, target_control_mode):
+    def __init__(self):
         super().__init__("SwitchControlMode")
-        self.target_control_mode = target_control_mode
+
         self.logger = logging.getLogger("Control Mode")
 
     def execute(self):
-        robotmap.control_mode = self.target_control_mode
+        if robotmap.control_mode == 1:
+            robotmap.control_mode = 0
+        elif robotmap.control_mode == 0:
+            robotmap.control_mode = 1
         self.logger.warning("Now " + str(robotmap.control_mode))

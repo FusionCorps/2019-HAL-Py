@@ -45,6 +45,7 @@ class Pneumatics(Subsystem):
             self.set_piston(True)
 
     def initDefaultCommand(self):
-        from commands.pneumatics.close import PneumaticsClose
+        # from commands.pneumatics.close import PneumaticsClose
 
-        self.setDefaultCommand(PneumaticsClose())
+        # self.setDefaultCommand(PneumaticsClose())
+        pass
