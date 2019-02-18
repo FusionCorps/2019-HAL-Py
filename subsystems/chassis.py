@@ -1,7 +1,7 @@
 import logging
 
 from ctre import WPI_TalonSRX
-from wpilib import SpeedControllerGroup
+from wpilib import ADXRS450_Gyro, SpeedControllerGroup, Ultrasonic
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
 
@@ -26,6 +26,14 @@ class Chassis(Subsystem):
 
         # Drive class instance
         self._drive = DifferentialDrive(self._group_L, self._group_R)
+
+        # Sensors
+        self.sonar = Ultrasonic(
+            robotmap.ultrasonic_ping,
+            robotmap.ultrasonic_echo,
+            Ultrasonic.Unit.kMillimeters,
+        )
+        self.gyro = ADXRS450_Gyro(robotmap.gyro)
 
     def initDefaultCommand(self):
         from commands import JoystickDrive

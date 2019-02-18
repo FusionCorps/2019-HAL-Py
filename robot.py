@@ -5,7 +5,6 @@ from commandbased import CommandBasedRobot
 from wpilib import Watchdog
 
 import subsystems
-from cscore import CameraServer, UsbCamera
 
 
 class Hal(CommandBasedRobot):
@@ -15,12 +14,15 @@ class Hal(CommandBasedRobot):
         import commands
         import dashboard
 
+        # import common.cameras
+
         self.logger = logging.getLogger("Core")
 
         oi.init()
         subsystems.init()
         commands.init()
         dashboard.init()
+        # common.cameras.init()
 
         self.logger.info("Robot initialized")
         self.watchdog.setTimeout(1)
@@ -28,19 +30,9 @@ class Hal(CommandBasedRobot):
         from commands.update_sd import UpdateSD
 
         self.update_smartdashboard = UpdateSD()
-        CameraServer().getInstance().addServer(
-            name="Front", port=5800, server="10.66.72.11"
-        )
-        cam_back = UsbCamera(0)
-        CameraServer().getInstance().addCamera(cam_back)
-        CameraServer().startAutomaticCapture()
 
     def autonomousInit(self):
         self.update_smartdashboard.start()
-        # from commands.autonomous.auton_profile import Auton_Profile
-
-        # self.auton_profile = Auton_Profile("example")
-        # self.auton_profile.start()
         from commands.pneumatics.close import PneumaticsClose
 
         PneumaticsClose().start()
