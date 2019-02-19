@@ -19,7 +19,10 @@ class PneumaticsPiston(Command):
             self.end()
 
     def isFinished(self):
-        return False
+        if robotmap.control_mode == 1:
+            return False
+        elif robotmap.control_mode == 0:
+            return True
 
     def interrupted(self):
         self.end()

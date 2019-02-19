@@ -7,10 +7,7 @@ import subsystems
 class PneumaticsVenturi(Command):
     def __init__(self):
         super().__init__("PneumaticsVenturi")
-        if robotmap.control_mode == 1:
-            self.requires(subsystems._pneumatics)
-        else:
-            pass
+        self.requires(subsystems._pneumatics)
 
     def execute(self):
         if robotmap.control_mode == 1:
@@ -19,7 +16,10 @@ class PneumaticsVenturi(Command):
             self.end()
 
     def isFinished(self):
-        return False
+        if robotmap.control_mode == 1:
+            return False
+        elif robotmap.control_mode == 0:
+            return True
 
     def interrupted(self):
         self.end()

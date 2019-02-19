@@ -2,7 +2,7 @@ import logging
 from math import atan2, cos, radians, sin, tan
 
 import pathfinder as pf
-from networktables import NetworkTablesInstance
+from networktables import NetworkTables
 from pathfinder import modifiers
 from pathfinder.followers import EncoderFollower
 from wpilib.command import Command
@@ -17,7 +17,7 @@ class AutoAlign(Command):
         self.requires(subsystems._chassis)
         self.target = target
 
-        self.nt = NetworkTablesInstance().getTable("limelight")
+        self.nt = NetworkTables.getTable("limelight")
 
         self.k_aim = robotmap.k_aim
         self.k_distance = robotmap.k_distance
@@ -55,68 +55,80 @@ class AutoAlign(Command):
 
     # Needs to calculate angle from target center pixel values
     def initialize(self):
-        tv = self.nt.getNumber("tv")
-        tx = self.nt.getNumber("tx")
-        ty = self.nt.getNumber("ty")
+        if robotmap.control_mode == 0:
+            subsystems._chassis.sonar.setDistanceUnits(0.0)
 
-        distance = subsystems._chassis.sonar.getDistanceUnits()
+            tv = self.nt.getNumber("tv", 0)
 
-        angle = self.getAngle(
-            self.getVPX(self.getVPW(robotmap.limelight_x_fov), self.getNX(tx))
-        )
+            if tv == 0.0:
+                self.end()
+            else:
+                pass
 
-        # Waypoint values converted to meters
-        drive_x = sin(angle) * (distance * 1000)
-        drive_y = cos(angle) * (distance * 1000)
+            tx = self.nt.getNumber("tx", 0)
+            ty = self.nt.getNumber("ty", 0)
+            ta = self.nt.getNumber("ta", 0)
 
-        self.logger.info("Angle to target in radians is " + str(angle))
+            distance = subsystems._chassis.sonar.getDistanceUnits()
 
-        points = [pf.Waypoint[0, 0, 0], pf.Waypoint[drive_x, drive_y, angle]]
+            drive_x = sin(tx) * distance
 
-        info, trajectory = pf.generate(
-            points,
-            pf.FIT_HERMITE_CUBIC,
-            pf.SAMPLES_HIGH,
-            dt=0.05,
-            max_velocity=robotmap.max_vel,
-            max_acceleration=robotmap.max_accel,
-            max_jerk=robotmap.max_jerk,
-        )
+            self.logger.info("Angle to target in radians is " + str(tx))
 
-        self.modifier = pf.modifiers.TankModifier(trajectory).modify(0.5)
+            points = [pf.Waypoint(0, drive_x, tx), pf.Waypoint(0, 0, 0)]
 
-        self.left = EncoderFollower(self.modifier.getLeftTrajectory())
-        self.right = EncoderFollower(self.modifier.getRightTrajectory())
-        self.encoder_followers = [self.left, self.right]
+            trajectory = pf.generate(
+                points,
+                pf.FIT_HERMITE_CUBIC,
+                pf.SAMPLES_HIGH,
+                dt=0.05,
+                max_velocity=robotmap.max_vel,
+                max_acceleration=robotmap.max_accel,
+                max_jerk=robotmap.max_jerk,
+            )
 
-        self.left.configureEncoder(
-            subsystems._chassis._talon_FL.getQuadraturePosition(),
-            robotmap.encoder_counts_per_rev,
-            robotmap.whl_diameter,
-        )
-        self.right.configureEncoder(
-            subsystems._chassis._talon_FR.getQuadraturePosition(),
-            robotmap.encoder_counts_per_rev,
-            robotmap.whl_diameter,
-        )
+            self.modifier = pf.modifiers.TankModifier(trajectory).modify(0.5)
 
-        for follower in self.encoder_followers:
-            follower.configurePIDVA(1.0, 0.0, 0.0, (1 / robotmap.max_vel), 0)
+            self.left = EncoderFollower(self.modifier.getLeftTrajectory())
+            self.right = EncoderFollower(self.modifier.getRightTrajectory())
+            self.encoder_followers = [self.left, self.right]
+
+            self.left.configureEncoder(
+                subsystems._chassis._talon_FL.getQuadraturePosition(),
+                robotmap.encoder_counts_per_rev,
+                robotmap.whl_diameter,
+            )
+            self.right.configureEncoder(
+                subsystems._chassis._talon_FR.getQuadraturePosition(),
+                robotmap.encoder_counts_per_rev,
+                robotmap.whl_diameter,
+            )
+
+            for follower in self.encoder_followers:
+                follower.configurePIDVA(1.0, 0.0, 0.0, (1 / robotmap.max_vel), 0)
+        else:
+            pass
 
     def execute(self):
-        heading = subsystems._chassis.gyro.getAngle()
-        output_L = self.left.calculate(
-            subsystems._chassis._talon_FL.getQuadraturePosition()
-        )
-        output_R = self.right.calculate(
-            subsystems._chassis._talon_FR.getQuadraturePosition()
-        )
-        heading_target = pf.r2d(self.left.getHeading())
-        heading_diff = pf.boundHalfDegrees(heading_target - heading)
-        turn_output = robotmap.spd_chassis_rotate * (-1 / 80)
+        if robotmap.control_mode == 0:
+            heading = subsystems._chassis.gyro.getAngle()
+            output_L = self.left.calculate(
+                subsystems._chassis._talon_FL.getQuadraturePosition()
+            )
+            output_R = self.right.calculate(
+                subsystems._chassis._talon_FR.getQuadraturePosition()
+            )
+            heading_target = pf.r2d(self.left.getHeading())
+            heading_diff = pf.boundHalfDegrees(heading_target - heading)
+            turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
+
+            subsystems._chassis._group_L.set(output_L + turn_output)
+            subsystems._chassis._group_R.set(output_R - turn_output)
+        else:
+            pass
 
     def isFinished(self):
-        pass
+        return True
 
     def end(self):
         pass

@@ -20,6 +20,9 @@ class Chassis(Subsystem):
         self._talon_BR = WPI_TalonSRX(robotmap.talon_back_right)
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
+        for talon in self._talons:
+            talon.setSafetyEnabled(False)
+
         # Speed Controller Groups
         self._group_L = SpeedControllerGroup(self._talon_BL, self._talon_FL)
         self._group_R = SpeedControllerGroup(self._talon_BR, self._talon_FR)
@@ -33,7 +36,14 @@ class Chassis(Subsystem):
             robotmap.ultrasonic_echo,
             Ultrasonic.Unit.kMillimeters,
         )
+        self.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
+        self.sonar.setDistanceUnits(0.0)
+
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
+
+    def resetEncoders(self):
+        for talon in self._talons:
+            talon.setQuadraturePosition(0, 50)
 
     def initDefaultCommand(self):
         from commands import JoystickDrive

@@ -29,10 +29,13 @@ class SlapperSlap(Command):
             self.end()
 
     def isFinished(self):
-        if self.timer.hasPeriodPassed(0.5):
+        if robotmap.control_mode == 1:
+            if self.timer.hasPeriodPassed(0.5):
+                return True
+            else:
+                return False
+        elif robotmap.control_mode == 0:
             return True
-        else:
-            return False
 
     def interrupted(self):
         self.end()

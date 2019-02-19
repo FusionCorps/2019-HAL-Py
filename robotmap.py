@@ -10,12 +10,14 @@ talon_back_left = 21
 talon_back_right = 10
 talon_intake = 4
 talon_slapper = 30
+talon_lift_CFront = 3
+talon_lift_CBack = 2
 
 # Sensor IDs
 # TODO update ids
-ultrasonic_ping = 1
-ultrasonic_echo = 2
-gyro = 1
+ultrasonic_ping = 7
+ultrasonic_echo = 8
+gyro = 0
 
 # Solenoid Port IDs
 solenoid_venturi_L = 0
@@ -61,8 +63,11 @@ limelight_x_fov = 54
 limelight_y_fov = 41
 
 # Chassis Constants
-whl_diameter = 1
-encoder_counts_per_rev = 360
-max_vel = 0
-max_accel = 0
-max_jerk = 0
+whl_diameter = 196.85
+encoder_counts_per_rev = 4096
+max_vel = 1.2168e11
+max_accel = 2500
+max_jerk = 500
+
+lift_height = -16000
+lift_flush = 0

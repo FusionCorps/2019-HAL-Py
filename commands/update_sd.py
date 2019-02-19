@@ -8,4 +8,4 @@ class UpdateSD(InstantCommand):
         super().__init__("UpdateSD")
 
     def execute(self):
-        dashboard.init()
+        dashboard.update()

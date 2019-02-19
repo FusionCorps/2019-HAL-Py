@@ -1,10 +1,18 @@
 from wpilib import SmartDashboard
+from wpilib.shuffleboard import BuiltInWidgets, Shuffleboard
 
 import robotmap
 import subsystems
 
+# def init():
+#     Shuffleboard.getTab("Functions").add("Differential").withWidget(
+#         BuiltInWidgets.kDifferentialDrive
+#     ).withProperties(
+#         "Number of wheels", 4, "Wheel diameter", 80, "Show velocity vectors", True
+#     ).getEntry()
 
-def init():
+
+def update():
     """Sets up SmartDashboard"""
     SmartDashboard().putData("Chassis", subsystems._chassis)
     SmartDashboard().putData("Pneumatics", subsystems._pneumatics)
@@ -28,3 +36,4 @@ def init():
     SmartDashboard().putNumber(
         "Compressor", subsystems._pneumatics.compressor.getPressureSwitchValue()
     )
+    SmartDashboard().putData("Drive", subsystems._chassis._drive)

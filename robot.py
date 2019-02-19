@@ -2,6 +2,7 @@ import logging
 
 import wpilib
 from commandbased import CommandBasedRobot
+from networktables import NetworkTablesInstance
 from wpilib import Watchdog
 
 import subsystems
@@ -21,7 +22,7 @@ class Hal(CommandBasedRobot):
         oi.init()
         subsystems.init()
         commands.init()
-        dashboard.init()
+        dashboard.update()
         # common.cameras.init()
 
         self.logger.info("Robot initialized")
@@ -44,10 +45,15 @@ class Hal(CommandBasedRobot):
 
     def teleopInit(self):
         self.update_smartdashboard.start()
+        subsystems._lift.talon_drive_CBack.setQuadraturePosition(0, 50)
         self.scheduler.run()
 
     def teleopPeriodic(self):
         subsystems._chassis._drive.feedWatchdog()
+        self.logger.info(
+            "Encoder position for left side is"
+            + str(subsystems._lift.talon_drive_CBack.getQuadraturePosition())
+        )
         self.update_smartdashboard.start()
         self.scheduler.run()
 
