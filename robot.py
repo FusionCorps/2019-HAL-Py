@@ -45,17 +45,15 @@ class Hal(CommandBasedRobot):
 
     def teleopInit(self):
         self.update_smartdashboard.start()
-        subsystems._lift.talon_drive_CBack.setQuadraturePosition(0, 50)
         self.scheduler.run()
 
     def teleopPeriodic(self):
         subsystems._chassis._drive.feedWatchdog()
-        self.logger.info(
-            "Encoder position for left side is"
-            + str(subsystems._lift.talon_drive_CBack.getQuadraturePosition())
-        )
         self.update_smartdashboard.start()
         self.scheduler.run()
+
+    def disabledInit(self):
+        self.scheduler.removeAll()
 
 
 if __name__ == "__main__":

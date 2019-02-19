@@ -1,4 +1,4 @@
-from ctre import WPI_TalonSRX
+from ctre import WPI_VictorSPX
 from wpilib.command import PIDSubsystem
 
 import robotmap
@@ -7,16 +7,15 @@ import robotmap
 class Intake(PIDSubsystem):
     def __init__(self, p, i, d):
         super().__init__(p, i, d, name="Intake")
-        self._talon = WPI_TalonSRX(robotmap.talon_intake)
+        self._victor = WPI_VictorSPX(robotmap.talon_intake)
 
     def returnPIDInput(self):
-        return self._talon.getBusVoltage()
+        return self._victor.getBusVoltage()
 
     def usePIDOutput(self, output):
-        self._talon.pidWrite(output)
+        self._victor.pidWrite(output)
 
     def initDefaultCommand(self):
-        # from commands.intake.halt import IntakeHalt
+        from commands.intake.halt import IntakeHalt
 
-        # self.setDefaultCommand(IntakeHalt())
-        pass
+        self.setDefaultCommand(IntakeHalt())

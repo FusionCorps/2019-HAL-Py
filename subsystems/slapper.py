@@ -11,7 +11,7 @@ class Slapper(Subsystem):
         super().__init__("Slapper")
         self.slapper = WPI_TalonSRX(robotmap.talon_slapper)
         self.limit_switch = DigitalInput(robotmap.slapper_limit)
-        self.slapper.setQuadraturePosition(0)
+        self.slapper.setPulseWidthPosition(0, 50)
 
     def getPosition(self):
-        return self.slapper.getQuadraturePosition()
+        return self.slapper.getPulseWidthPosition()

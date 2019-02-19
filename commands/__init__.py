@@ -1,6 +1,7 @@
 import logging
 
 import oi
+from subsystems.lift import Position
 
 from .autonomous.auto_align import AutoAlign
 from .intake.eject import IntakeEject
@@ -26,6 +27,7 @@ def init():
     """Adds all commands to controller"""
     logger = logging.getLogger("Commands")
 
+    # CONTROL MODE 1
     oi.bumper_L.whenPressed(PneumaticsVenturi())
     oi.bumper_R.whenPressed(PneumaticsPiston())
 
@@ -37,10 +39,11 @@ def init():
     oi.back.whenPressed(SwitchControlMode())
     # oi.start.whenPressed(AutoAlign("tape"))
 
-    oi.B.whenPressed(SetLift(-0.6))
-    oi.A.whenPressed(SetLift(0.4))
-    oi.start.whenPressed(SetLift(0.3))
-    oi.X.whenPressed(FrontSet(0.0))
-    oi.Y.whenPressed(FrontSet(0.4))
+    # CONTROL MODE 2
+    oi.B.whenPressed(SetLift(Position.DOWN))
+    oi.X.whenPressed(FrontSet(Position.UP))
+    oi.Y.whenPressed(BackSet(Position.UP))
+    oi.A.whenPressed(SetLift(Position.ZERO))
+    oi.start.whenPressed(SetLift(Position.UP))
 
     logger.info("Commands initialized")

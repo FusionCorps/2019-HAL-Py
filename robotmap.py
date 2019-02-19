@@ -69,5 +69,10 @@ max_vel = 1.2168e11
 max_accel = 2500
 max_jerk = 500
 
-lift_height = -16000
+lift_height = 10000
 lift_flush = 0
+
+lift_cfront_limit_top = 5
+lift_cfront_limit_bottom = 10
+lift_cback_limit_top = 6
+lift_cback_limit_bottom = 11
