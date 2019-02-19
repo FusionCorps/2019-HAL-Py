@@ -3,3 +3,4 @@ pyfrc
 coverage
 robotpy-ctre
 numpy
+robotpy-pathfinder
