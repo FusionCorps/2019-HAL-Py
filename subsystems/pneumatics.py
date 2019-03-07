@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 
 from wpilib import Compressor, Solenoid
 from wpilib.command import Subsystem
@@ -6,45 +7,52 @@ from wpilib.command import Subsystem
 import robotmap
 
 
+class DuckbillState(Enum):
+    """
+    Duckbill state enum that stores tuple with (bottom, top) values
+    """
+
+    HALT = (False, False)  # Refrain from using HALT b/c of solenoids
+    OUT = (True, False)
+    UP = (False, True)
+
+
+class PistonState(Enum):
+    """
+    Piston state enum that stores tuple with (left, right) values
+    """
+
+    HALT = (False, False)
+    OUT = (True, False)
+    IN = (False, True)
+
+
 class Pneumatics(Subsystem):
     def __init__(self):
         super().__init__("Pneumatics")
 
-        self.solenoid_venturi_R = Solenoid(robotmap.solenoid_venturi_R)
-        self.solenoid_venturi_L = Solenoid(robotmap.solenoid_venturi_L)
-        self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)
-        self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_R)
-        self.compressor = Compressor()
+
+        
+        self.setState(state_duckbill=DuckbillState.HALT, state_piston=PistonState.HALT)
         self.logger = logging.getLogger("Pneumatics")
 
-    def set_venturi(self, state):
-        if state == True:
-            self.solenoid_venturi_L.set(False)
-            self.solenoid_venturi_R.set(True)
-        elif state == False:
-            self.solenoid_venturi_R.set(False)
-            self.solenoid_venturi_L.set(True)
+    def setState(self, state_duckbill=None, state_piston=None):
+        if state_duckbill is not None:
+            self.setDuckbill(state_duckbill)
+        if state_piston is not None:
+            self.setPiston(state_piston)
 
-    def set_piston(self, state):
-        if state == True:
-            self.solenoid_piston_R.set(False)
-            self.solenoid_piston_L.set(True)
-        elif state == False:
-            self.solenoid_piston_L.set(False)
-            self.solenoid_piston_R.set(True)
+    def setDuckbill(self, state_duckbill):
+        if self.solenoid_duckbill_B.get() is not state_duckbill[0]:
+            self.solenoid_duckbill_B.set(state_duckbill[0])
+        if self.solenoid_duckbill_T.get() is not state_duckbill[1]:
+            self.solenoid_duckbill_B.set(state_duckbill[1])
 
-    def set_state(self, target):
-        if target == 0:
-            self.set_venturi(False)
-            self.set_piston(False)
-        elif target == 1:
-            self.set_venturi(True)
-            self.set_piston(False)
-        elif target == 2:
-            self.set_venturi(False)
-            self.set_piston(True)
+    def setPiston(self, state_pison):
+        if self.solenoid_piston_L.get() is not state_pison[0]:
+            self.solenoid_piston_L.set(state_pison[0])
+        if self.solenoid_piston_R.get() is not state_pison[1]:
+            self.solenoid_piston_R.set(state_pison[1])
 
     def initDefaultCommand(self):
-        from commands.pneumatics.close import PneumaticsClose
-
-        self.setDefaultCommand(PneumaticsClose())
+        pass

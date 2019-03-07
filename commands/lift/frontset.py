@@ -1,5 +1,6 @@
 import logging
 
+from wpilib import Timer
 from wpilib.command import Command
 
 import robotmap
@@ -15,9 +16,12 @@ class FrontSet(Command):
         self.target_height = robotmap.lift_height
         self.logger = logging.getLogger("BackSet")
         self.target_spd = target_spd
+        self.timer = Timer()
 
     def initialize(self):
         subsystems._lift.resetEncoders()
+        self.timer.reset()
+        self.timer.start()
         if robotmap.control_mode == 0:
             if self.target == Position.DOWN:
                 subsystems._lift.talon_drive_CFront.set(-0.6)
@@ -43,17 +47,11 @@ class FrontSet(Command):
             #     self.end()
             # else:
             #     pass
-            if (
-                self.target == Position.DOWN
-                and not subsystems._lift.CFront_limit_top.get()
-            ):
+            if self.target == Position.DOWN and not subsystems._lift.CFront_limit.get():
                 subsystems._lift.talon_drive_CFront.set(0.0)
                 self.end()
-            elif (
-                self.target == Position.UP
-                and not subsystems._lift.CFront_limit_bottom.get()
-            ):
-                subsystems._lift.talon_drive_CBack.set(0.0)
+            elif self.target == Position.UP and self.timer.hasPeriodPassed(2):
+                subsystems._lift.talon_drive_CFront.set(0.0)
                 self.end()
             else:
                 self.end()
@@ -71,4 +69,6 @@ class FrontSet(Command):
         self.end()
 
     def end(self):
+        self.timer.stop()
+        self.timer.reset()
         subsystems._lift.resetEncoders()

@@ -20,10 +20,8 @@ class Lift(Subsystem):
         self.talon_drive_CBack = WPI_TalonSRX(robotmap.talon_lift_CBack)
         self.resetEncoders()
 
-        self.CFront_limit_top = DigitalInput(robotmap.lift_cfront_limit_top)
-        self.CFront_limit_bottom = DigitalInput(robotmap.lift_cfront_limit_bottom)
-        self.CBack_limit_top = DigitalInput(robotmap.lift_cback_limit_top)
-        self.CBack_limit_bottom = DigitalInput(robotmap.lift_cback_limit_bottom)
+        self.CFront_limit = DigitalInput(robotmap.lift_cfront_limit_top)
+        self.CBack_limit = DigitalInput(robotmap.lift_cback_limit_top)
 
     def resetEncoders(self):
         self.talon_drive_CBack.setPulseWidthPosition(0, 50)

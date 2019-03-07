@@ -2,6 +2,7 @@ import logging
 
 import wpilib
 from commandbased import CommandBasedRobot
+from ctre import ControlMode
 from networktables import NetworkTablesInstance
 from wpilib import Watchdog
 
@@ -15,15 +16,12 @@ class Hal(CommandBasedRobot):
         import commands
         import dashboard
 
-        # import common.cameras
-
         self.logger = logging.getLogger("Core")
 
         oi.init()
         subsystems.init()
         commands.init()
         dashboard.update()
-        # common.cameras.init()
 
         self.logger.info("Robot initialized")
         self.watchdog.setTimeout(1)
@@ -34,22 +32,20 @@ class Hal(CommandBasedRobot):
 
     def autonomousInit(self):
         self.update_smartdashboard.start()
-        from commands.pneumatics.close import PneumaticsClose
 
-        PneumaticsClose().start()
         self.scheduler.run()
 
     def autonomousPeriodic(self):
-        self.update_smartdashboard.start()
         self.scheduler.run()
 
     def teleopInit(self):
-        self.update_smartdashboard.start()
+        # from commands.pneumatics.close import PneumaticsClose
+
+        # PneumaticsClose().start()
         self.scheduler.run()
 
     def teleopPeriodic(self):
         subsystems._chassis._drive.feedWatchdog()
-        self.update_smartdashboard.start()
         self.scheduler.run()
 
     def disabledInit(self):

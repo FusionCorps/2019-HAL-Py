@@ -8,20 +8,20 @@ talon_front_left = 20
 talon_front_right = 11
 talon_back_left = 21
 talon_back_right = 10
-talon_intake = 4
+talon_intake = 1
 talon_slapper = 30
 talon_lift_CFront = 3
 talon_lift_CBack = 2
 
 # Sensor IDs
 # TODO update ids
-ultrasonic_ping = 7
-ultrasonic_echo = 8
+ultrasonic_ping = 21
+ultrasonic_echo = 22
 gyro = 0
 
 # Solenoid Port IDs
-solenoid_venturi_L = 0
-solenoid_venturi_R = 1
+solenoid_piston_B = 0
+solenoid_piston_T = 1
 solenoid_piston_L = 2
 solenoid_piston_R = 3
 
@@ -34,10 +34,10 @@ spd_chassis_drive = 0.8
 spd_chassis_rotate = 0.4
 spd_intake = -0.5
 spd_intake_shoot = -0.8
-spd_slapper_hold = 0.6
-spd_slapper_slap = 0.2
-spd_slapper_raise1 = -0.7
-spd_slapper_raise2 = -0.6
+spd_slapper_hold = -0.1
+spd_slapper_slap = 0.5
+spd_slapper_raise1 = -0.6
+spd_slapper_raise2 = -0.5
 spd_chassis_vision_seeking = 0.3
 
 # PID Loop variables
@@ -73,6 +73,6 @@ lift_height = 10000
 lift_flush = 0
 
 lift_cfront_limit_top = 5
-lift_cfront_limit_bottom = 10
 lift_cback_limit_top = 6
-lift_cback_limit_bottom = 11
+spd_lift_cfront = -0.8
+spd_lift_cback = -0.6

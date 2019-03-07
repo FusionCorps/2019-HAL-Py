@@ -5,6 +5,7 @@ from wpilib import ADXRS450_Gyro, SpeedControllerGroup, Ultrasonic
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
 
+import oi
 import robotmap
 
 
@@ -22,6 +23,7 @@ class Chassis(Subsystem):
 
         for talon in self._talons:
             talon.setSafetyEnabled(False)
+            talon.changeMotionControlFramePeriod(10)
 
         # Speed Controller Groups
         self._group_L = SpeedControllerGroup(self._talon_BL, self._talon_FL)
@@ -36,14 +38,32 @@ class Chassis(Subsystem):
             robotmap.ultrasonic_echo,
             Ultrasonic.Unit.kMillimeters,
         )
-        self.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
-        self.sonar.setDistanceUnits(0.0)
 
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
 
     def resetEncoders(self):
+        """
+        Sets quadrature position to 0
+        """
         for talon in self._talons:
             talon.setQuadraturePosition(0, 50)
+
+    def setUltrasonic(self, state):
+        """
+        Sets Ultrasonic state
+        """
+        self.sonar.setEnabled(True)
+
+    def getDistance(self):
+        """
+        Gets Ultrasonic distance in MM
+        """
+        return self.sonar.getRangeMM()
+
+    def joystickDrive(self):
+        self._drive.curvatureDrive(
+            -(oi.joystick.getRawAxis(1)), oi.joystick.getRawAxis(4), True
+        )
 
     def initDefaultCommand(self):
         from commands import JoystickDrive

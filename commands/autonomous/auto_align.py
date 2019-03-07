@@ -5,6 +5,7 @@ import pathfinder as pf
 from networktables import NetworkTables
 from pathfinder import modifiers
 from pathfinder.followers import EncoderFollower
+from wpilib import Ultrasonic
 from wpilib.command import Command
 
 import robotmap
@@ -56,8 +57,7 @@ class AutoAlign(Command):
     # Needs to calculate angle from target center pixel values
     def initialize(self):
         if robotmap.control_mode == 0:
-            subsystems._chassis.sonar.setDistanceUnits(0.0)
-
+            subsystems._chassis.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
             tv = self.nt.getNumber("tv", 0)
 
             if tv == 0.0:
@@ -70,14 +70,11 @@ class AutoAlign(Command):
             ta = self.nt.getNumber("ta", 0)
 
             distance = subsystems._chassis.sonar.getDistanceUnits()
-
             drive_x = sin(tx) * distance
-
             self.logger.info("Angle to target in radians is " + str(tx))
+            points = [pf.Waypoint(0, -drive_x, -tx), pf.Waypoint(0, 0, 0)]
 
-            points = [pf.Waypoint(0, drive_x, tx), pf.Waypoint(0, 0, 0)]
-
-            trajectory = pf.generate(
+            info, trajectory = pf.generate(
                 points,
                 pf.FIT_HERMITE_CUBIC,
                 pf.SAMPLES_HIGH,

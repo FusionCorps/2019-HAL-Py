@@ -4,12 +4,10 @@ from wpilib.shuffleboard import BuiltInWidgets, Shuffleboard
 import robotmap
 import subsystems
 
-# def init():
-#     Shuffleboard.getTab("Functions").add("Differential").withWidget(
-#         BuiltInWidgets.kDifferentialDrive
-#     ).withProperties(
-#         "Number of wheels", 4, "Wheel diameter", 80, "Show velocity vectors", True
-#     ).getEntry()
+
+def init():
+    SmartDashboard().putNumber("CFront Spd", robotmap.spd_lift_cfront)
+    SmartDashboard().putNumber("CBack Spd", robotmap.spd_lift_cback)
 
 
 def update():
