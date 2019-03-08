@@ -6,14 +6,9 @@ from subsystems.intake import IntakeState
 from subsystems.lift import Position
 from subsystems.piston import StatePiston
 
-# from .autonomous.auto_align import AutoAlign
 from .duckbill.duckbill_set import DuckbillSet
 from .intake.intake_set import IntakeSet
-
-# from .joystick_drive import JoystickDrive
-from .lift.backset import BackSet
-from .lift.frontset import FrontSet
-from .lift.lraise import SetLift
+from .lift.lift_set import LiftSet
 from .piston.piston_set import PistonSet
 from .switch_control_mode import SwitchControlMode
 
@@ -32,14 +27,14 @@ def init():
     oi.stick_L.whenReleased(IntakeSet(IntakeState.HALT))
 
     oi.stick_R.whenPressed(IntakeSet(IntakeState.SHOOTING))
-    oi.stick_R.whenPressed(IntakeSet(IntakeState.HALT))
+    oi.stick_R.whenReleased(IntakeSet(IntakeState.HALT))
 
     oi.back.whenPressed(SwitchControlMode())
 
     # CONTROL MODE 0
-    oi.B.whenPressed(SetLift(Position.DOWN))
-    oi.X.whenPressed(FrontSet(Position.UP))
-    oi.Y.whenPressed(BackSet(Position.UP))
-    oi.A.whenPressed(SetLift(Position.ZERO))
+    oi.X.whenPressed(LiftSet(Position.BOTH_DOWN))
+    oi.B.whenPressed(LiftSet(Position.BOTH_UP))
+    oi.A.whenPressed(LiftSet(Position.BOTH_HALT))
+    oi.Y.whenPressed(LiftSet(Position.FRONT_UP))
 
     logger.info("Commands initialized")

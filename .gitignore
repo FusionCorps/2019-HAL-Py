@@ -109,3 +109,6 @@ __pycache__/
 .deploy_cfg
 coverage.xml
 .coverage
+.ipk
+.tar.gz
+.jmd

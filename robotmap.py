@@ -14,7 +14,6 @@ talon_lift_CFront = 3
 talon_lift_CBack = 2
 
 # Sensor IDs
-# TODO update ids
 ultrasonic_ping = 21
 ultrasonic_echo = 22
 gyro = 0
@@ -39,6 +38,8 @@ spd_slapper_slap = 0.5
 spd_slapper_raise1 = -0.6
 spd_slapper_raise2 = -0.5
 spd_chassis_vision_seeking = 0.3
+spd_lift_cfront = -0.8
+spd_lift_cback = -0.6
 
 # PID Loop variables
 intake_p = 1.0
@@ -74,5 +75,3 @@ lift_flush = 0
 
 lift_cfront_limit_top = 5
 lift_cback_limit_top = 6
-spd_lift_cfront = -0.8
-spd_lift_cback = -0.6

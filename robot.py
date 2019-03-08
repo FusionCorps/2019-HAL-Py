@@ -46,6 +46,12 @@ class Hal(CommandBasedRobot):
 
     def teleopPeriodic(self):
         subsystems._chassis._drive.feedWatchdog()
+        print(
+            "CBack: ",
+            subsystems._lift.talon_drive_CBack.getQuadraturePosition(),
+            " CFront: ",
+            subsystems._lift.talon_drive_CFront.getQuadraturePosition(),
+        )
         self.scheduler.run()
 
     def disabledInit(self):

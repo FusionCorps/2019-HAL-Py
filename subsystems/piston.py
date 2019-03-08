@@ -13,8 +13,8 @@ class StatePiston(Enum):
     """
 
     HALT = (False, False)
-    OUT = (True, False)
-    IN = (False, True)
+    IN = (True, False)
+    OUT = (False, True)
 
 
 class Piston(Subsystem):
