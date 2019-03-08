@@ -25,10 +25,12 @@ class Piston(Subsystem):
         self.setState(StatePiston.IN)
 
     def setState(self, state_target):
-        if self.solenoid_piston_L.get() is not state_target[0]:
-            self.solenoid_piston_L.set(state_target[0])
-        if self.solenoid_piston_R.get() is not state_target[1]:
-            self.solenoid_piston_R.set(state_target[1])
+        if self.solenoid_piston_L.get() is not state_target.value[0]:
+            self.solenoid_piston_L.set(state_target.value[0])
+        if self.solenoid_piston_R.get() is not state_target.value[1]:
+            self.solenoid_piston_R.set(state_target.value[1])
 
     def initDefaultCommand(self):
-        pass
+        from commands.piston.piston_set import PistonSet
+
+        self.setDefaultCommand(PistonSet(StatePiston.IN))

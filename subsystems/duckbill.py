@@ -25,10 +25,12 @@ class Duckbill(Subsystem):
         self.setState(StateDuckbill.UP)
 
     def setState(self, state_target):
-        if self.solenoid_duckbill_B.get() is not state_target[0]:
-            self.solenoid_duckbill_B.set(state_target[0])
-        if self.solenoid_duckbill_T.get() is not state_target[1]:
-            self.solenoid_duckbill_T.set(state_target[1])
+        if self.solenoid_duckbill_B.get() is not state_target.value[0]:
+            self.solenoid_duckbill_B.set(state_target.value[0])
+        if self.solenoid_duckbill_T.get() is not state_target.value[1]:
+            self.solenoid_duckbill_T.set(state_target.value[1])
 
     def initDefaultCommand(self):
-        pass
+        from commands.duckbill.duckbill_set import DuckbillSet
+
+        self.setDefaultCommand(DuckbillSet(StateDuckbill.UP))

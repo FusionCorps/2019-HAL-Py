@@ -23,7 +23,7 @@ class Chassis(Subsystem):
 
         for talon in self._talons:
             talon.setSafetyEnabled(False)
-            talon.changeMotionControlFramePeriod(10)
+            # talon.changeMotionControlFramePeriod(10)
 
         # Speed Controller Groups
         self._group_L = SpeedControllerGroup(self._talon_BL, self._talon_FL)
@@ -66,6 +66,6 @@ class Chassis(Subsystem):
         )
 
     def initDefaultCommand(self):
-        from commands import JoystickDrive
+        from commands.joystick_drive import JoystickDrive
 
         self.setDefaultCommand(JoystickDrive())
