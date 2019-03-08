@@ -9,10 +9,10 @@ import robotmap
 
 class StateDuckbill(Enum):
     """
-    Duckbill state enum that stores tuple with (bottom, top) values
+    Duckbill state enum that stores solenoid values in a (bottom, top) format
     """
 
-    HALT = (False, False)  # Refrain from using HALT b/c of solenoids
+    HALT = (False, False)
     DOWN = (True, False)
     UP = (False, True)
 
@@ -25,10 +25,20 @@ class Duckbill(Subsystem):
         self.setState(StateDuckbill.UP)
 
     def setState(self, state_target):
+        """
+        Sets the state of the Duckbill subsystem using the StateDuckBill Enum.
+
+        `state_target` is the StateDuckbill Enum value to set (e.g. `DOWN`)
+        """
         if self.solenoid_duckbill_B.get() is not state_target.value[0]:
             self.solenoid_duckbill_B.set(state_target.value[0])
         if self.solenoid_duckbill_T.get() is not state_target.value[1]:
             self.solenoid_duckbill_T.set(state_target.value[1])
+            
+        self.state = state_target
+
+    def getState(self):
+        return self.state
 
     def initDefaultCommand(self):
         from commands.duckbill.duckbill_set import DuckbillSet

@@ -3,12 +3,12 @@ from ctre import ControlMode
 import robotmap
 import subsystems
 from common.fusion_command import FusionCommand
-from subsystems.intake import IntakeState
+from subsystems.intake import StateIntake
 
 
 class IntakeSet(FusionCommand):
     """
-    Sets Intake State (Control Mode 1)
+    Sets Intake State
     """
 
     def __init__(self, state_target):

@@ -25,10 +25,20 @@ class Piston(Subsystem):
         self.setState(StatePiston.IN)
 
     def setState(self, state_target):
+        """
+        Sets the state of the Piston subsystem using the StatePiston Enum.
+
+        `state_target` is the StatePiston Enum value to set (e.g. `OUT`)
+        """
         if self.solenoid_piston_L.get() is not state_target.value[0]:
             self.solenoid_piston_L.set(state_target.value[0])
         if self.solenoid_piston_R.get() is not state_target.value[1]:
             self.solenoid_piston_R.set(state_target.value[1])
+
+        self.state = state_target
+
+    def getState(self):
+        return self.state
 
     def initDefaultCommand(self):
         from commands.piston.piston_set import PistonSet

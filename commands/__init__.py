@@ -2,7 +2,7 @@ import logging
 
 import oi
 from subsystems.duckbill import StateDuckbill
-from subsystems.intake import IntakeState
+from subsystems.intake import StateIntake
 from subsystems.lift import Position
 from subsystems.piston import StatePiston
 
@@ -23,11 +23,11 @@ def init():
     oi.bumper_R.whenPressed(PistonSet(StatePiston.OUT))
     oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
 
-    oi.stick_L.whenPressed(IntakeSet(IntakeState.INTAKING))
-    oi.stick_L.whenReleased(IntakeSet(IntakeState.HALT))
+    oi.stick_L.whenPressed(IntakeSet(StateIntake.INTAKING))
+    oi.stick_L.whenReleased(IntakeSet(StateIntake.HALT))
 
-    oi.stick_R.whenPressed(IntakeSet(IntakeState.SHOOTING))
-    oi.stick_R.whenReleased(IntakeSet(IntakeState.HALT))
+    oi.stick_R.whenPressed(IntakeSet(StateIntake.SHOOTING))
+    oi.stick_R.whenReleased(IntakeSet(StateIntake.HALT))
 
     oi.back.whenPressed(SwitchControlMode())
 
