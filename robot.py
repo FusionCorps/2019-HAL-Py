@@ -30,32 +30,24 @@ class Hal(CommandBasedRobot):
 
         self.update_smartdashboard = UpdateSD()
 
+    def robotPeriodic(self):
+        pass
+
     def autonomousInit(self):
         self.update_smartdashboard.start()
 
-        self.scheduler.run()
-
     def autonomousPeriodic(self):
-        self.scheduler.run()
+        super().autonomousPeriodic()
 
     def teleopInit(self):
-        # from commands.pneumatics.close import PneumaticsClose
-
-        # PneumaticsClose().start()
-        self.scheduler.run()
+        pass
 
     def teleopPeriodic(self):
+        super().teleopPeriodic()
         subsystems._chassis._drive.feedWatchdog()
-        print(
-            "CBack: ",
-            subsystems._lift.talon_drive_CBack.getQuadraturePosition(),
-            " CFront: ",
-            subsystems._lift.talon_drive_CFront.getQuadraturePosition(),
-        )
-        self.scheduler.run()
 
     def disabledInit(self):
-        self.scheduler.removeAll()
+        pass
 
 
 if __name__ == "__main__":
