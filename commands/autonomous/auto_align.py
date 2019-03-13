@@ -23,6 +23,7 @@ class AutoAlign(Command):
         self.k_aim = robotmap.k_aim
         self.k_distance = robotmap.k_distance
         self.min_aim_command = robotmap.min_aim_command
+
         self.logger = logging.getLogger("Automatic Alignment")
 
     # Get normalized x pixel values from resolution
@@ -125,7 +126,7 @@ class AutoAlign(Command):
             pass
 
     def isFinished(self):
-        return True
+        return self.left.isFinished() and self.right.isFinished()
 
     def end(self):
         pass
