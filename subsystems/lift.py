@@ -12,10 +12,13 @@ class Position(Enum):
     Sets position speeds based on (back, front) value
     """
 
-    BOTH_UP = (robotmap.spd_lift_cback, robotmap.spd_lift_cfront)
-    BOTH_DOWN = (-robotmap.spd_lift_cback, -robotmap.spd_lift_cfront)
+    BOTH_DOWN = (robotmap.spd_lift_cback, robotmap.spd_lift_cfront)
+    BOTH_UP = (-robotmap.spd_lift_up, -robotmap.spd_lift_up)
     BOTH_HALT = (0.0, 0.0)
-    FRONT_UP = (0.0, robotmap.spd_lift_cfront)
+    FRONT_UP = (0.0, -robotmap.spd_lift_cfront)
+    FRONT_DOWN = (0.0, robotmap.spd_lift_cfront)
+    BACK_UP = (-robotmap.spd_lift_cback, 0.0)
+    BACK_DOWN = (robotmap.spd_lift_cback, 0.0)
 
 
 class Lift(Subsystem):
@@ -23,6 +26,7 @@ class Lift(Subsystem):
         super().__init__("Lift")
         self.talon_drive_CFront = WPI_TalonSRX(robotmap.talon_lift_CFront)
         self.talon_drive_CBack = WPI_TalonSRX(robotmap.talon_lift_CBack)
+        self.talon_drive_CDRive = WPI_TalonSRX(robotmap.talon_lift_CDrive)
         self.CFront_limit = DigitalInput(robotmap.lift_cfront_limit_top)
         self.CBack_limit = DigitalInput(robotmap.lift_cback_limit_top)
         self.resetEncoders()
@@ -34,7 +38,7 @@ class Lift(Subsystem):
             self.talon_drive_CFront.set(position_target.value[1])
         else:
             pass
-            
+
         self.state = position_target
 
     def getState(self):
@@ -49,3 +53,11 @@ class Lift(Subsystem):
     def resetEncoders(self):
         self.talon_drive_CBack.setQuadraturePosition(0, 50)
         self.talon_drive_CFront.setQuadraturePosition(0, 50)
+
+    def setCDrive(self, spd):
+        self.talon_drive_CDRive.set(spd)
+
+    # def initDefaultCommand(self):
+    #     from commands.lift.lift_set import LiftSet
+
+    #     self.setDefaultCommand(LiftSet(Position.BOTH_HALT))

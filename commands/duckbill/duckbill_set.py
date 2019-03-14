@@ -17,6 +17,4 @@ class DuckbillSet(FusionCommand):
         pass
 
     def end(self):
-        from subsystems.duckbill import StateDuckbill
-
-        subsystems._duckbill.setState(StateDuckbill.UP)
+        pass

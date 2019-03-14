@@ -8,6 +8,8 @@ from subsystems.piston import StatePiston
 
 from .duckbill.duckbill_set import DuckbillSet
 from .intake.intake_set import IntakeSet
+from .lift.lift_drive import LiftDrive
+from .lift.lift_grp import LiftGroup
 from .lift.lift_set import LiftSet
 from .piston.piston_set import PistonSet
 from .switch_control_mode import SwitchControlMode
@@ -29,7 +31,9 @@ def init():
     oi.stick_R.whenPressed(IntakeSet(StateIntake.SHOOTING))
     oi.stick_R.whenReleased(IntakeSet(StateIntake.HALT))
 
-    oi.back.whenPressed(SwitchControlMode())
+    oi.back.whenPressed(LiftGroup())
+
+    oi.start.toggleWhenPressed(LiftDrive(0.6, 100))
 
     # CONTROL MODE 0
     oi.X.whenPressed(LiftSet(Position.BOTH_DOWN))

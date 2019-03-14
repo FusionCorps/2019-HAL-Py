@@ -61,7 +61,7 @@ class AutoAlign(Command):
             subsystems._chassis.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
             tv = self.nt.getNumber("tv", 0)
 
-            if tv == 0.0:
+            if tv is 0.0:
                 self.end()
             else:
                 pass
@@ -72,6 +72,7 @@ class AutoAlign(Command):
 
             distance = subsystems._chassis.sonar.getDistanceUnits()
             drive_x = sin(tx) * distance
+
             self.logger.info("Angle to target in radians is " + str(tx))
             points = [pf.Waypoint(0, -drive_x, -tx), pf.Waypoint(0, 0, 0)]
 

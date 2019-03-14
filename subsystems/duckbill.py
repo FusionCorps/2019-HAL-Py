@@ -13,8 +13,8 @@ class StateDuckbill(Enum):
     """
 
     HALT = (False, False)
-    DOWN = (True, False)
-    UP = (False, True)
+    UP = (True, False)
+    DOWN = (False, True)
 
 
 class Duckbill(Subsystem):

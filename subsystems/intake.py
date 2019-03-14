@@ -30,7 +30,7 @@ class Intake(Subsystem):
         if self._victor.getMotorOutputPercent() is spd_target:
             pass
         else:
-            self._victor.set(mode, demand0=spd_target)
+            self._victor.set(mode, spd_target)
 
     def setState(self, state_target):
         """
@@ -42,7 +42,7 @@ class Intake(Subsystem):
             state_target is not None
             and self._victor.getMotorOutputPercent() is not state_target.value
         ):
-            self.setVictor(state_target.value)
+            self.setVictor(state_target.value, mode=ControlMode.PercentOutput)
         elif state_target is None:
             pass
 
@@ -50,8 +50,3 @@ class Intake(Subsystem):
 
     def getState(self):
         return self.state
-
-    def initDefaultCommand(self):
-        from commands.intake.intake_set import IntakeSet
-
-        self.setDefaultCommand(IntakeSet(StateIntake.HALT))

@@ -16,7 +16,7 @@ class IntakeSet(FusionCommand):
         self.state_target = state_target
 
     def initialize(self):
-        subsystems._intake.setState(self.state_target)
+        subsystems._intake.setVictor(self.state_target.value)
 
     def isFinished(self):
         return False
