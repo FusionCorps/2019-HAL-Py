@@ -6,6 +6,7 @@ import dashboard
 
 class UpdateFunc:
     def run(self):
+        print("Updating smartdashboard")
         dashboard.update()
 
 
@@ -18,4 +19,7 @@ class UpdateSD(InstantCommand):
         self.notifier.startPeriodic(0.5)
 
     def execute(self):
+        pass
+
+    def isFinished(self):
         pass

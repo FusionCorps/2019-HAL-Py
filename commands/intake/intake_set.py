@@ -25,4 +25,4 @@ class IntakeSet(FusionCommand):
         self.end()
 
     def end(self):
-        pass
+        subsystems._intake._victor.set(ControlMode.PercentOutput, 0.0)

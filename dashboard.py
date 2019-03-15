@@ -9,8 +9,8 @@ def init():
     """
     Creates SD objects once at robot start
     """
-    SmartDashboard().putNumber("CFront Spd", robotmap.spd_lift_cfront)
-    SmartDashboard().putNumber("CBack Spd", robotmap.spd_lift_cback)
+    SmartDashboard().putNumber("CFront", robotmap.spd_lift_cfront)
+    SmartDashboard().putNumber("CBack", robotmap.spd_lift_cback)
 
 
 def update():
@@ -27,3 +27,6 @@ def update():
         "BEncoder", subsystems._lift.talon_drive_CBack.getQuadraturePosition()
     )
     SmartDashboard().putData("Drive", subsystems._chassis._drive)
+
+    # robotmap.spd_lift_cfront = SmartDashboard().getNumber("CFront", 0)
+    # robotmap.spd_lift_cback = SmartDashboard().getNumber("CBack", 0)

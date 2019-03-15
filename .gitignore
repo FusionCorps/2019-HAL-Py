@@ -104,11 +104,15 @@ venv.bak/
 .mypy_cache/
 
 __pycache__/
-.pytest_cache/
-.vscode/
-.deploy_cfg
+*.pytest_cache/
+*.vscode/
+*.deploy_cfg
 coverage.xml
-.coverage
-.ipk
-.tar.gz
-.jmd
+*.coverage
+*.ipk
+*.tar.gz
+*.jmd
+*.sh
+opkg_cache/Packages/httpdownload.ni.comni-linux-rtfeeds2018armcortexa9-vfpv3
+opkg_cache/Packages/httpswww.tortall.netrobotpyfeeds2019
+.installer_config

@@ -16,31 +16,38 @@ class Hal(CommandBasedRobot):
         import commands
         import dashboard
 
+        # import common.cameras
+
         self.logger = logging.getLogger("Core")
 
         oi.init()
         subsystems.init()
         commands.init()
         dashboard.update()
+        # common.cameras.init()
 
         self.logger.info("Robot initialized")
-        self.watchdog.setTimeout(1)
+        self.watchdog.setTimeout(2)
 
-        from commands.update_sd import UpdateSD
+        # from commands.update_sd import UpdateSD
 
-        self.update_smartdashboard = UpdateSD()
+        # self.update_smartdashboard = UpdateSD()
 
     def robotPeriodic(self):
         pass
 
     def autonomousInit(self):
-        self.update_smartdashboard.start()
+        # self.update_smartdashboard.start()
+        pass
 
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
+        subsystems._chassis._drive.feedWatchdog()
 
     def teleopInit(self):
-        pass
+        import dashboard
+
+        dashboard.update()
 
     def teleopPeriodic(self):
         super().teleopPeriodic()

@@ -27,10 +27,7 @@ class Intake(Subsystem):
         """
         Sets Intake Victor speed controller speed (uses PercentOutput as default)
         """
-        if self._victor.getMotorOutputPercent() is spd_target:
-            pass
-        else:
-            self._victor.set(mode, spd_target)
+        self._victor.set(mode, -spd_target * 0.7)
 
     def setState(self, state_target):
         """
@@ -50,3 +47,8 @@ class Intake(Subsystem):
 
     def getState(self):
         return self.state
+
+    def initDefaultCommand(self):
+        from commands.intake.intake_joystick import IntakeJoystick
+
+        self.setDefaultCommand(IntakeJoystick())

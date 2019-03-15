@@ -1,11 +1,26 @@
 import logging
 
 from wpilib import Joystick
-from wpilib.buttons import JoystickButton
+from wpilib.buttons import JoystickButton, Trigger
 
 import robotmap
 
-logger, joystick, A, B, X, Y, bumper_L, bumper_R, back, start, stick_L, stick_R = None, None, None, None, None, None, None, None, None, None, None, None
+logger, joystick, A, B, X, Y, bumper_L, bumper_R, trigger_L, trigger_R, back, start, stick_L, stick_R = (
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None,
+)
 
 
 def init():

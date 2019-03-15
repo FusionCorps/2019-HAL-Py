@@ -13,6 +13,8 @@ talon_lift_CDrive = 30
 talon_lift_CFront = 2
 talon_lift_CBack = 3
 
+chassis_zero_accel_on_start = True
+
 # Sensor IDs
 ultrasonic_ping = 21
 ultrasonic_echo = 22
@@ -29,18 +31,18 @@ joystick = 0
 control_mode = 1  # 0 is Left, 1 is Right
 
 # Speed Constants
-spd_chassis_drive = 0.8
-spd_chassis_rotate = 0.4
-spd_intake = -0.5
+spd_chassis_drive = 0.35
+spd_chassis_rotate = 0.30
+spd_intake = 0.7
 spd_intake_shoot = -0.8
 spd_slapper_hold = -0.1
 spd_slapper_slap = 0.5
 spd_slapper_raise1 = -0.6
 spd_slapper_raise2 = -0.5
 spd_chassis_vision_seeking = 0.3
-spd_lift_cfront = 0.73
+spd_lift_cfront = 0.5
 spd_lift_up = 0.25
-spd_lift_cback = 0.62
+spd_lift_cback = 0.4
 
 # PID Loop variables
 intake_p = 1.0

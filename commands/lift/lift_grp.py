@@ -1,8 +1,6 @@
 import logging
 from commands.chassis.chassis_drive import ChassisDrive
-from commands.lift.lift_back_alternate import LiftBackAlternate
 from commands.lift.lift_drive import LiftDrive
-from commands.lift.lift_drive_grp import LiftDriveGroup
 from commands.lift.lift_set import LiftSet
 from commands.wait import Wait
 
@@ -18,14 +16,23 @@ class LiftGroup(CommandGroup):
         self.logger = logging.getLogger("LiftGroup")
 
         self.addSequential(LiftSet(Position.BOTH_DOWN))
-        self.addSequential(LiftDrive(0.3, 3))
-        self.addParallel(LiftBackAlternate(3))
+        self.addSequential(LiftDrive(0.6, 3))
+        self.addSequential(ChassisDrive(0.5, 0.0, 2))
         self.addSequential(LiftSet(Position.FRONT_UP))
-        self.addSequential(ChassisDrive(0.3, 0.0, 3))
-        self.addParallel(LiftSet(Position.BACK_UP))
+        self.addParallel(ChassisDrive(0.5, 0.0, 3))
+        self.addSequential(LiftSet(Position.BACK_UP))
 
     def initialize(self):
         pass
 
+    def execute(self):
+        pass
+
     def isFinished(self):
         return False
+
+    def interrupted(self):
+        self.end()
+
+    def end(self):
+        self.clearRequirements()
