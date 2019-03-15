@@ -36,9 +36,6 @@ class Hal(CommandBasedRobot):
     def autonomousInit(self):
         self.update_smartdashboard.start()
 
-        subsystems._lift.talon_drive_CFront.setQuadraturePosition(10000, 0)
-        subsystems._lift.talon_drive_CBack.setQuadraturePosition(0, 0)
-
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
 

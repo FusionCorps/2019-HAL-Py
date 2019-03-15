@@ -28,6 +28,7 @@ class LiftDrive(Command):
         return self.timer.hasPeriodPassed(self.time)
 
     def interrupted(self):
+        self.logger.info("Lift Drive was interrupted")
         self.end()
 
     def end(self):
