@@ -1,3 +1,5 @@
+import logging
+
 from wpilib import Timer
 from wpilib.command import Command
 
@@ -12,19 +14,15 @@ class LiftDrive(Command):
         self.spd_new = spd_new
         self.timer = Timer()
         self.time = time
-        self.back_alternate = LiftBackAlternate()
+        self.logger = logging.getLogger("LiftDrive")
 
     def initialize(self):
         self.timer.reset()
         self.timer.start()
         subsystems._lift.setCDrive(self.spd_new)
-        self.back_alternate.start()
 
     def execute(self):
-        if self.timer.hasPeriodPassed(self.time):
-            self.end()
-        else:
-            pass
+        pass
 
     def isFinished(self):
         return self.timer.hasPeriodPassed(self.time)
@@ -33,6 +31,7 @@ class LiftDrive(Command):
         self.end()
 
     def end(self):
+        self.logger.info("Ending LiftDrive")
         self.timer.stop()
-        self.back_alternate.end()
+        self.timer.reset()
         subsystems._lift.setCDrive(0.0)

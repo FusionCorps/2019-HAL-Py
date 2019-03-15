@@ -5,16 +5,14 @@ import subsystems
 
 
 class ChassisDrive(Command):
-    def __init__(self, spd_x, spd_z, time):
+    def __init__(self, spd_x, spd_z=0.0, time=None):
         super().__init__("ChassisDrive")
         self.requires(subsystems._chassis)
         self.spd_x = spd_x
         self.spd_z = spd_z
-        if time is None:
-            pass
-        else:
+        self.time = time
+        if time is not None:
             self.timer = Timer()
-            self.time = time
 
     def initialize(self):
         if self.time is not None:
@@ -23,17 +21,18 @@ class ChassisDrive(Command):
         subsystems._chassis._drive.curvatureDrive(self.spd_x, self.spd_z, True)
 
     def execute(self):
-        if self.time is not None:
-            if self.timer.hasPeriodPassed(self.time):
-                self.end()
-        else:
-            pass
+        pass
 
     def interrupted(self):
         self.end()
 
     def isFinished(self):
-        return False
+        if self.time is not None:
+            return self.timer.hasPeriodPassed(self.time)
+        else:
+            return False
 
     def end(self):
+        self.timer.stop()
+        self.timer.reset()
         subsystems._chassis._drive.curvatureDrive(0.0, 0.0, True)

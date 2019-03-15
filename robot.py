@@ -35,15 +35,12 @@ class Hal(CommandBasedRobot):
 
     def autonomousInit(self):
         self.update_smartdashboard.start()
-        from commands.lift.lift_back_alternate import LiftBackAlternate
 
         subsystems._lift.talon_drive_CFront.setQuadraturePosition(10000, 0)
         subsystems._lift.talon_drive_CBack.setQuadraturePosition(0, 0)
-        LiftBackAlternate().start()
 
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
-        self.logger.info(str(subsystems._lift.getCurrentCommand()))
 
     def teleopInit(self):
         pass

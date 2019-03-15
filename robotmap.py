@@ -10,8 +10,8 @@ talon_back_left = 21
 talon_back_right = 10
 talon_intake = 1
 talon_lift_CDrive = 30
-talon_lift_CFront = 3
-talon_lift_CBack = 2
+talon_lift_CFront = 2
+talon_lift_CBack = 3
 
 # Sensor IDs
 ultrasonic_ping = 21
@@ -38,9 +38,9 @@ spd_slapper_slap = 0.5
 spd_slapper_raise1 = -0.6
 spd_slapper_raise2 = -0.5
 spd_chassis_vision_seeking = 0.3
-spd_lift_cfront = 0.72
-spd_lift_up = 0.4
-spd_lift_cback = 0.65
+spd_lift_cfront = 0.73
+spd_lift_up = 0.25
+spd_lift_cback = 0.62
 
 # PID Loop variables
 intake_p = 1.0
@@ -71,7 +71,7 @@ max_vel = 1.2168e11
 max_accel = 2500
 max_jerk = 500
 
-lift_height = 18000
+lift_height = 20000
 lift_flush = 0
 
 lift_cfront_limit_top = 5

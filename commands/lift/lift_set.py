@@ -18,6 +18,7 @@ class LiftSet(FusionCommand):
         subsystems._lift.talon_drive_CBack.setQuadraturePosition(0, 50)
         subsystems._lift.talon_drive_CFront.setQuadraturePosition(0, 50)
         subsystems._lift.setPosition(self.target_position)
+        self.logger.info("Position has been set to " + str(self.target_position))
 
     def execute(self):
         if self.target_position is Position.BOTH_UP:
@@ -60,18 +61,15 @@ class LiftSet(FusionCommand):
                 abs(subsystems._lift.talon_drive_CFront.getQuadraturePosition())
                 >= robotmap.lift_height
             ):
-                self.logger.info("Stopping front movement")
                 self.end()
         elif self.target_position is Position.BACK_UP:
             if (
                 abs(subsystems._lift.talon_drive_CBack.getQuadraturePosition())
                 >= robotmap.lift_height
             ):
-                self.logger.info("Stopping back movement")
                 self.end()
         elif self.target_position is Position.BACK_DOWN:
-            if not subsystems._lift.CBack_limit.get():
-                self.end()
+            pass
         elif self.target_position is Position.FRONT_DOWN:
             if not subsystems._lift.CBack_limit.get():
                 self.end()
@@ -93,6 +91,8 @@ class LiftSet(FusionCommand):
             or self.target_position is Position.BACK_UP
         ):
             return False
+        if self.target_position is Position.BACK_DOWN:
+            return not subsystems._lift.CBack_limit.get()
 
     def interrupted(self):
         self.end()
@@ -101,4 +101,9 @@ class LiftSet(FusionCommand):
         if self.target_position is Position.BOTH_DOWN:
             subsystems._lift.talon_drive_CBack.setQuadraturePosition(0, 50)
             subsystems._lift.talon_drive_CFront.setQuadraturePosition(0, 50)
+        if self.target_position is Position.BACK_DOWN:
+            self.logger.info(
+                "Current lift command is " + str(subsystems._lift.getCurrentCommand())
+            )
+            self.logger.info("Stopping back down")
         subsystems._lift.setPosition(Position.BOTH_HALT)
