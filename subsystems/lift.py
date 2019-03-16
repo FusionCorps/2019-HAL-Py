@@ -14,18 +14,10 @@ class Position(Enum):
     Sets position speeds based on (back, front) value
     """
 
-    # BOTH_DOWN = (robotmap.spd_lift_cback, robotmap.spd_lift_cfront)
-    # BOTH_UP = (-robotmap.spd_lift_up, -robotmap.spd_lift_up)
-    # BOTH_HALT = (0.0, 0.0)
-    # FRONT_UP = (0.0, -robotmap.spd_lift_cfront)
-    # FRONT_DOWN = (0.0, robotmap.spd_lift_cfront)
-    # BACK_UP = (-robotmap.spd_lift_cback, 0.0)
-    # BACK_DOWN = (robotmap.spd_lift_cback, 0.0)
-
-    BOTH_DOWN = (1000, 1000)
-    BOTH_UP = (-1000, -1000)
-    BACK_DOWN = (0, 21000)
-    FRONT_DOWN = (21000, 0)
+    BOTH_DOWN = (50000, 50000)
+    BOTH_UP = (0, 0)
+    BACK_DOWN = (50000, 0)
+    FRONT_DOWN = (0, 50000)
 
 
 class Lift(Subsystem):
@@ -37,6 +29,7 @@ class Lift(Subsystem):
         self.talon_drive_CBack = WPI_TalonSRX(robotmap.talon_lift_CBack)
         self.lift_talons = [self.talon_drive_CFront, self.talon_drive_CBack]
         self.talon_drive_CDRive = WPI_TalonSRX(robotmap.talon_lift_CDrive)
+
         self.talon_drive_CDRive.configSelectedFeedbackSensor(
             WPI_TalonSRX.FeedbackDevice.QuadEncoder, 0, 0
         )
@@ -47,31 +40,41 @@ class Lift(Subsystem):
             )
             talon.configSelectedFeedbackCoefficient(0.5, 0, 0)
             talon.setStatusFramePeriod(
-                WPI_TalonSRX.StatusFrame.Status_12_Feedback1, 20, 0
+                WPI_TalonSRX.StatusFrameEnhanced.Status_12_Feedback1, 20, 0
             )
             talon.setStatusFramePeriod(
-                WPI_TalonSRX.StatusFrame.Status_13_Base_PIDF0, 20, 0
+                WPI_TalonSRX.StatusFrameEnhanced.Status_13_Base_PIDF0, 20, 0
             )
             talon.setStatusFramePeriod(
-                WPI_TalonSRX.StatusFrame.Status_10_Targets, 20, 0
+                WPI_TalonSRX.StatusFrameEnhanced.Status_10_MotionMagic, 20, 0
             )
-            talon.setStatusFramePeriod(
-                WPI_TalonSRX.StatusFrame.Status_2_Feedback0, 20, 0
-            )
-            talon.configMotionAcceleration(350, 0)
-            talon.configMotionCruiseVelocity(500, 0)
+            # talon.setStatusFramePeriod(
+            #     WPI_TalonSRX.StatusFrameEnhanced.Status_10_Targets, 20, 0
+            # )
+            # talon.setStatusFramePeriod(
+            #     WPI_TalonSRX.StatusFrameEnhanced.Status_2_Feedback0, 20, 0
+            # )
+
+            talon.selectProfileSlot(0, 0)
+            talon.configMotionAcceleration(200, 0)
+            talon.configMotionCruiseVelocity(24000, 0)
             talon.configPeakOutputForward(1.0, 0)
             talon.configPeakOutputReverse(-1.0, 0)
-            talon.set(0.0)
-        self.talon_drive_CFront.config_kF(0, 0.2, 0)
-        self.talon_drive_CFront.config_kP(0, 0.2, 0)
-        self.talon_drive_CFront.config_kI(0, 0.0, 0)
-        self.talon_drive_CFront.config_kD(0, 0.2, 0)
 
-        self.talon_drive_CBack.config_kF(0, 0.2, 0)
-        self.talon_drive_CBack.config_kP(0, 0.2, 0)
-        self.talon_drive_CBack.config_kI(0, 0, 0)
-        self.talon_drive_CBack.config_kD(0, 0, 0)
+            talon.set(0.0)
+
+        self.frontFPID = [0.025, 0.8, 0.005, 0.4]
+        self.backFPID = [0.025, 0.8, 0.005, 0.4]
+
+        self.talon_drive_CFront.config_kF(0, self.frontFPID[0], 0)
+        self.talon_drive_CFront.config_kP(0, self.frontFPID[1], 0)
+        self.talon_drive_CFront.config_kI(0, self.frontFPID[2], 0)
+        self.talon_drive_CFront.config_kD(0, self.frontFPID[3], 0)
+
+        self.talon_drive_CBack.config_kF(0, self.backFPID[0], 0)
+        self.talon_drive_CBack.config_kP(0, self.backFPID[1], 0)
+        self.talon_drive_CBack.config_kI(0, self.backFPID[2], 0)
+        self.talon_drive_CBack.config_kD(0, self.backFPID[3], 0)
 
         self.resetEncoders()
 
@@ -79,21 +82,44 @@ class Lift(Subsystem):
         self.CBack_limit = DigitalInput(robotmap.lift_cback_limit_top)
 
         self.position_current = Position.BOTH_UP
-        # self.setPosition(Position.BOTH_UP)
 
-    def setBack(self, spd_new):
-        self.talon_drive_CBack.set(ControlMode.MotionMagic, spd_new)
+    def setBack(self, pos_new):
+        """
+        Sets Back Lift Talon to new position specified in `pos_new`
+        Parameters
+        ---
+        `pos_new` (int) The new position to be set
+        """
+        self.talon_drive_CBack.set(ControlMode.MotionMagic, pos_new)
 
-    def setFront(self, spd_new):
-        self.talon_drive_CFront.set(ControlMode.MotionMagic, spd_new)
+    def setFront(self, pos_new):
+        """
+        Sets Front Lift Talon to new position specified in `pos_new`
+        Parameters
+        ---
+        `pos_new` (int) The new position to be set
+        """
+        self.talon_drive_CFront.set(ControlMode.MotionMagic, pos_new)
 
     def stopBack(self):
+        """
+        Stops Back Lift Talon
+        """
         self.talon_drive_CBack.set(ControlMode.PercentOutput, 0.0)
 
     def stopFront(self):
+        """
+        Stops Front Lift Talon
+        """
         self.talon_drive_CFront.set(ControlMode.PercentOutput, 0.0)
 
     def setDrive(self, spd):
+        """
+        Sets Lift Drive Talon to new speed
+        Parameters
+        ---
+        `spd` (int) The new speed to be set
+        """
         self.talon_drive_CDRive.set(spd)
 
     def setPosition(self, position_target):
@@ -102,9 +128,11 @@ class Lift(Subsystem):
                 self.logger.warning(
                     "(Position) "
                     + self.position_current.name
-                    + " >> "
+                    + " -> "
                     + position_target.name
                 )
+                for talon in self.lift_talons:
+                    talon.setIntegralAccumulator(0, 0, 0)
 
             self.setBack(position_target.value[0])
             self.setFront(position_target.value[1])
@@ -144,9 +172,11 @@ class Lift(Subsystem):
             pass
 
     def resetFrontEncoder(self):
+        self.logger.info("Zeroing front encoder")
         self.talon_drive_CFront.setQuadraturePosition(0, 0)
 
     def resetBackEncoder(self):
+        self.logger.info("Zeroing back encoder")
         self.talon_drive_CBack.setQuadraturePosition(0, 0)
 
     def resetEncoders(self):

@@ -1,3 +1,5 @@
+import logging
+
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
 from wpilib.command import Command
@@ -12,24 +14,27 @@ class AutoProfile(Command):
         self.requires(subsystems._chassis)
         self.starting_loc = starting_loc
         self.target_loc = target_loc
+        self.logger = logging.getLogger("AutoProfile")
 
     def initialize(self):
+        self.logger.info("Target location is " + str(self.target_loc[0]))
+
         points = [
-            pf.Waypoint(-self.target_loc[0], -self.target_loc[1], self.target_loc[2]),
-            pf.Waypoint(0, 0, 0),
+            pf.Waypoint(-(self.target_loc[0]), -(self.target_loc[1]), 0),
+            pf.Waypoint(0, 0, self.target_loc[2]),
         ]
 
-        self.info, self.trajectory = pf.generate(
+        info, trajectory = pf.generate(
             points,
             pf.FIT_HERMITE_CUBIC,
             pf.SAMPLES_HIGH,
-            dt=0.05,
-            max_velocity=robotmap.max_vel,
-            max_acceleration=robotmap.max_accel,
-            max_jerk=robotmap.max_jerk,
+            0.05,
+            robotmap.max_vel,
+            robotmap.max_accel,
+            robotmap.max_jerk,
         )
 
-        self.modifier = pf.modifiers.TankModifier(self.trajectory).modify(0.5)
+        self.modifier = pf.modifiers.TankModifier(trajectory).modify(0.5)
 
         self.left = EncoderFollower(self.modifier.getLeftTrajectory())
         self.right = EncoderFollower(self.modifier.getRightTrajectory())
@@ -47,16 +52,18 @@ class AutoProfile(Command):
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(1.0, 0.0, 0.0, (1 / robotmap.max_vel), 0)
+            follower.configurePIDVA(0.8, 0.2, 0.0, (1 / robotmap.max_vel), 0)
 
     def execute(self):
         heading = subsystems._chassis.gyro.getAngle()
+
         output_L = self.left.calculate(
             subsystems._chassis._talon_FL.getQuadraturePosition()
         )
         output_R = self.right.calculate(
             subsystems._chassis._talon_FR.getQuadraturePosition()
         )
+
         heading_target = pf.r2d(self.left.getHeading())
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
@@ -71,5 +78,8 @@ class AutoProfile(Command):
         self.end()
 
     def end(self):
+        self.logger.info("Ending")
         self.left.reset()
         self.right.reset()
+        subsystems._chassis._group_L.set(0.0)
+        subsystems._chassis._group_R.set(0.0)

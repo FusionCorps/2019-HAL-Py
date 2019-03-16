@@ -48,6 +48,17 @@ class PhysicsEngine(object):
         l_motor = hal_data["CAN"][21]["value"]
         r_motor = hal_data["CAN"][11]["value"]
 
+        f_lift = hal_data["CAN"][2]
+        b_lift = hal_data["CAN"][2]
+
+        spd_f = int(4096 * 4 * f_lift["value"] * tm_diff)
+        spd_b = int(4096 * 4 * b_lift["value"] * tm_diff)
+
+        f_lift["quad_position"] += spd_f
+        f_lift["quad_velocity"] = spd_f
+        b_lift["quad_position"] += spd_b
+        b_lift["quad_velocity"] = spd_f
+
         x, y, angle = self.drivetrain.get_distance(l_motor, r_motor, tm_diff)
         self.physics_controller.distance_drive(x, y, angle)
 

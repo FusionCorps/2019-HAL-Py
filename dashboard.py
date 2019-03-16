@@ -1,4 +1,4 @@
-from wpilib import SmartDashboard
+from wpilib import SendableChooser, SmartDashboard
 from wpilib.shuffleboard import BuiltInWidgets, Shuffleboard
 
 import robotmap
@@ -9,24 +9,16 @@ def init():
     """
     Creates SD objects once at robot start
     """
-    SmartDashboard().putNumber("CFront", robotmap.spd_lift_cfront)
-    SmartDashboard().putNumber("CBack", robotmap.spd_lift_cback)
+    SmartDashboard().putNumberArray("Front FPID", subsystems._lift.frontFPID)
+    SmartDashboard().putNumberArray("Back FPID", subsystems._lift.backFPID)
 
 
 def update():
     """Updates SmartDashboard"""
-    SmartDashboard().putData("Chassis", subsystems._chassis)
-    SmartDashboard().putData("Intake", subsystems._intake)
-    SmartDashboard().putNumber("Control Mode", robotmap.control_mode)
-    SmartDashboard().putNumber("Slap", robotmap.spd_slapper_slap)
-    SmartDashboard().putNumber("Hold", robotmap.spd_slapper_hold)
-    SmartDashboard().putNumber(
-        "FEncoder", subsystems._lift.talon_drive_CFront.getQuadraturePosition()
+    subsystems._lift.frontFPID = SmartDashboard().getNumberArray(
+        "Front FPID", [0, 0, 0, 0]
     )
-    SmartDashboard().putNumber(
-        "BEncoder", subsystems._lift.talon_drive_CBack.getQuadraturePosition()
+    subsystems._lift.backFPID = SmartDashboard().getNumberArray(
+        "Back FPID", [0, 0, 0, 0]
     )
-    SmartDashboard().putData("Drive", subsystems._chassis._drive)
-
-    # robotmap.spd_lift_cfront = SmartDashboard().getNumber("CFront", 0)
-    # robotmap.spd_lift_cback = SmartDashboard().getNumber("CBack", 0)
+    # pass
