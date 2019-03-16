@@ -67,14 +67,13 @@ limelight_x_fov = 54
 limelight_y_fov = 41
 
 # Chassis Constants
-whl_diameter = 196.85
+whl_diameter = 0.0254
 encoder_counts_per_rev = 4096
-max_vel = 1.2168e11
-max_accel = 2500
-max_jerk = 500
+max_vel = 200
+max_accel = 50
+max_jerk = 25
 
 lift_height = 50000
-lift_flush = 0
 
 lift_cfront_limit_top = 5
 lift_cback_limit_top = 6

@@ -14,10 +14,10 @@ class Position(Enum):
     Sets position speeds based on (back, front) value
     """
 
-    BOTH_DOWN = (50000, 50000)
+    BOTH_DOWN = (robotmap.lift_height, robotmap.lift_height)
     BOTH_UP = (0, 0)
-    BACK_DOWN = (50000, 0)
-    FRONT_DOWN = (0, 50000)
+    BACK_DOWN = (robotmap.lift_height, 0)
+    FRONT_DOWN = (0, robotmap.lift_height)
 
 
 class Lift(Subsystem):
@@ -58,8 +58,8 @@ class Lift(Subsystem):
             talon.selectProfileSlot(0, 0)
             talon.configMotionAcceleration(200, 0)
             talon.configMotionCruiseVelocity(24000, 0)
-            talon.configPeakOutputForward(1.0, 0)
-            talon.configPeakOutputReverse(-1.0, 0)
+            talon.configPeakOutputForward(0.8, 0)
+            talon.configPeakOutputReverse(-0.8, 0)
 
             talon.set(0.0)
 

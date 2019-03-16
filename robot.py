@@ -16,7 +16,7 @@ class Hal(CommandBasedRobot):
         import commands
         import dashboard
 
-        # import common.cameras
+        import common.cameras
 
         self.timer = Timer()
         self.logger = logging.getLogger("Core")
@@ -25,10 +25,12 @@ class Hal(CommandBasedRobot):
         subsystems.init()
         commands.init()
         dashboard.update()
-        # common.cameras.init()
+        common.cameras.init()
 
         self.logger.info("Robot initialized")
         self.watchdog.setTimeout(2)
+
+        subsystems._chassis.resetEncoders()
 
     def robotPeriodic(self):
         pass
@@ -45,16 +47,13 @@ class Hal(CommandBasedRobot):
 
         self.update_smartdashboard = UpdateSD()
         self.update_smartdashboard.start()
+        subsystems._chassis.resetEncoders()
 
     def teleopPeriodic(self):
         import oi
 
         super().teleopPeriodic()
         subsystems._chassis._drive.feedWatchdog()
-        if oi.joystick.getRawButton(7):
-            subsystems._lift.setBackPosition(21000)
-        if oi.joystick.getRawButton(8):
-            subsystems._lift.setBackPosition(21000)
 
     def disabledInit(self):
         pass

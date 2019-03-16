@@ -19,10 +19,7 @@ class LiftSet(Command):
 
     def execute(self):
         if self.target_position is Position.BOTH_UP:
-            if abs(subsystems._lift.getBackPosition()) >= robotmap.lift_height:
-                subsystems._lift.setBack(0.0)
-            if abs(subsystems._lift.getFrontPosition()) >= robotmap.lift_height:
-                subsystems._lift.setFront(0.0)
+            pass
         elif self.target_position is Position.BOTH_DOWN:
             if not subsystems._lift.getFrontLimit():
                 subsystems._lift.stopFront()
@@ -31,10 +28,7 @@ class LiftSet(Command):
 
     def isFinished(self):
         if self.target_position is Position.BOTH_UP:
-            return (
-                abs(subsystems._lift.getBackPosition()) >= robotmap.lift_height
-                and abs(subsystems._lift.getFrontPosition()) >= robotmap.lift_height
-            )
+            return False
         elif self.target_position is Position.BOTH_DOWN:
             return (
                 not subsystems._lift.getFrontLimit()

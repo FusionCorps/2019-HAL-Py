@@ -1,4 +1,5 @@
 import logging
+from math import radians
 
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
@@ -9,23 +10,32 @@ import subsystems
 
 
 class AutoProfile(Command):
-    def __init__(self, starting_loc, target_loc=(0, 0, 0)):
-        super().__init__("AutoProfile" + str(starting_loc) + " " + str(target_loc))
+    def __init__(self, *args, **kwargs):
+        super().__init__("AutoProfile")
         self.requires(subsystems._chassis)
-        self.starting_loc = starting_loc
-        self.target_loc = target_loc
+        self.points = []
         self.logger = logging.getLogger("AutoProfile")
 
+        for loc in args:
+            if loc[2] is 0:
+                a = loc[2]
+            else:
+                a = radians(loc[2])
+            if len(self.points) == 0:
+                self.points.append(pf.Waypoint(loc[0], loc[1], a))
+                continue
+            if len(self.points) > 0:
+                if loc == self.points[len(self.points) - 1]:
+                    continue
+                else:
+                    self.points.append(pf.Waypoint(loc[0], loc[1], a))
+
+    # 8 inch to meter 0.0254
     def initialize(self):
-        self.logger.info("Target location is " + str(self.target_loc[0]))
+        self.logger.info(str(self.points))
 
-        points = [
-            pf.Waypoint(-(self.target_loc[0]), -(self.target_loc[1]), 0),
-            pf.Waypoint(0, 0, self.target_loc[2]),
-        ]
-
-        info, trajectory = pf.generate(
-            points,
+        info, self.trajectory = pf.generate(
+            self.points,
             pf.FIT_HERMITE_CUBIC,
             pf.SAMPLES_HIGH,
             0.05,
@@ -34,7 +44,9 @@ class AutoProfile(Command):
             robotmap.max_jerk,
         )
 
-        self.modifier = pf.modifiers.TankModifier(trajectory).modify(0.5)
+        self.logger.info("Trajectory generated")
+
+        self.modifier = pf.modifiers.TankModifier(self.trajectory).modify(0.0254)
 
         self.left = EncoderFollower(self.modifier.getLeftTrajectory())
         self.right = EncoderFollower(self.modifier.getRightTrajectory())
@@ -52,7 +64,7 @@ class AutoProfile(Command):
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(0.8, 0.2, 0.0, (1 / robotmap.max_vel), 0)
+            follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.max_vel), 0)
 
     def execute(self):
         heading = subsystems._chassis.gyro.getAngle()
@@ -68,7 +80,7 @@ class AutoProfile(Command):
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-        subsystems._chassis._group_L.set(output_L + turn_output)
+        subsystems._chassis._group_L.set(-output_L + turn_output)
         subsystems._chassis._group_R.set(output_R - turn_output)
 
     def isFinished(self):
@@ -81,5 +93,3 @@ class AutoProfile(Command):
         self.logger.info("Ending")
         self.left.reset()
         self.right.reset()
-        subsystems._chassis._group_L.set(0.0)
-        subsystems._chassis._group_R.set(0.0)

@@ -27,10 +27,10 @@ class PhysicsEngine(object):
             110 * units.lbs,                    # robot mass
             10.71,                              # drivetrain gear ratio
             2,                                  # motors per side
-            22 * units.inch,                    # robot wheelbase
+            26 * units.inch,                    # robot wheelbase
             23 * units.inch + bumper_width * 2, # robot width
             32 * units.inch + bumper_width * 2, # robot length
-            6 * units.inch,                     # wheel diameter
+            8 * units.inch,                     # wheel diameter
         )
         # fmt: on
 
@@ -45,8 +45,24 @@ class PhysicsEngine(object):
         """
 
         # Simulate the drivetrain
-        l_motor = hal_data["CAN"][21]["value"]
-        r_motor = hal_data["CAN"][11]["value"]
+        l_motor = hal_data["CAN"][21]
+        r_motor = hal_data["CAN"][11]
+        l_motor2 = hal_data["CAN"][20]
+        r_motor2 = hal_data["CAN"][10]
+
+        spd_l_motor = int(4096 * l_motor["value"] * tm_diff)
+        spd_r_motor = int(4096 * r_motor["value"] * tm_diff)
+        spd_l_motor2 = int(4096 * l_motor2["value"] * tm_diff)
+        spd_r_motor2 = int(4096 * r_motor2["value"] * tm_diff)
+
+        l_motor["quad_position"] += spd_l_motor
+        l_motor["quad velocity"] = spd_l_motor
+        r_motor["quad_position"] += spd_r_motor
+        r_motor["quad_velocity"] = spd_r_motor
+        l_motor2["quad_position"] += spd_l_motor2
+        l_motor2["quad velocity"] = spd_l_motor2
+        r_motor2["quad_velocity"] = spd_r_motor2
+        r_motor2["quad_position"] += spd_r_motor2
 
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][2]
@@ -59,7 +75,9 @@ class PhysicsEngine(object):
         b_lift["quad_position"] += spd_b
         b_lift["quad_velocity"] = spd_f
 
-        x, y, angle = self.drivetrain.get_distance(l_motor, r_motor, tm_diff)
+        x, y, angle = self.drivetrain.get_distance(
+            l_motor["value"], r_motor["value"], tm_diff
+        )
         self.physics_controller.distance_drive(x, y, angle)
 
         # update position (use tm_diff so the rate is constant)
