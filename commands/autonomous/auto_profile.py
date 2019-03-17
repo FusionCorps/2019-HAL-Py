@@ -3,6 +3,7 @@ from math import radians
 
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
+from wpilib import Timer
 from wpilib.command import Command
 
 import robotmap
@@ -30,9 +31,13 @@ class AutoProfile(Command):
                 else:
                     self.points.append(pf.Waypoint(loc[0], loc[1], a))
 
+        self.timer = Timer()
+
     # 8 inch to meter 0.0254
     def initialize(self):
         self.logger.info(str(self.points))
+        self.timer.reset()
+        self.timer.start()
 
         info, self.trajectory = pf.generate(
             self.points,
@@ -82,6 +87,9 @@ class AutoProfile(Command):
 
         subsystems._chassis._group_L.set(-output_L + turn_output)
         subsystems._chassis._group_R.set(output_R - turn_output)
+
+        if self.timer.hasPeriodPassed(0.2):
+            self.logger.info(str(turn_output))
 
     def isFinished(self):
         return self.left.isFinished() and self.right.isFinished()

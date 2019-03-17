@@ -24,17 +24,14 @@ class Intake(Subsystem):
         self.setState(StateIntake.HALT)
 
     def setVictor(self, spd_target, mode=ControlMode.PercentOutput):
-        """
-        Sets Intake Victor speed controller speed (uses PercentOutput as default)
-        """
-        self._victor.set(mode, -spd_target * 0.7)
+        """Sets Intake Victor speed (uses PercentOutput as default mode)"""
+        self._victor.set(mode, -spd_target)
 
     def setState(self, state_target):
-        """
-        Sets the state of the Intake subsystem using the IntakeState Enum.
-
-        `state_target` is the IntakeState Enum value to set (e.g. `INTAKING`)
-        """
+        """Sets the state of the Intake subsystem using the IntakeState Enum.
+        Parameters
+        ---
+        `state_target`: (IntakeState) Value to set (e.g. `INTAKING`)"""
         if (
             state_target is not None
             and self._victor.getMotorOutputPercent() is not state_target.value
@@ -46,6 +43,7 @@ class Intake(Subsystem):
         self.state = state_target
 
     def getState(self):
+        """Returns current IntakeState"""
         return self.state
 
     def initDefaultCommand(self):

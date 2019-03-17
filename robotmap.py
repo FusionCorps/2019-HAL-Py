@@ -13,7 +13,7 @@ talon_lift_CDrive = 30
 talon_lift_CFront = 2
 talon_lift_CBack = 3
 
-chassis_zero_accel_on_start = True
+chassis_zero_accel_on_start = False
 
 # Sensor IDs
 ultrasonic_ping = 21

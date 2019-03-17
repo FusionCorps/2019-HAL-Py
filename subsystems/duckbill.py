@@ -25,19 +25,19 @@ class Duckbill(Subsystem):
         self.setState(StateDuckbill.UP)
 
     def setState(self, state_target):
-        """
-        Sets the state of the Duckbill subsystem using the StateDuckBill Enum.
-
-        `state_target` is the StateDuckbill Enum value to set (e.g. `DOWN`)
-        """
+        """Sets the state of the Duckbill subsystem using the StateDuckBill Enum.
+        Parameters
+        ---
+        `state_target`: (StateDuckbill) Value to set (e.g. `DOWN`)"""
         if self.solenoid_duckbill_B.get() is not state_target.value[0]:
             self.solenoid_duckbill_B.set(state_target.value[0])
         if self.solenoid_duckbill_T.get() is not state_target.value[1]:
             self.solenoid_duckbill_T.set(state_target.value[1])
-            
+
         self.state = state_target
 
     def getState(self):
+        """Returns current StateDuckbill"""
         return self.state
 
     def initDefaultCommand(self):

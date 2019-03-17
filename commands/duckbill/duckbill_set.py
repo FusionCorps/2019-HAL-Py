@@ -1,10 +1,12 @@
+from wpilib.command import Command
+
 import subsystems
-from common.fusion_command import FusionCommand
 
 
-class DuckbillSet(FusionCommand):
+class DuckbillSet(Command):
     def __init__(self, state_target):
-        super().__init__(self.__class__.__name__, 1, sub=subsystems._duckbill)
+        super().__init__(self.__class__.__name__)
+        self.requires(subsystems._duckbill)
         self.state_target = state_target
 
     def initialize(self):
@@ -15,6 +17,9 @@ class DuckbillSet(FusionCommand):
 
     def execute(self):
         pass
+
+    def interrupted(self):
+        self.end()
 
     def end(self):
         pass

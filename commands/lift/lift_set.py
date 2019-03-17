@@ -54,8 +54,9 @@ class LiftSet(Command):
         if self.target_position is Position.BOTH_UP:
             pass
         elif self.target_position is Position.BOTH_DOWN:
-            subsystems._lift.setFrontPosition(robotmap.lift_height)
-            subsystems._lift.setBackPosition(robotmap.lift_height)
+            # subsystems._lift.setFrontPosition(robotmap.lift_height)
+            # subsystems._lift.setBackPosition(robotmap.lift_height)
+            pass
         elif self.target_position is Position.BACK_DOWN:
             pass
         elif self.target_position is Position.FRONT_DOWN:

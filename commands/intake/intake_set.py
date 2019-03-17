@@ -1,19 +1,20 @@
 from ctre import ControlMode
+from wpilib.command import Command
 
 import robotmap
 import subsystems
-from common.fusion_command import FusionCommand
 from subsystems.intake import StateIntake
 
 
-class IntakeSet(FusionCommand):
+class IntakeSet(Command):
     """
     Sets Intake State
     """
 
     def __init__(self, state_target):
-        super().__init__(self.__class__.__name__, 1, sub=subsystems._intake)
+        super().__init__(self.__class__.__name__)
         self.state_target = state_target
+        self.requires(subsystems._intake)
 
     def initialize(self):
         subsystems._intake.setVictor(self.state_target.value)

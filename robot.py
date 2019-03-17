@@ -16,16 +16,15 @@ class Hal(CommandBasedRobot):
         import commands
         import dashboard
 
-        import common.cameras
+        # import common.cameras
 
-        self.timer = Timer()
         self.logger = logging.getLogger("Core")
 
         oi.init()
         subsystems.init()
         commands.init()
         dashboard.update()
-        common.cameras.init()
+        # common.cameras.init()
 
         self.logger.info("Robot initialized")
         self.watchdog.setTimeout(2)

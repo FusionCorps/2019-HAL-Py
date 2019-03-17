@@ -14,7 +14,6 @@ class Chassis(Subsystem):
         super().__init__("Chassis")
         self.logger = logging.getLogger("Chassis")
 
-        # Motor objects
         self._talon_FL = WPI_TalonSRX(robotmap.talon_front_left)
         self._talon_FR = WPI_TalonSRX(robotmap.talon_front_right)
         self._talon_BL = WPI_TalonSRX(robotmap.talon_back_left)
@@ -64,48 +63,50 @@ class Chassis(Subsystem):
             self.gyro.calibrate()
 
     def getX(self):
-        return self.accel_x
+        """Returns relative x position"""
+        return self.accel_x - self._getX()
 
     def getY(self):
-        return self.accel_y
+        """Returns relative y position"""
+        return self.accel_y - self._getY()
 
     def getZ(self):
-        return self.accel_z
+        """Returns relative z position"""
+        return self.accel_z - self._getZ()
 
     def _getX(self):
+        """Internal method that returns the accelerometer x position"""
         return self.accelerometer_internal.getX()
 
     def _getY(self):
+        """Internal method that returns the accelerometer y position"""
         return self.accelerometer_internal.getY()
 
     def _getZ(self):
+        """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
     def resetEncoders(self):
-        """
-        Sets quadrature position to 0
-        """
+        """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
             talon.setQuadraturePosition(0, 50)
 
     def resetGyro(self):
+        """Zeroes the gyro"""
         self.gyro.reset()
 
     def resetAccelerometer(self):
+        """Zeroes all accelerometer values"""
         self.accel_x = self._getX()
         self.accel_y = self._getY()
         self.accel_z = self._getZ()
 
     def setUltrasonic(self, state):
-        """
-        Sets Ultrasonic state
-        """
-        self.sonar.setEnabled(True)
+        """Sets Ultrasonic state"""
+        self.sonar.setEnabled(state)
 
     def getDistance(self):
-        """
-        Gets Ultrasonic distance in MM
-        """
+        """Gets Ultrasonic distance in MM"""
         return self.sonar.getRangeMM()
 
     def joystickDrive(self):
