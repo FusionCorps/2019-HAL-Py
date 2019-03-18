@@ -4,6 +4,7 @@ import oi
 import subsystems
 import robotmap
 
+
 class IntakeJoystick(Command):
     def __init__(self):
         super().__init__(self.__class__.__name__)

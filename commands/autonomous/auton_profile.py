@@ -50,14 +50,14 @@ class Auton_Profile(Command):
         self.k_num_loops_timeout = 10
 
         self.trajectory_L_name = (
-            "/home/lvuser/py/commands/autonomous/"
-            + trajectory_name_prefix
-            + "_left.csv"
+                "/home/lvuser/py/commands/autonomous/"
+                + trajectory_name_prefix
+                + "_left.csv"
         )
         self.trajectory_R_name = (
-            "/home/lvuser/py/commands/autonomous/"
-            + trajectory_name_prefix
-            + "_right.csv"
+                "/home/lvuser/py/commands/autonomous/"
+                + trajectory_name_prefix
+                + "_right.csv"
         )
 
         self.csv_points1 = []
@@ -155,7 +155,7 @@ class Auton_Profile(Command):
             self._talon_BL.follow(self._talon_FL)
 
         with open(self.trajectory_R_name, newline="") as file_1, open(
-            self.trajectory_L_name, newline=""
+                self.trajectory_L_name, newline=""
         ) as file_2:
             csv_file1 = csv.reader(file_1, delimiter=",", quotechar="|")
             csv_file2 = csv.reader(file_2, delimiter=",", quotechar="|")
@@ -183,7 +183,7 @@ class Auton_Profile(Command):
                 point_R = point_R._replace(isLastPoint=False)
                 if values == self.csv_points1[-1]:
                     point_R = point_R._replace(isLastPoint=True)
- 
+
                 # Pushes points to MPB on Talon
                 self._talon_FR.pushMotionProfileTrajectory(point_R)
 

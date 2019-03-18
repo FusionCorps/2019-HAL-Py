@@ -55,11 +55,11 @@ class Chassis(Subsystem):
             BuiltInAccelerometer.Range.k4G
         )
         self.accel_x, self.accel_y, self.accel_z = None, None, None
-        self.resetAccelerometer()
+        self.reset_accelerometer()
 
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
 
-        if robotmap.chassis_zero_accel_on_start:
+        if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
 
     def getX(self):
@@ -86,7 +86,7 @@ class Chassis(Subsystem):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
-    def resetEncoders(self):
+    def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
             talon.setQuadraturePosition(0, 50)
@@ -95,7 +95,7 @@ class Chassis(Subsystem):
         """Zeroes the gyro"""
         self.gyro.reset()
 
-    def resetAccelerometer(self):
+    def reset_accelerometer(self):
         """Zeroes all accelerometer values"""
         self.accel_x = self._getX()
         self.accel_y = self._getY()
@@ -109,7 +109,7 @@ class Chassis(Subsystem):
         """Gets Ultrasonic distance in MM"""
         return self.sonar.getRangeMM()
 
-    def joystickDrive(self):
+    def joystick_drive(self):
         self._drive.curvatureDrive(
             -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
             oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
@@ -120,16 +120,16 @@ class Chassis(Subsystem):
     def PIDDrive(self):
         self._talon_FL.set(
             ControlMode.MotionMagic,
-            (self.getZOutput(0.8) + self.getXOutput(0.8)) * 30000,
+            (self.getZOutput(0.8) + self.get_x_output(0.8)) * 30000,
         )
         self._talon_FR.set(
             ControlMode.MotionMagic,
-            (self.getZOutput(0.8) - self.getXOutput(0.8)) * 30000,
+            (self.getZOutput(0.8) - self.get_x_output(0.8)) * 30000,
         )
         self._talon_BL.follow(self._talon_FL)
         self._talon_BR.follow(self._talon_FR)
 
-    def getXOutput(self, spd_limit, deadband=0.2):
+    def get_x_output(self, spd_limit, deadband=0.2):
         if -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive < deadband:
             return 0.0
         else:

@@ -10,4 +10,4 @@ class DriveChassis(Command):
         self.target_distance = target_distance
 
     def initialize(self):
-        subsystems._chassis.resetEncoders()
+        subsystems._chassis.reset_encoders()

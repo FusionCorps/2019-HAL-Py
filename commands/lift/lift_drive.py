@@ -16,8 +16,8 @@ class LiftDrive(Command):
         self.lift_down = LiftSet(Position.BACK_DOWN)
 
     def initialize(self):
-        subsystems._lift.resetEncoders()
-        subsystems._lift.setDrive(self.spd_new)
+        subsystems._lift.reset_encoders()
+        subsystems._lift.set_drive(self.spd_new)
 
     def execute(self):
         # if (
@@ -38,4 +38,4 @@ class LiftDrive(Command):
 
     def end(self):
         self.logger.info("Ending")
-        subsystems._lift.setDrive(0.0)
+        subsystems._lift.set_drive(0.0)

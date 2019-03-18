@@ -13,21 +13,21 @@ import subsystems
 
 
 class AutoAlign(Command):
+    """Autonomous alignment of the robot with 'eyebrow' tape markings"""
     def __init__(self, target):
         super().__init__("AutoAlign")
         self.requires(subsystems._chassis)
+
         self.target = target
-
         self.nt = NetworkTables.getTable("limelight")
-
         self.k_aim = robotmap.k_aim
         self.k_distance = robotmap.k_distance
         self.min_aim_command = robotmap.min_aim_command
-
         self.logger = logging.getLogger("Automatic Alignment")
 
     def initialize(self):
         subsystems._chassis.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
+
         tv = self.nt.getNumber("tv", 0)
 
         if tv is 0.0:
@@ -35,16 +35,16 @@ class AutoAlign(Command):
         else:
             pass
 
-        camtran = self.nt.getNumberArray("camtran", 0)
+        camera_transform = self.nt.getNumberArray("camtran", 0)
 
-        x = camtran[0]
-        y = camtran[1]
-        y2 = camtran[2]
-        pitch = camtran[3]
-        yaw = camtran[4]
-        roll = camtran[5]
+        x = camera_transform[0]
+        y = camera_transform[1]
+        y2 = camera_transform[2]
 
-        # self.logger.info("Angle to target in radians is " + str(tx))
+        pitch = camera_transform[3]
+        yaw = camera_transform[4]
+        roll = camera_transform[5]
+
         # points = [pf.Waypoint(0, -drive_x, -tx), pf.Waypoint(0, 0, 0)]
 
         # info, trajectory = pf.generate(

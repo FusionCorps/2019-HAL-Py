@@ -23,14 +23,14 @@ class PhysicsEngine(object):
 
         # fmt: off
         self.drivetrain = tankmodel.TankModel.theory(
-            motor_cfgs.MOTOR_CFG_CIM,           # motor configuration
-            110 * units.lbs,                    # robot mass
-            10.71,                              # drivetrain gear ratio
-            2,                                  # motors per side
-            26 * units.inch,                    # robot wheelbase
-            23 * units.inch + bumper_width * 2, # robot width
-            32 * units.inch + bumper_width * 2, # robot length
-            8 * units.inch,                     # wheel diameter
+            motor_cfgs.MOTOR_CFG_CIM,  # motor configuration
+            110 * units.lbs,  # robot mass
+            10.71,  # drivetrain gear ratio
+            2,  # motors per side
+            26 * units.inch,  # robot wheelbase
+            23 * units.inch + bumper_width * 2,  # robot width
+            32 * units.inch + bumper_width * 2,  # robot length
+            8 * units.inch,  # wheel diameter
         )
         # fmt: on
 

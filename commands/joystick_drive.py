@@ -12,7 +12,7 @@ class JoystickDrive(InstantCommand):
         self.requires(subsystems._chassis)
 
     def execute(self):
-        subsystems._chassis.joystickDrive()
+        subsystems._chassis.joystick_drive()
 
     def interrupted(self):
         self.end()

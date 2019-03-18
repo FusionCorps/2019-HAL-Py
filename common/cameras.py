@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
 
 

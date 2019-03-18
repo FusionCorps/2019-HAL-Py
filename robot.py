@@ -29,7 +29,12 @@ class Hal(CommandBasedRobot):
         self.logger.info("Robot initialized")
         self.watchdog.setTimeout(2)
 
-        subsystems._chassis.resetEncoders()
+        subsystems._chassis.reset_encoders()
+
+        from commands.update_sd import UpdateSD
+
+        self.update_smartdashboard = UpdateSD()
+        self.update_smartdashboard.start()
 
     def robotPeriodic(self):
         pass
@@ -42,20 +47,16 @@ class Hal(CommandBasedRobot):
         subsystems._chassis._drive.feedWatchdog()
 
     def teleopInit(self):
-        from commands.update_sd import UpdateSD
 
-        self.update_smartdashboard = UpdateSD()
-        self.update_smartdashboard.start()
-        subsystems._chassis.resetEncoders()
+        subsystems._chassis.reset_encoders()
 
     def teleopPeriodic(self):
         import oi
 
         super().teleopPeriodic()
         subsystems._chassis._drive.feedWatchdog()
-
-    def disabledInit(self):
-        pass
+        if oi.joystick.getRawButton(7):
+            subsystems._lift.set_front_position(45000)
 
 
 if __name__ == "__main__":

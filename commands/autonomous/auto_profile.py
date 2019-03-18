@@ -44,9 +44,9 @@ class AutoProfile(Command):
             pf.FIT_HERMITE_CUBIC,
             pf.SAMPLES_HIGH,
             0.05,
-            robotmap.max_vel,
-            robotmap.max_accel,
-            robotmap.max_jerk,
+            robotmap.chassis_max_vel,
+            robotmap.chassis_max_acceleration,
+            robotmap.chassis_max_jerk,
         )
 
         self.logger.info("Trajectory generated")
@@ -59,17 +59,17 @@ class AutoProfile(Command):
 
         self.left.configureEncoder(
             subsystems._chassis._talon_FL.getQuadraturePosition(),
-            robotmap.encoder_counts_per_rev,
-            robotmap.whl_diameter,
+            robotmap.chassis_encoder_counts_per_rev,
+            robotmap.chassis_whl_diameter,
         )
         self.right.configureEncoder(
             subsystems._chassis._talon_FR.getQuadraturePosition(),
-            robotmap.encoder_counts_per_rev,
-            robotmap.whl_diameter,
+            robotmap.chassis_encoder_counts_per_rev,
+            robotmap.chassis_whl_diameter,
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.max_vel), 0)
+            follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
     def execute(self):
         heading = subsystems._chassis.gyro.getAngle()
