@@ -51,12 +51,8 @@ class Hal(CommandBasedRobot):
         subsystems._chassis.reset_encoders()
 
     def teleopPeriodic(self):
-        import oi
-
         super().teleopPeriodic()
         subsystems._chassis._drive.feedWatchdog()
-        if oi.joystick.getRawButton(7):
-            subsystems._lift.set_front_position(45000)
 
 
 if __name__ == "__main__":

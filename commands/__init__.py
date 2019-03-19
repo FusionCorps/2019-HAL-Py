@@ -26,10 +26,10 @@ def init():
     oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
 
     # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
-    # oi.Y.whenPressed(AutoProfile((1, 0, 0), (2, 0, 0), (3, 0, 0)))
+    oi.Y.whenPressed(AutoProfile((1, 0, 0), (3, 0, 90)))
     oi.A.whenPressed(LiftSet(Position.BOTH_UP))
     oi.B.whenPressed(LiftSet(Position.BOTH_DOWN))
     oi.X.whenPressed(LiftSet(Position.FRONT_DOWN))
-    oi.Y.whenPressed(LiftSet(Position.BACK_DOWN))
+    # oi.Y.whenPressed(LiftSet(Position.BACK_DOWN))
 
     logger.info("Commands initialized")

@@ -18,26 +18,26 @@ class AutoProfile(Command):
         self.logger = logging.getLogger("AutoProfile")
 
         for loc in args:
+            # Check to make sure angle is not -0
             if loc[2] is 0:
                 a = loc[2]
             else:
                 a = radians(loc[2])
+
+            # Check whether list has a first element
             if len(self.points) == 0:
                 self.points.append(pf.Waypoint(loc[0], loc[1], a))
                 continue
+
+            # Append new points that are not the last point
             if len(self.points) > 0:
                 if loc == self.points[len(self.points) - 1]:
                     continue
                 else:
                     self.points.append(pf.Waypoint(loc[0], loc[1], a))
 
-        self.timer = Timer()
-
-    # 8 inch to meter 0.0254
     def initialize(self):
         self.logger.info(str(self.points))
-        self.timer.reset()
-        self.timer.start()
 
         info, self.trajectory = pf.generate(
             self.points,
@@ -87,9 +87,6 @@ class AutoProfile(Command):
 
         subsystems._chassis._group_L.set(-output_L + turn_output)
         subsystems._chassis._group_R.set(output_R - turn_output)
-
-        if self.timer.hasPeriodPassed(0.2):
-            self.logger.info(str(turn_output))
 
     def isFinished(self):
         return self.left.isFinished() and self.right.isFinished()

@@ -60,3 +60,5 @@ chassis_zero_acceleration_on_start = False
 lift_height = 50000
 lift_front_limit = 5
 lift_back_limit = 6
+lift_front_fpid = (0.025, 0.8, 0.05, 0)
+lift_back_fpid = (0.025, 0.8, 0.05, 0)

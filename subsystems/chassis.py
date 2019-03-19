@@ -62,27 +62,27 @@ class Chassis(Subsystem):
         if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
 
-    def getX(self):
+    def get_x(self):
         """Returns relative x position"""
-        return self.accel_x - self._getX()
+        return self.accel_x - self._get_x()
 
-    def getY(self):
+    def get_y(self):
         """Returns relative y position"""
-        return self.accel_y - self._getY()
+        return self.accel_y - self._get_y()
 
-    def getZ(self):
+    def get_z(self):
         """Returns relative z position"""
-        return self.accel_z - self._getZ()
+        return self.accel_z - self._get_z()
 
-    def _getX(self):
+    def _get_x(self):
         """Internal method that returns the accelerometer x position"""
         return self.accelerometer_internal.getX()
 
-    def _getY(self):
+    def _get_y(self):
         """Internal method that returns the accelerometer y position"""
         return self.accelerometer_internal.getY()
 
-    def _getZ(self):
+    def _get_z(self):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
@@ -91,21 +91,21 @@ class Chassis(Subsystem):
         for talon in self._talons:
             talon.setQuadraturePosition(0, 50)
 
-    def resetGyro(self):
+    def reset_gyro(self):
         """Zeroes the gyro"""
         self.gyro.reset()
 
     def reset_accelerometer(self):
         """Zeroes all accelerometer values"""
-        self.accel_x = self._getX()
-        self.accel_y = self._getY()
-        self.accel_z = self._getZ()
+        self.accel_x = self._get_x()
+        self.accel_y = self._get_y()
+        self.accel_z = self._get_z()
 
-    def setUltrasonic(self, state):
+    def set_ultrasonic(self, state):
         """Sets Ultrasonic state"""
         self.sonar.setEnabled(state)
 
-    def getDistance(self):
+    def get_distance(self):
         """Gets Ultrasonic distance in MM"""
         return self.sonar.getRangeMM()
 
@@ -117,25 +117,27 @@ class Chassis(Subsystem):
         )
         # self.PIDDrive()
 
-    def PIDDrive(self):
+    def pid_drive(self):
         self._talon_FL.set(
             ControlMode.MotionMagic,
-            (self.getZOutput(0.8) + self.get_x_output(0.8)) * 30000,
+            (self.get_z_output(0.8) + self.get_x_output(0.8)) * 30000,
         )
         self._talon_FR.set(
             ControlMode.MotionMagic,
-            (self.getZOutput(0.8) - self.get_x_output(0.8)) * 30000,
+            (self.get_z_output(0.8) - self.get_x_output(0.8)) * 30000,
         )
         self._talon_BL.follow(self._talon_FL)
         self._talon_BR.follow(self._talon_FR)
 
-    def get_x_output(self, spd_limit, deadband=0.2):
+    @staticmethod
+    def get_x_output(spd_limit, deadband=0.2):
         if -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive < deadband:
             return 0.0
         else:
             return -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive
 
-    def getZOutput(self, spd_limit, deadband=0.2):
+    @staticmethod
+    def get_z_output(spd_limit, deadband=0.2):
         return oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate
 
     def initDefaultCommand(self):

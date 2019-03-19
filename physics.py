@@ -47,24 +47,6 @@ class PhysicsEngine(object):
         # Simulate the drivetrain
         l_motor = hal_data["CAN"][21]
         r_motor = hal_data["CAN"][11]
-        # l_motor2 = hal_data["CAN"][20]
-        # r_motor2 = hal_data["CAN"][10]
-
-        # spd_l_motor = int(4096 * l_motor["value"] * tm_diff)
-        # spd_r_motor = int(4096 * r_motor["value"] * tm_diff)
-        # spd_l_motor2 = int(4096 * l_motor2["value"] * tm_diff)
-        # spd_r_motor2 = int(4096 * r_motor2["value"] * tm_diff)
-
-        # l_motor["quad_position"] += spd_l_motor
-        # l_motor["quad velocity"] = spd_l_motor
-        # r_motor["quad_position"] += spd_r_motor
-        # r_motor["quad_velocity"] = spd_r_motor
-
-        # l_motor2["quad_position"] += spd_l_motor2
-        # l_motor2["quad velocity"] = spd_l_motor2
-        # r_motor2["quad_velocity"] = spd_r_motor2
-        # r_motor2["quad_position"] += spd_r_motor2
-
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][3]
 
@@ -75,6 +57,8 @@ class PhysicsEngine(object):
         f_lift["quad_velocity"] = spd_f
         b_lift["quad_position"] += spd_b
         b_lift["quad_velocity"] = spd_f
+
+        gyro = hal_data["Spi"][0]
 
         x, y, angle = self.drivetrain.get_distance(
             l_motor["value"], r_motor["value"], tm_diff

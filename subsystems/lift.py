@@ -65,18 +65,15 @@ class Lift(Subsystem):
 
             talon.set(0.0)
 
-        self.frontFPID = [0.025, 0.8, 0.05, 0]
-        self.backFPID = [0.025, 0.8, 0.05, 0]
+        self.talon_drive_CFront.config_kF(0, robotmap.lift_front_fpid[0], 0)
+        self.talon_drive_CFront.config_kP(0, robotmap.lift_front_fpid[1], 0)
+        self.talon_drive_CFront.config_kI(0, robotmap.lift_front_fpid[2], 0)
+        self.talon_drive_CFront.config_kD(0, robotmap.lift_front_fpid[3], 0)
 
-        self.talon_drive_CFront.config_kF(0, self.frontFPID[0], 0)
-        self.talon_drive_CFront.config_kP(0, self.frontFPID[1], 0)
-        self.talon_drive_CFront.config_kI(0, self.frontFPID[2], 0)
-        self.talon_drive_CFront.config_kD(0, self.frontFPID[3], 0)
-
-        self.talon_drive_CBack.config_kF(0, self.backFPID[0], 0)
-        self.talon_drive_CBack.config_kP(0, self.backFPID[1], 0)
-        self.talon_drive_CBack.config_kI(0, self.backFPID[2], 0)
-        self.talon_drive_CBack.config_kD(0, self.backFPID[3], 0)
+        self.talon_drive_CBack.config_kF(0, robotmap.lift_back_fpid[0], 0)
+        self.talon_drive_CBack.config_kP(0, robotmap.lift_back_fpid[1], 0)
+        self.talon_drive_CBack.config_kI(0, robotmap.lift_back_fpid[2], 0)
+        self.talon_drive_CBack.config_kD(0, robotmap.lift_back_fpid[3], 0)
 
         self.reset_encoders()
 
