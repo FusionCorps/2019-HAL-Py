@@ -2,9 +2,6 @@ import logging
 
 import wpilib
 from commandbased import CommandBasedRobot
-from ctre import ControlMode
-from networktables import NetworkTablesInstance
-from wpilib import Timer, Watchdog
 
 import subsystems
 
@@ -40,14 +37,13 @@ class Hal(CommandBasedRobot):
         pass
 
     def autonomousInit(self):
-        pass
+        subsystems._chassis.reset_encoders()
 
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
         subsystems._chassis._drive.feedWatchdog()
 
     def teleopInit(self):
-
         subsystems._chassis.reset_encoders()
 
     def teleopPeriodic(self):

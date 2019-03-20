@@ -98,11 +98,19 @@ class Lift(Subsystem):
 
     def stop_back(self):
         """Stops Back Lift Talon"""
-        self.talon_drive_CBack.set(ControlMode.PercentOutput, 0.0)
+        if (
+                self.talon_drive_CBack.get() is not 0.0
+                or self.talon_drive_CBack.getControlMode() is not ControlMode.PercentOutput
+        ):
+            self.talon_drive_CBack.set(ControlMode.PercentOutput, 0.0)
 
     def stop_front(self):
         """Stops Front Lift Talon"""
-        self.talon_drive_CFront.set(ControlMode.PercentOutput, 0.0)
+        if (
+                self.talon_drive_CFront.get() is not 0.0
+                or self.talon_drive_CFront.getControlMode() is not ControlMode.PercentOutput
+        ):
+            self.talon_drive_CFront.set(ControlMode.PercentOutput, 0.0)
 
     def set_drive(self, spd):
         """Sets Lift Drive Talon to new speed
@@ -116,11 +124,11 @@ class Lift(Subsystem):
         if position_target is not None:
             if position_target is not self.position_current:
                 self.logger.warning(
-                    "Position Target | ["
+                    "Target State is [ "
                     + self.position_current.name
                     + " -> "
                     + position_target.name
-                    + "]"
+                    + " ]"
                 )
                 for talon in self.lift_talons:
                     talon.setIntegralAccumulator(0, 0, 0)
@@ -136,6 +144,12 @@ class Lift(Subsystem):
     def get_current_position(self):
         """Returns the internal target Lift position"""
         return self.position_current
+
+    def get_front(self):
+        return self.talon_drive_CFront.get(), self.talon_drive_CFront.getControlMode()
+
+    def get_back(self):
+        return self.talon_drive_CBack.get(), self.talon_drive_CBack.getControlMode()
 
     def get_front_limit(self):
         return self.CFront_limit.get()

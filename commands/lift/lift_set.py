@@ -21,22 +21,27 @@ class LiftSet(Command):
         if self.target_position is Position.BOTH_UP:
             pass
         elif (
-            self.target_position is Position.BOTH_DOWN
-            or self.target_position is Position.FRONT_DOWN
-            or self.target_position is Position.BACK_DOWN
+                self.target_position is Position.BOTH_DOWN
+                or self.target_position is Position.FRONT_DOWN
+                or self.target_position is Position.BACK_DOWN
         ):
+            # if subsystems._lift.get_front_position() > robotmap.lift_height - 500:
+            #     self.logger.info("Front done")
+            # if subsystems._lift.get_back_position() > robotmap.lift_height - 500:
+            #     self.logger.info("Back done")
             if (
-                not subsystems._lift.get_front_limit()
-                and subsystems._lift.get_front_position() is not robotmap.lift_height
+                    not subsystems._lift.get_front_limit()
+                    and subsystems._lift.get_front_position() is not robotmap.lift_height
             ):
-                subsystems._lift.set_front_position(robotmap.lift_height)
+                subsystems._lift.stop_front()
             if (
-                not subsystems._lift.get_back_limit()
-                and subsystems._lift.get_back_position() is not robotmap.lift_height
+                    not subsystems._lift.get_back_limit()
+                    and subsystems._lift.get_back_position() is not robotmap.lift_height
             ):
-                subsystems._lift.set_back_position(robotmap.lift_height)
+                subsystems._lift.stop_back()
 
     def isFinished(self):
+        # LiftSet is not supposed to finish because of backsliding from Position.BOTH_DOWN
         if self.target_position is Position.BOTH_UP:
             # return (
             #     abs(subsystems._lift.getFrontPosition()) <= 30
@@ -48,6 +53,8 @@ class LiftSet(Command):
             #     not subsystems._lift.getFrontLimit()
             #     and not subsystems._lift.getBackLimit()
             # )
+            # return subsystems._lift.get_front_position() > robotmap.lift_height - 500 \
+            #        and subsystems._lift.get_back_position() > robotmap.lift_height - 500
             return False
         elif self.target_position is Position.FRONT_DOWN:
             # return not subsystems._lift.getFrontLimit()
@@ -57,21 +64,20 @@ class LiftSet(Command):
             return False
 
     def interrupted(self):
-        self.logger.info(
-            "("
+        self.logger.warning(
+            "The Target Position ["
             + self.target_position.name
             + " -> "
             + subsystems._lift.get_current_position().name
-            + ") "
-            + "Interrupted"
+            + "] was Interrupted"
         )
         self.end()
 
     def end(self):
-        if self.target_position is Position.BOTH_UP:
-            subsystems._lift.stop_front()
-            subsystems._lift.stop_back()
-        elif self.target_position is Position.BOTH_DOWN:
+        self.logger.info("The Target Position [ " + self.target_position.name + " -> "
+                         + subsystems._lift.get_current_position().name + " ] has been reached")
+
+        if self.target_position is Position.BOTH_UP or self.target_position is Position.BOTH_DOWN:
             subsystems._lift.stop_front()
             subsystems._lift.stop_back()
         elif self.target_position is Position.FRONT_DOWN:

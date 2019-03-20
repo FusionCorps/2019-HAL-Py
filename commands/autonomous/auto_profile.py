@@ -80,7 +80,6 @@ class AutoProfile(Command):
         output_R = self.right.calculate(
             subsystems._chassis._talon_FR.getQuadraturePosition()
         )
-
         heading_target = pf.r2d(self.left.getHeading())
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff

@@ -50,15 +50,16 @@ class PhysicsEngine(object):
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][3]
 
-        spd_f = int(4096 * 4 * f_lift["value"] * tm_diff)
-        spd_b = int(4096 * 4 * b_lift["value"] * tm_diff)
+        # Encoder change values off to simulate different load conditions
+        spd_f = int(4096 * 4.2 * f_lift["value"] * tm_diff)
+        spd_b = int(4096 * 2.5 * b_lift["value"] * tm_diff)
 
         f_lift["quad_position"] += spd_f
         f_lift["quad_velocity"] = spd_f
         b_lift["quad_position"] += spd_b
         b_lift["quad_velocity"] = spd_f
 
-        gyro = hal_data["Spi"][0]
+        # gyro = hal_data["Spi"][0]
 
         x, y, angle = self.drivetrain.get_distance(
             l_motor["value"], r_motor["value"], tm_diff
