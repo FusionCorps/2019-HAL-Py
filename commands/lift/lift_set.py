@@ -34,23 +34,27 @@ class LiftSet(Command):
 
     def execute(self):
         lift_offset = subsystems._lift.get_front_position() - subsystems._lift.get_back_position()
+        output_F = subsystems._lift.talon_drive_CFront.get()
+        output_B = subsystems._lift.talon_drive_CBack.get()
 
-        if lift_offset <= -1000 and not self.has_lift_correction_started:
+        if lift_offset <= -1000 and not self.has_lift_correction_started and not (output_B <= 0 or output_F <= 0):
             self.logger.info("Lift is unbalanced, correcting...")
             self.timer.start()
             self.has_lift_correction_started = True
-        elif lift_offset >= 1000 and not self.has_lift_correction_started:
+        elif lift_offset >= 1000 and not self.has_lift_correction_started and not (output_B <= 0 or output_F <= 0):
             self.logger.info("Lift is unbalanced, correcting...")
             self.timer.start()
             self.has_lift_correction_started = True
 
         time_temp = self.timer.get()
 
-        if lift_offset <= -1000 and self.has_lift_correction_started:
+        if self.has_lift_correction_started and subsystems._lift.get_back_position() > self.get_correction_setpoint(time_temp):
+            pass
+        elif lift_offset <= -1000 and self.has_lift_correction_started:
             self.logger.info("New back setpoint at " + str(self.get_correction_setpoint(self.timer.get())))
             if subsystems._lift.get_back_position() > self.get_correction_setpoint(time_temp):
                 subsystems._lift.set_back(self.get_correction_setpoint(time_temp))
-        elif lift_offset > -1000 and lift_offset < 1000 and self.has_lift_correction_started:
+        elif lift_offset > -750 and lift_offset < 750 and self.has_lift_correction_started:
             self.logger.info("Lift balanced, stopping alignment")
             self.timer.stop()
             self.timer.reset()
