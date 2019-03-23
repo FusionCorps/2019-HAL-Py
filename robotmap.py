@@ -57,7 +57,7 @@ chassis_max_jerk = 25
 chassis_zero_acceleration_on_start = False
 
 # Lift constants
-lift_height = 50000
+lift_height = 200000
 lift_front_limit = 5
 lift_back_limit = 6
 lift_front_fpid = (0.025, 0.8, 0.05, 0)

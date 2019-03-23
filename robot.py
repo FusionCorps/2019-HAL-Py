@@ -20,7 +20,7 @@ class Hal(CommandBasedRobot):
         oi.init()
         subsystems.init()
         commands.init()
-        dashboard.update()
+        # dashboard.init()
         # common.cameras.init()
 
         self.logger.info("Robot initialized")
@@ -28,10 +28,10 @@ class Hal(CommandBasedRobot):
 
         subsystems._chassis.reset_encoders()
 
-        from commands.update_sd import UpdateSD
-
-        self.update_smartdashboard = UpdateSD()
-        self.update_smartdashboard.start()
+        # from commands.update_sd import UpdateSD
+        #
+        # self.update_smartdashboard = UpdateSD()
+        # self.update_smartdashboard.start()
 
     def robotPeriodic(self):
         pass

@@ -1,10 +1,12 @@
 import logging
 
 from wpilib.command import Command
-
+from math import pow
 import robotmap
 import subsystems
 from subsystems.lift import Position
+
+from wpilib import Timer
 
 
 class LiftSet(Command):
@@ -14,21 +16,60 @@ class LiftSet(Command):
         super().__init__(self.__class__.__name__ + " " + str(target_position))
         self.requires(subsystems._lift)
 
+        self.has_lift_correction_started = False
+        self.timer = Timer()
+
+    @staticmethod
+    def get_correction_setpoint(time):
+        if time > 1:
+            return robotmap.lift_height * pow((1 / time), 2)
+        elif time < -1:
+            return robotmap.lift_height * pow((1 / time), 2)
+        else:
+            return robotmap.lift_height
+
     def initialize(self):
         subsystems._lift.set_position(self.target_position)
+        self.timer.reset()
 
     def execute(self):
+        lift_offset = subsystems._lift.get_front_position() - subsystems._lift.get_back_position()
+
+        if lift_offset <= -1000 and not self.has_lift_correction_started:
+            self.logger.info("Lift is unbalanced, correcting...")
+            self.timer.start()
+            self.has_lift_correction_started = True
+        elif lift_offset >= 1000 and not self.has_lift_correction_started:
+            self.logger.info("Lift is unbalanced, correcting...")
+            self.timer.start()
+            self.has_lift_correction_started = True
+
+        time_temp = self.timer.get()
+
+        if lift_offset <= -1000 and self.has_lift_correction_started:
+            self.logger.info("New back setpoint at " + str(self.get_correction_setpoint(self.timer.get())))
+            if subsystems._lift.get_back_position() > self.get_correction_setpoint(time_temp):
+                subsystems._lift.set_back(self.get_correction_setpoint(time_temp))
+        elif lift_offset > -1000 and lift_offset < 1000 and self.has_lift_correction_started:
+            self.logger.info("Lift balanced, stopping alignment")
+            self.timer.stop()
+            self.timer.reset()
+            subsystems._lift.set_position(self.target_position)
+            self.has_lift_correction_started = False
+        elif lift_offset >= 1000 and self.has_lift_correction_started:
+            self.logger.info("New front setpoint at " + str(self.get_correction_setpoint(self.timer.get())))
+            if subsystems._lift.get_front_position() > self.get_correction_setpoint(time_temp):
+                subsystems._lift.set_front(self.get_correction_setpoint(time_temp))
+
         if self.target_position is Position.BOTH_UP:
+            pass
+        if self.target_position is Position.BOTH_DOWN:
             pass
         elif (
                 self.target_position is Position.BOTH_DOWN
                 or self.target_position is Position.FRONT_DOWN
                 or self.target_position is Position.BACK_DOWN
         ):
-            # if subsystems._lift.get_front_position() > robotmap.lift_height - 500:
-            #     self.logger.info("Front done")
-            # if subsystems._lift.get_back_position() > robotmap.lift_height - 500:
-            #     self.logger.info("Back done")
             if (
                     not subsystems._lift.get_front_limit()
                     and subsystems._lift.get_front_position() is not robotmap.lift_height

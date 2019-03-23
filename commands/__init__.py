@@ -9,7 +9,7 @@ from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet
 from .intake.intake_joystick import IntakeJoystick
 from .intake.intake_set import IntakeSet
-from .lift.lift_reset import LiftReset
+# from .lift.lift_reset import LiftReset
 from .lift.lift_set import LiftSet
 from .piston.piston_set import PistonSet
 from .switch_control_mode import SwitchControlMode
