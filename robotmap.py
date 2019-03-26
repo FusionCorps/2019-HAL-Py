@@ -58,7 +58,9 @@ chassis_zero_acceleration_on_start = False
 
 # Lift constants
 lift_height = 200000
+lift_cruise_velocity = 24000
+lif_acceleration = 200
 lift_front_limit = 5
 lift_back_limit = 6
-lift_front_fpid = (0.025, 0.8, 0.05, 0)
-lift_back_fpid = (0.025, 0.8, 0.05, 0)
+lift_front_fpid = (0.025, 0.8, 0.1, 0)
+lift_back_fpid = (0.025, 0.8, 0.1, 0)
