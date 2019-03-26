@@ -58,8 +58,8 @@ class Lift(Subsystem):
             # )
 
             talon.selectProfileSlot(0, 0)
-            talon.configMotionAcceleration(200, 0)
-            talon.configMotionCruiseVelocity(24000, 0)
+            talon.configMotionAcceleration(robotmap.lift_acceleration, 0)
+            talon.configMotionCruiseVelocity(robotmap.lift_cruise_velocity, 0)
             talon.configPeakOutputForward(0.8, 0)
             talon.configPeakOutputReverse(-0.8, 0)
 
@@ -70,6 +70,8 @@ class Lift(Subsystem):
         self.talon_drive_CFront.config_kI(0, robotmap.lift_front_fpid[2], 0)
         self.talon_drive_CFront.config_kD(0, robotmap.lift_front_fpid[3], 0)
 
+        self.talon_drive_CBack.setSensorPhase(True)
+        self.talon_drive_CBack.setInverted(True)
         self.talon_drive_CBack.config_kF(0, robotmap.lift_back_fpid[0], 0)
         self.talon_drive_CBack.config_kP(0, robotmap.lift_back_fpid[1], 0)
         self.talon_drive_CBack.config_kI(0, robotmap.lift_back_fpid[2], 0)
@@ -87,7 +89,7 @@ class Lift(Subsystem):
         Parameters
         ---
         `pos_new`: (int) The new position to be set"""
-        self.talon_drive_CBack.set(ControlMode.MotionMagic, pos_new)
+        self.talon_drive_CBack.set(ControlMode.MotionMagic, -pos_new)
 
     def set_front(self, pos_new):
         """Sets Front Lift Talon to new MotionMagic position specified in `pos_new`
@@ -130,8 +132,8 @@ class Lift(Subsystem):
                     + position_target.name
                     + " ]"
                 )
-                for talon in self.lift_talons:
-                    talon.setIntegralAccumulator(0, 0, 0)
+                # for talon in self.lift_talons:
+                #     talon.setIntegralAccumulator(0, 0, 0)
 
             self.set_back(position_target.value[0])
             self.set_front(position_target.value[1])

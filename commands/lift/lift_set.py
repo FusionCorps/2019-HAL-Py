@@ -84,11 +84,11 @@ class LiftSet(Command):
                     subsystems._lift.set_front(front_correction_setpoint)
 
         # Special Execution Conditions for each Position
-        if self.target_position is Position.BOTH_UP:
-            pass
-        if self.target_position is Position.BOTH_DOWN:
-            pass
-        elif (
+        # if self.target_position is Position.BOTH_UP:
+        #     pass
+        # if self.target_position is Position.BOTH_DOWN:
+        #     pass
+        if (
                 self.target_position is Position.BOTH_DOWN
                 or self.target_position is Position.FRONT_DOWN
                 or self.target_position is Position.BACK_DOWN

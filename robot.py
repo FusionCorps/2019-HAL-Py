@@ -20,7 +20,7 @@ class Hal(CommandBasedRobot):
         oi.init()
         subsystems.init()
         commands.init()
-        # dashboard.init()
+        dashboard.init()
         # common.cameras.init()
 
         self.logger.info("Robot initialized")
@@ -28,10 +28,10 @@ class Hal(CommandBasedRobot):
 
         subsystems._chassis.reset_encoders()
 
-        # from commands.update_sd import UpdateSD
-        #
-        # self.update_smartdashboard = UpdateSD()
-        # self.update_smartdashboard.start()
+        from commands.update_sd import UpdateSD
+
+        self.update_smartdashboard = UpdateSD()
+        self.update_smartdashboard.start()
 
     def robotPeriodic(self):
         pass
@@ -49,6 +49,8 @@ class Hal(CommandBasedRobot):
     def teleopPeriodic(self):
         super().teleopPeriodic()
         subsystems._chassis._drive.feedWatchdog()
+        self.logger.info("Front " + str(subsystems._lift.get_front_position()) + " Back " + str(
+            subsystems._lift.get_back_position()))
 
 
 if __name__ == "__main__":
