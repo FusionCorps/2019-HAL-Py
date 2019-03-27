@@ -1,9 +1,9 @@
 import logging
 
 import oi
-from subsystems.duckbill import StateDuckbill
-from subsystems.lift import Position
-from subsystems.piston import StatePiston
+from subsystems.subduckbill import StateDuckbill
+from subsystems.sublift import Position
+from subsystems.subpiston import StatePiston
 from .autonomous.auto_profile import AutoProfile
 from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet

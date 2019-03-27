@@ -1,13 +1,11 @@
 import logging
-from commands.chassis.chassis_drive import ChassisDrive
-from commands.lift.lift_drive import LiftDrive
-from commands.lift.lift_set import LiftSet
-from commands.wait import Wait
 
 from wpilib.command import CommandGroup
 
-import subsystems
-from subsystems.lift import Position
+from commands.chassis.chassis_drive import ChassisDrive
+from commands.lift.lift_drive import LiftDrive
+from commands.lift.lift_set import LiftSet
+from subsystems.sublift import Position
 
 
 class LiftGroup(CommandGroup):

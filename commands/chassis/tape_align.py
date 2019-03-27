@@ -7,5 +7,5 @@ import subsystems
 class TapeAlign(Command):
     def __init__(self):
         super().__init__("TapeAlign")
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
         self.nt = NetworkTables.getTable("limelight")

@@ -1,6 +1,6 @@
 import logging
 
-from ctre import ControlMode, WPI_TalonSRX
+from ctre import WPI_TalonSRX
 from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, SpeedControllerGroup, Ultrasonic
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
@@ -9,7 +9,7 @@ import oi
 import robotmap
 
 
-class Chassis(Subsystem):
+class SubChassis(Subsystem):
     def __init__(self):
         super().__init__("Chassis")
         self.logger = logging.getLogger("Chassis")
@@ -42,7 +42,7 @@ class Chassis(Subsystem):
         self._group_R = SpeedControllerGroup(self._talon_BR, self._talon_FR)
 
         # Drive class instance
-        self._drive = DifferentialDrive(self._group_L, self._group_R)
+        self.drive = DifferentialDrive(self._group_L, self._group_R)
 
         # Sensors
         self.sonar = Ultrasonic(
@@ -110,35 +110,34 @@ class Chassis(Subsystem):
         return self.sonar.getRangeMM()
 
     def joystick_drive(self):
-        self._drive.curvatureDrive(
+        self.drive.curvatureDrive(
             -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
             oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
             True,
         )
-        # self.PIDDrive()
 
-    def pid_drive(self):
-        self._talon_FL.set(
-            ControlMode.MotionMagic,
-            (self.get_z_output(0.8) + self.get_x_output(0.8)) * 30000,
-        )
-        self._talon_FR.set(
-            ControlMode.MotionMagic,
-            (self.get_z_output(0.8) - self.get_x_output(0.8)) * 30000,
-        )
-        self._talon_BL.follow(self._talon_FL)
-        self._talon_BR.follow(self._talon_FR)
-
-    @staticmethod
-    def get_x_output(spd_limit, deadband=0.2):
-        if -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive < deadband:
-            return 0.0
-        else:
-            return -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive
-
-    @staticmethod
-    def get_z_output(spd_limit, deadband=0.2):
-        return oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate
+    # def pid_drive(self):
+    #     self._talon_FL.set(
+    #         ControlMode.MotionMagic,
+    #         (self.get_z_output(0.8) + self.get_x_output(0.8)) * 30000,
+    #     )
+    #     self._talon_FR.set(
+    #         ControlMode.MotionMagic,
+    #         (self.get_z_output(0.8) - self.get_x_output(0.8)) * 30000,
+    #     )
+    #     self._talon_BL.follow(self._talon_FL)
+    #     self._talon_BR.follow(self._talon_FR)
+    #
+    # @staticmethod
+    # def get_x_output(spd_limit, deadband=0.2):
+    #     if -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive < deadband:
+    #         return 0.0
+    #     else:
+    #         return -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive
+    #
+    # @staticmethod
+    # def get_z_output(spd_limit, deadband=0.2):
+    #     return oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate
 
     def initDefaultCommand(self):
         from commands.joystick_drive import JoystickDrive

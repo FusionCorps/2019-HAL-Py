@@ -1,11 +1,10 @@
 import logging
-from commands.lift.lift_set import LiftSet
 
 from wpilib.command import Command
 
-import robotmap
 import subsystems
-from subsystems.lift import Position
+from commands.lift.lift_set import LiftSet
+from subsystems.sublift import Position
 
 
 class LiftDrive(Command):
@@ -16,8 +15,8 @@ class LiftDrive(Command):
         self.lift_down = LiftSet(Position.BACK_DOWN)
 
     def initialize(self):
-        subsystems._lift.reset_encoders()
-        subsystems._lift.set_drive(self.spd_new)
+        subsystems.lift.reset_encoders()
+        subsystems.lift.set_drive(self.spd_new)
 
     def execute(self):
         # if (
@@ -38,4 +37,4 @@ class LiftDrive(Command):
 
     def end(self):
         self.logger.info("Ending")
-        subsystems._lift.set_drive(0.0)
+        subsystems.lift.set_drive(0.0)

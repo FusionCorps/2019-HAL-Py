@@ -1,14 +1,12 @@
 import logging
 
-import robotmap
+from .subchassis import SubChassis
+from .subduckbill import SubDuckbill
+from .subintake import SubIntake
+from .sublift import SubLift
+from .subpiston import SubPiston
 
-from .chassis import Chassis
-from .duckbill import Duckbill
-from .intake import Intake
-from .lift import Lift
-from .piston import Piston
-
-_chassis, _intake, _duckbill, _slapper, _lift, _piston = (
+chassis, intake, duckbill, slapper, lift, piston = (
     None,
     None,
     None,
@@ -22,12 +20,12 @@ def init():
     """Creates all instances of subsystem classes"""
     logger = logging.getLogger("Subsystems")
 
-    global _chassis, _intake, _duckbill, _slapper, _lift, _piston
+    global chassis, intake, duckbill, slapper, lift, piston
 
-    _chassis = Chassis()
-    _intake = Intake()
-    _duckbill = Duckbill()
-    _lift = Lift()
-    _piston = Piston()
+    chassis = SubChassis()
+    intake = SubIntake()
+    duckbill = SubDuckbill()
+    lift = SubLift()
+    piston = SubPiston()
 
     logger.info("Subsystems initialized")

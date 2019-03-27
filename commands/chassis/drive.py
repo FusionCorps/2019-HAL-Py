@@ -6,8 +6,8 @@ import subsystems
 class DriveChassis(Command):
     def __init__(self, target_distance):
         super().__init__("DriveChassis")
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
         self.target_distance = target_distance
 
     def initialize(self):
-        subsystems._chassis.reset_encoders()
+        subsystems.chassis.reset_encoders()

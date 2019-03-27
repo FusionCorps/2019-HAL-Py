@@ -3,7 +3,6 @@ from math import radians
 
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
-from wpilib import Timer
 from wpilib.command import Command
 
 import robotmap
@@ -13,7 +12,7 @@ import subsystems
 class AutoProfile(Command):
     def __init__(self, *args, **kwargs):
         super().__init__("AutoProfile")
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
         self.points = []
         self.logger = logging.getLogger("AutoProfile")
 
@@ -58,12 +57,12 @@ class AutoProfile(Command):
         self.encoder_followers = [self.left, self.right]
 
         self.left.configureEncoder(
-            subsystems._chassis._talon_FL.getQuadraturePosition(),
+            subsystems.chassis._talon_FL.getQuadraturePosition(),
             robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
         self.right.configureEncoder(
-            subsystems._chassis._talon_FR.getQuadraturePosition(),
+            subsystems.chassis._talon_FR.getQuadraturePosition(),
             robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
@@ -72,20 +71,20 @@ class AutoProfile(Command):
             follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
     def execute(self):
-        heading = subsystems._chassis.gyro.getAngle()
+        heading = subsystems.chassis.gyro.getAngle()
 
         output_L = self.left.calculate(
-            subsystems._chassis._talon_FL.getQuadraturePosition()
+            subsystems.chassis._talon_FL.getQuadraturePosition()
         )
         output_R = self.right.calculate(
-            subsystems._chassis._talon_FR.getQuadraturePosition()
+            subsystems.chassis._talon_FR.getQuadraturePosition()
         )
         heading_target = pf.r2d(self.left.getHeading())
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-        subsystems._chassis._group_L.set(-output_L + turn_output)
-        subsystems._chassis._group_R.set(output_R - turn_output)
+        subsystems.chassis._group_L.set(-output_L + turn_output)
+        subsystems.chassis._group_R.set(output_R - turn_output)
 
     def isFinished(self):
         return self.left.isFinished() and self.right.isFinished()

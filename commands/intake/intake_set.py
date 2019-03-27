@@ -1,9 +1,7 @@
 from ctre import ControlMode
 from wpilib.command import Command
 
-import robotmap
 import subsystems
-from subsystems.intake import StateIntake
 
 
 class IntakeSet(Command):
@@ -14,10 +12,10 @@ class IntakeSet(Command):
     def __init__(self, state_target):
         super().__init__(self.__class__.__name__)
         self.state_target = state_target
-        self.requires(subsystems._intake)
+        self.requires(subsystems.intake)
 
     def initialize(self):
-        subsystems._intake.setVictor(self.state_target.value)
+        subsystems.intake.setVictor(self.state_target.value)
 
     def isFinished(self):
         return False
@@ -26,4 +24,4 @@ class IntakeSet(Command):
         self.end()
 
     def end(self):
-        subsystems._intake._victor.set(ControlMode.PercentOutput, 0.0)
+        subsystems.intake._victor.set(ControlMode.PercentOutput, 0.0)

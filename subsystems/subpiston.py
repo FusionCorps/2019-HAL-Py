@@ -1,4 +1,3 @@
-import logging
 from enum import Enum
 
 from wpilib import Solenoid
@@ -17,7 +16,7 @@ class StatePiston(Enum):
     OUT = (False, True)
 
 
-class Piston(Subsystem):
+class SubPiston(Subsystem):
     def __init__(self):
         super().__init__("Piston")
         self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)

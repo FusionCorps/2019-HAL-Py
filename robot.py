@@ -26,7 +26,7 @@ class Hal(CommandBasedRobot):
         self.logger.info("Robot initialized")
         self.watchdog.setTimeout(2)
 
-        subsystems._chassis.reset_encoders()
+        subsystems.chassis.reset_encoders()
 
         from commands.update_sd import UpdateSD
 
@@ -37,20 +37,20 @@ class Hal(CommandBasedRobot):
         pass
 
     def autonomousInit(self):
-        subsystems._chassis.reset_encoders()
+        subsystems.chassis.reset_encoders()
 
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
-        subsystems._chassis._drive.feedWatchdog()
+        subsystems.chassis.drive.feedWatchdog()
 
     def teleopInit(self):
-        subsystems._chassis.reset_encoders()
+        subsystems.chassis.reset_encoders()
 
     def teleopPeriodic(self):
         super().teleopPeriodic()
-        subsystems._chassis._drive.feedWatchdog()
-        self.logger.info("Front " + str(subsystems._lift.get_front_position()) + " Back " + str(
-            subsystems._lift.get_back_position()))
+        subsystems.chassis.drive.feedWatchdog()
+        # self.logger.info("Front " + str(subsystems.lift.get_front_position()) + " Back " + str(
+        #     subsystems.lift.get_back_position()))
 
 
 if __name__ == "__main__":

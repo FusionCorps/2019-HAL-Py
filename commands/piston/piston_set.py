@@ -6,11 +6,11 @@ import subsystems
 class PistonSet(Command):
     def __init__(self, state_target):
         super().__init__(self.__class__.__name__)
-        self.requires(subsystems._piston)
+        self.requires(subsystems.piston)
         self.state_target = state_target
 
     def initialize(self):
-        subsystems._piston.setState(self.state_target)
+        subsystems.piston.setState(self.state_target)
 
     def isFinished(self):
         return False
@@ -19,6 +19,6 @@ class PistonSet(Command):
         pass
 
     def end(self):
-        from subsystems.piston import StatePiston
+        from subsystems.subpiston import StatePiston
 
-        subsystems._piston.setState(StatePiston.IN)
+        subsystems.piston.setState(StatePiston.IN)

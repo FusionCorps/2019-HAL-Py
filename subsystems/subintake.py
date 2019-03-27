@@ -17,7 +17,7 @@ class StateIntake(Enum):
     SHOOTING = robotmap.spd_intake_shoot
 
 
-class Intake(Subsystem):
+class SubIntake(Subsystem):
     def __init__(self):
         super().__init__("Intake")
         self._victor = VictorSPX(robotmap.talon_intake)

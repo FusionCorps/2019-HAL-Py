@@ -1,6 +1,5 @@
 import logging
 
-from wpilib import Timer
 from wpilib.command import Command
 
 import subsystems
@@ -9,7 +8,7 @@ import subsystems
 class ChassisDrive(Command):
     def __init__(self, spd_x, spd_z=0.0, time=None):
         super().__init__("ChassisDrive")
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
         self.logger = logging.getLogger("ChassisDrive")
         self.spd_x = spd_x
         self.spd_z = spd_z
@@ -20,7 +19,7 @@ class ChassisDrive(Command):
 
     def initialize(self):
         self.logger.info("Starting")
-        subsystems._chassis._drive.curvatureDrive(self.spd_x, self.spd_z, True)
+        subsystems.chassis._drive.curvatureDrive(self.spd_x, self.spd_z, True)
 
     def execute(self):
         pass
@@ -34,4 +33,4 @@ class ChassisDrive(Command):
 
     def end(self):
         self.logger.info("Ending")
-        subsystems._chassis._drive.curvatureDrive(0.0, 0.0, True)
+        subsystems.chassis._drive.curvatureDrive(0.0, 0.0, True)

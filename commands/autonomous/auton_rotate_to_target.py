@@ -7,7 +7,7 @@ import subsystems
 class AutonRotateToTarget(Command):
     def __init__(self):
         super().__init__(self.__class__.__name__)
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
         self.nt = NetworkTables.getTable("limelight")
 
     def initialize(self):
@@ -21,9 +21,9 @@ class AutonRotateToTarget(Command):
         if abs(self.tx) < 1:
             self.end()
         elif self.tx > 1:
-            subsystems._chassis._drive.curvatureDrive(0.0, -0.2, True)
+            subsystems.chassis._drive.curvatureDrive(0.0, -0.2, True)
         elif self.tx < -1:
-            subsystems._chassis._drive.curvatureDrive(0.0, 0.2, True)
+            subsystems.chassis._drive.curvatureDrive(0.0, 0.2, True)
 
     def isFinished(self):
         return abs(self.tx) < 1
@@ -32,4 +32,4 @@ class AutonRotateToTarget(Command):
         self.end()
 
     def end(self):
-        subsystems._chassis._drive.curvatureDrive(0.0, 0.0, True)
+        subsystems.chassis._drive.curvatureDrive(0.0, 0.0, True)

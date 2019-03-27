@@ -2,7 +2,6 @@ import logging
 from enum import Enum
 
 from ctre import ControlMode, WPI_TalonSRX
-from ctre.basemotorcontroller import DemandType
 from wpilib import DigitalInput
 from wpilib.command import Subsystem
 
@@ -20,7 +19,7 @@ class Position(Enum):
     FRONT_DOWN = (0, robotmap.lift_height)
 
 
-class Lift(Subsystem):
+class SubLift(Subsystem):
     def __init__(self):
         super().__init__("Lift")
         self.logger = logging.getLogger("Lift")

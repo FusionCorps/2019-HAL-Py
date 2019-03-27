@@ -2,7 +2,6 @@ import csv
 import logging
 
 from ctre import ControlMode, SetValueMotionProfile, WPI_TalonSRX
-from ctre._impl.motionprofilestatus import MotionProfileStatus
 from ctre.btrajectorypoint import BTrajectoryPoint
 from wpilib import Notifier, SmartDashboard
 from wpilib.command import Command
@@ -12,17 +11,17 @@ import subsystems
 
 class Process_Buffer:
     def run(self):
-        subsystems._chassis._talon_FL.processMotionProfileBuffer()
-        subsystems._chassis._talon_FR.processMotionProfileBuffer()
-        subsystems._chassis._talon_BL.processMotionProfileBuffer()
-        subsystems._chassis._talon_BR.processMotionProfileBuffer()
+        subsystems.chassis._talon_FL.processMotionProfileBuffer()
+        subsystems.chassis._talon_FR.processMotionProfileBuffer()
+        subsystems.chassis._talon_BL.processMotionProfileBuffer()
+        subsystems.chassis._talon_BR.processMotionProfileBuffer()
 
 
 class Auton_Profile(Command):
     def __init__(self, trajectory_name_prefix):
         super().__init__("Auton_Profile " + trajectory_name_prefix)
 
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
         self.logger = logging.getLogger(
             "Auton Profile (" + trajectory_name_prefix + ")"
         )
@@ -30,10 +29,10 @@ class Auton_Profile(Command):
         self._set_value = SetValueMotionProfile.Disable
 
         # Speed Controllers
-        self._talon_FL = subsystems._chassis._talon_FL
-        self._talon_FR = subsystems._chassis._talon_FR
-        self._talon_BL = subsystems._chassis._talon_BL
-        self._talon_BR = subsystems._chassis._talon_BR
+        self._talon_FL = subsystems.chassis._talon_FL
+        self._talon_FR = subsystems.chassis._talon_FR
+        self._talon_BL = subsystems.chassis._talon_BL
+        self._talon_BR = subsystems.chassis._talon_BR
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
         self.logger.info("Talons constructed")
 

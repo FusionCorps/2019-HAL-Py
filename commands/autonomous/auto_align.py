@@ -1,10 +1,6 @@
 import logging
-from math import atan2, cos, radians, sin, tan
 
-import pathfinder as pf
 from networktables import NetworkTables
-from pathfinder import modifiers
-from pathfinder.followers import EncoderFollower
 from wpilib import Ultrasonic
 from wpilib.command import Command
 
@@ -16,7 +12,7 @@ class AutoAlign(Command):
     """Autonomous alignment of the robot with 'eyebrow' tape markings"""
     def __init__(self, target):
         super().__init__("AutoAlign")
-        self.requires(subsystems._chassis)
+        self.requires(subsystems.chassis)
 
         self.target = target
         self.nt = NetworkTables.getTable("limelight")
@@ -26,7 +22,7 @@ class AutoAlign(Command):
         self.logger = logging.getLogger("Automatic Alignment")
 
     def initialize(self):
-        subsystems._chassis.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
+        subsystems.chassis.sonar.setDistanceUnits(Ultrasonic.Unit.kMillimeters)
 
         tv = self.nt.getNumber("tv", 0)
 
@@ -79,7 +75,7 @@ class AutoAlign(Command):
 
     def execute(self):
         if robotmap.control_mode == 0:
-            heading = subsystems._chassis.gyro.getAngle()
+            heading = subsystems.chassis.gyro.getAngle()
             # output_L = self.left.calculate(
             #     subsystems._chassis._talon_FL.getQuadraturePosition()
             # )

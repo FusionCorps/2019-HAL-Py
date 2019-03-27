@@ -1,4 +1,3 @@
-import logging
 from enum import Enum
 
 from wpilib import Solenoid
@@ -17,7 +16,7 @@ class StateDuckbill(Enum):
     DOWN = (False, True)
 
 
-class Duckbill(Subsystem):
+class SubDuckbill(Subsystem):
     def __init__(self):
         super().__init__("Duckbill")
         self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_B)
