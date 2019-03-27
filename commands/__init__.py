@@ -9,7 +9,6 @@ from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet
 from .intake.intake_joystick import IntakeJoystick
 from .intake.intake_set import IntakeSet
-# from .lift.lift_reset import LiftReset
 from .lift.lift_set import LiftSet
 from .piston.piston_set import PistonSet
 from .switch_control_mode import SwitchControlMode
@@ -25,7 +24,7 @@ def init():
     oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
 
     # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
-    # oi.Y.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
+    oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
     oi.A.whenPressed(LiftSet(Position.BOTH_UP))
     oi.B.whenPressed(LiftSet(Position.BOTH_DOWN))
     oi.X.whenPressed(LiftSet(Position.FRONT_DOWN))

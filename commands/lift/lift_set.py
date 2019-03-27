@@ -20,17 +20,20 @@ class LiftSet(Command):
         self.is_correcting = False
         self.timer = Timer()
 
+    def __str__(self):
+        return "[ " + self.target_position.name + " -> " + subsystems.lift.get_current_position().name + " ]"
+
     @staticmethod
     def get_back_correction(time, decay_rate=0.1):
         """Returns the encoder tick amount (from a decay function) that needs to be added to the current lift height"""
         # return (robotmap.lift_height - subsystems._lift.get_back_position()) * pow(1 - decay_rate, time)
-        return (robotmap.lift_height) * pow(1 - decay_rate, time)
+        return robotmap.lift_height * pow(1 - decay_rate, time)
 
     @staticmethod
     def get_front_correction(time, decay_rate=0.1):
         """Returns the encoder tick amount (from a decay function) that needs to be added to the current lift height"""
         # return (robotmap.lift_height - subsystems._lift.get_front_position()) * pow(1 - decay_rate, time)
-        return (robotmap.lift_height) * pow(1 - decay_rate, time)
+        return robotmap.lift_height * pow(1 - decay_rate, time)
 
     def initialize(self):
         subsystems.lift.set_position(self.target_position)
@@ -41,8 +44,8 @@ class LiftSet(Command):
             # Lift offset correction code
             lift_offset = subsystems.lift.get_front_position() - subsystems.lift.get_back_position()
 
-            output_F = subsystems.lift.talon_drive_CFront.get()
-            output_B = subsystems.lift.talon_drive_CBack.get()
+            output_F = subsystems.lift.talon_drive_CFront.get()[0]
+            output_B = subsystems.lift.talon_drive_CBack.get()[0]
 
             time_temp = self.timer.get()
 
@@ -55,21 +58,14 @@ class LiftSet(Command):
                 self.timer.start()
                 self.is_correcting = True
 
-            # front_correction_setpoint = self.get_front_correction(time_temp) + subsystems._lift.get_front_position()
-            front_correction_setpoint = self.get_front_correction(time_temp)
-            # back_correction_setpoint = self.get_back_correction(time_temp) + subsystems._lift.get_back_position()
-            back_correction_setpoint = self.get_back_correction(time_temp)
-
             if lift_offset <= -4096 and self.is_correcting and not subsystems.lift.get_front_position() >= \
                                                                    robotmap.lift_height:
-                self.logger.info(back_correction_setpoint)
-
                 if subsystems.lift.get_back_position() >= robotmap.lift_height:
                     subsystems.lift.set_back(robotmap.lift_height)
-                elif back_correction_setpoint > subsystems.lift.get_back_position():
-                    subsystems.lift.set_back(back_correction_setpoint)
+                else:
+                    subsystems.lift.set_back(output_B * 0.8)
 
-            elif lift_offset > -2048 and lift_offset < 2048 and self.is_correcting:
+            elif (-2048 < lift_offset < 2048) and self.is_correcting:
                 self.logger.info("Lift balanced, stopping alignment")
                 self.timer.stop()
                 self.timer.reset()
@@ -77,18 +73,11 @@ class LiftSet(Command):
                 self.is_correcting = False
 
             elif lift_offset >= 4096 and self.is_correcting:
-                self.logger.info(front_correction_setpoint)
-
                 if subsystems.lift.get_front_position() >= robotmap.lift_height:
                     subsystems.lift.set_front(robotmap.lift_height)
-                elif front_correction_setpoint > subsystems.lift.get_front_position():
-                    subsystems.lift.set_front(front_correction_setpoint)
+                else:
+                    subsystems.lift.set_front(output_F * 0.8)
 
-        # Special Execution Conditions for each Position
-        # if self.target_position is Position.BOTH_UP:
-        #     pass
-        # if self.target_position is Position.BOTH_DOWN:
-        #     pass
         if (
                 self.target_position is Position.BOTH_DOWN
                 or self.target_position is Position.FRONT_DOWN
@@ -117,17 +106,12 @@ class LiftSet(Command):
 
     def interrupted(self):
         self.logger.warning(
-            "The Target Position ["
-            + self.target_position.name
-            + " -> "
-            + subsystems.lift.get_current_position().name
-            + "] was Interrupted"
+            "The Target Position " + str(self) + " was Interrupted"
         )
         self.end()
 
     def end(self):
-        self.logger.info("The Target Position [ " + self.target_position.name + " -> "
-                         + subsystems.lift.get_current_position().name + " ] has been reached")
+        self.logger.info("The Target Position " + str(self) + " has been reached")
 
         if self.target_position is Position.BOTH_UP or self.target_position is Position.BOTH_DOWN:
             subsystems.lift.stop_front()

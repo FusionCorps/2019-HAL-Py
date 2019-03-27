@@ -83,19 +83,25 @@ class SubLift(Subsystem):
 
         self.position_current = Position.BOTH_UP
 
-    def set_back(self, pos_new):
+    def set_back(self, target_magnitude, target=0):
         """Sets Back Lift Talon to new MotionMagic position specified in `pos_new`
         Parameters
         ---
         `pos_new`: (int) The new position to be set"""
-        self.talon_drive_CBack.set(ControlMode.MotionMagic, -pos_new)
+        if target is 0:
+            self.talon_drive_CBack.set(ControlMode.MotionMagic, -target_magnitude)
+        elif target is 1:
+            self.talon_drive_CBack.set(ControlMode.PercentOutput, -target_magnitude)
 
-    def set_front(self, pos_new):
+    def set_front(self, target_magnitude, target=0):
         """Sets Front Lift Talon to new MotionMagic position specified in `pos_new`
         Parameters
         ---
         `pos_new`: (int) The new position to be set"""
-        self.talon_drive_CFront.set(ControlMode.MotionMagic, pos_new)
+        if target is 0:
+            self.talon_drive_CFront.set(ControlMode.MotionMagic, target_magnitude)
+        elif target is 1:
+            self.talon_drive_CFront.set(ControlMode.PercentOutput, target_magnitude)
 
     def stop_back(self):
         """Stops Back Lift Talon"""
@@ -113,12 +119,15 @@ class SubLift(Subsystem):
         ):
             self.talon_drive_CFront.set(ControlMode.PercentOutput, 0.0)
 
-    def set_drive(self, spd):
+    def set_drive(self, target_magnitude, target=0):
         """Sets Lift Drive Talon to new speed
         Parameters
         ---
         `spd` (int) The new speed to be set"""
-        self.talon_drive_CDRive.set(spd)
+        if target is 1:
+            self.talon_drive_CDRive.set(ControlMode.MotionMagic, target_magnitude)
+        elif target is 0:
+            self.talon_drive_CDRive.set(ControlMode.PercentOutput, target_magnitude)
 
     def set_position(self, position_target=None):
         """Sets the position (from the `Position` enum) of the lift"""
@@ -151,6 +160,9 @@ class SubLift(Subsystem):
 
     def get_back(self):
         return self.talon_drive_CBack.get(), self.talon_drive_CBack.getControlMode()
+
+    def get_drive(self):
+        return self.talon_drive_CDRive.get(), self.talon_drive_CDRive.getControlMode()
 
     def get_front_limit(self):
         return self.CFront_limit.get()
@@ -203,6 +215,12 @@ class SubLift(Subsystem):
             return self.talon_drive_CBack.getPulseWidthPosition()
         else:
             pass
+
+    def get_drive_position(self, target=0):
+        if target is 0:
+            return self.talon_drive_CDRive.getQuadraturePosition()
+        elif target is 1:
+            return self.talon_drive_CDRive.getPulseWidthPosition()
 
     def reset_front_encoder(self):
         """Sets the front quadrature encoder to 0"""
