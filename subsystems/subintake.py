@@ -21,13 +21,13 @@ class SubIntake(Subsystem):
     def __init__(self):
         super().__init__("Intake")
         self._victor = VictorSPX(robotmap.talon_intake)
-        self.setState(StateIntake.HALT)
+        self.set_state(StateIntake.HALT)
 
-    def setVictor(self, spd_target, mode=ControlMode.PercentOutput):
+    def set_victor(self, spd_target, mode=ControlMode.PercentOutput):
         """Sets Intake Victor speed (uses PercentOutput as default mode)"""
         self._victor.set(mode, -spd_target)
 
-    def setState(self, state_target):
+    def set_state(self, state_target):
         """Sets the state of the Intake subsystem using the IntakeState Enum.
         Parameters
         ---
@@ -36,13 +36,13 @@ class SubIntake(Subsystem):
             state_target is not None
             and self._victor.getMotorOutputPercent() is not state_target.value
         ):
-            self.setVictor(state_target.value, mode=ControlMode.PercentOutput)
+            self.set_victor(state_target.value, mode=ControlMode.PercentOutput)
         elif state_target is None:
             pass
 
         self.state = state_target
 
-    def getState(self):
+    def get_state(self):
         """Returns current IntakeState"""
         return self.state
 

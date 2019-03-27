@@ -10,7 +10,7 @@ class DuckbillSet(Command):
         self.state_target = state_target
 
     def initialize(self):
-        subsystems.duckbill.setState(self.state_target)
+        subsystems.duckbill.set_state(self.state_target)
 
     def isFinished(self):
         return False

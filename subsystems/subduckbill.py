@@ -21,9 +21,9 @@ class SubDuckbill(Subsystem):
         super().__init__("Duckbill")
         self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_B)
         self.solenoid_duckbill_T = Solenoid(robotmap.solenoid_piston_T)
-        self.setState(StateDuckbill.UP)
+        self.set_state(StateDuckbill.UP)
 
-    def setState(self, state_target):
+    def set_state(self, state_target):
         """Sets the state of the Duckbill subsystem using the StateDuckBill Enum.
         Parameters
         ---
@@ -35,7 +35,7 @@ class SubDuckbill(Subsystem):
 
         self.state = state_target
 
-    def getState(self):
+    def get_state(self):
         """Returns current StateDuckbill"""
         return self.state
 

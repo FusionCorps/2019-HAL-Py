@@ -15,7 +15,7 @@ class IntakeSet(Command):
         self.requires(subsystems.intake)
 
     def initialize(self):
-        subsystems.intake.setVictor(self.state_target.value)
+        subsystems.intake.set_victor(self.state_target.value)
 
     def isFinished(self):
         return False

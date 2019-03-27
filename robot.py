@@ -12,7 +12,6 @@ class Hal(CommandBasedRobot):
         import oi
         import commands
         import dashboard
-
         # import common.cameras
 
         self.logger = logging.getLogger("Core")

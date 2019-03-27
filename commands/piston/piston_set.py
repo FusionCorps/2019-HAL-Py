@@ -10,7 +10,7 @@ class PistonSet(Command):
         self.state_target = state_target
 
     def initialize(self):
-        subsystems.piston.setState(self.state_target)
+        subsystems.piston.set_state(self.state_target)
 
     def isFinished(self):
         return False
@@ -21,4 +21,4 @@ class PistonSet(Command):
     def end(self):
         from subsystems.subpiston import StatePiston
 
-        subsystems.piston.setState(StatePiston.IN)
+        subsystems.piston.set_state(StatePiston.IN)
