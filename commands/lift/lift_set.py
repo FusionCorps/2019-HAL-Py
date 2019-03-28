@@ -113,8 +113,4 @@ class LiftSet(Command):
         self.end()
 
     def end(self):
-        if self.target_position is Position.BOTH_DOWN:
-            subsystems.lift.set_back(robotmap.lift_height)
-            subsystems.lift.set_front(robotmap.lift_height)
-
         self.logger.warning("The Target Position " + str(self) + " has been reached")

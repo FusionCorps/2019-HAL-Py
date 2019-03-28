@@ -19,7 +19,7 @@ class ChassisDrive(Command):
 
     def initialize(self):
         self.logger.info("Starting")
-        subsystems.chassis._drive.curvatureDrive(self.spd_x, self.spd_z, True)
+        subsystems.chassis.drive.curvatureDrive(self.spd_x, self.spd_z, True)
 
     def execute(self):
         pass
@@ -33,4 +33,4 @@ class ChassisDrive(Command):
 
     def end(self):
         self.logger.info("Ending")
-        subsystems.chassis._drive.curvatureDrive(0.0, 0.0, True)
+        subsystems.chassis.drive.curvatureDrive(0.0, 0.0, True)
