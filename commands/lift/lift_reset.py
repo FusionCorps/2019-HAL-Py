@@ -13,8 +13,9 @@ class LiftReset(Command):
         self.logger = logging.getLogger("LiftReset")
 
     def initialize(self):
-        subsystems.lift.set_front(-robotmap.spd_lift_front)
-        subsystems.lift.set_back(-robotmap.spd_lift_back)
+        self.logger.warning("Lift is driving up to reset")
+        subsystems.lift.set_front(-robotmap.spd_lift_front, target=1)
+        subsystems.lift.set_back(-robotmap.spd_lift_back, target=1)
 
     def execute(self):
         pass
@@ -29,3 +30,4 @@ class LiftReset(Command):
         subsystems.lift.stop_front()
         subsystems.lift.stop_back()
         subsystems.lift.reset_encoders()
+        self.logger.warning("Lift has stopped driving up, encoders reset")

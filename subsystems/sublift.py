@@ -49,12 +49,6 @@ class SubLift(Subsystem):
             talon.setStatusFramePeriod(
                 WPI_TalonSRX.StatusFrameEnhanced.Status_10_MotionMagic, 20, 0
             )
-            # talon.setStatusFramePeriod(
-            #     WPI_TalonSRX.StatusFrameEnhanced.Status_10_Targets, 20, 0
-            # )
-            # talon.setStatusFramePeriod(
-            #     WPI_TalonSRX.StatusFrameEnhanced.Status_2_Feedback0, 20, 0
-            # )
 
             talon.selectProfileSlot(0, 0)
             talon.configMotionAcceleration(robotmap.lift_acceleration, 0)
@@ -140,8 +134,6 @@ class SubLift(Subsystem):
                     + position_target.name
                     + " ]"
                 )
-                # for talon in self.lift_talons:
-                #     talon.setIntegralAccumulator(0, 0, 0)
 
             self.set_back(position_target.value[0])
             self.set_front(position_target.value[1])

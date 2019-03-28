@@ -3,8 +3,7 @@ import logging
 from wpilib.command import Command
 
 import subsystems
-from commands.lift.lift_set import LiftSet
-from subsystems.sublift import Position, Position
+from subsystems.sublift import Position
 
 
 class LiftDrive(Command):
@@ -12,9 +11,12 @@ class LiftDrive(Command):
         super().__init__("LiftDrive", timeout=time)
         self.logger = logging.getLogger("LiftDrive")
         self.spd_new = spd_new
-        self.lift_down = LiftSet(Position.BACK_DOWN)
 
     def initialize(self):
+        self.logger.warning("Lift is driving...")
+        if subsystems.lift.position_current is not Position.BOTH_DOWN:
+            self.logger.warning("The Lift is not Down!")
+            self.end()
         subsystems.lift.set_drive(self.spd_new)
 
     def execute(self):
@@ -28,5 +30,5 @@ class LiftDrive(Command):
         self.end()
 
     def end(self):
-        self.logger.info("Ending")
+        self.logger.warning("Ending")
         subsystems.lift.set_drive(0.0)

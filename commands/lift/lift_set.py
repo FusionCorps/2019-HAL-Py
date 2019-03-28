@@ -1,5 +1,4 @@
 import logging
-from math import pow
 
 from wpilib import Timer
 from wpilib.command import Command
@@ -22,21 +21,15 @@ class LiftSet(Command):
         self.timer = Timer()
 
     def __str__(self):
-        return "[ " + self.target_position.name + " -> " + subsystems.lift.get_current_position().name + " ] (Front: " \
-                                                                                                         "" + str(
-            subsystems.lift.get_front_position()) + ", Back: " + str(subsystems.lift.get_back_position())
-
-    @staticmethod
-    def get_back_correction(time, decay_rate=0.1):
-        """Returns the encoder tick amount (from a decay function) that needs to be added to the current lift height"""
-        # return (robotmap.lift_height - subsystems._lift.get_back_position()) * pow(1 - decay_rate, time)
-        return robotmap.lift_height * pow(1 - decay_rate, time)
-
-    @staticmethod
-    def get_front_correction(time, decay_rate=0.1):
-        """Returns the encoder tick amount (from a decay function) that needs to be added to the current lift height"""
-        # return (robotmap.lift_height - subsystems._lift.get_front_position()) * pow(1 - decay_rate, time)
-        return robotmap.lift_height * pow(1 - decay_rate, time)
+        return "[ " \
+               + self.target_position.name \
+               + " -> " \
+               + subsystems.lift.get_current_position().name \
+               + " ] (Front: " \
+               + str(subsystems.lift.get_front_position()) \
+               + ", Back: " \
+               + str(subsystems.lift.get_back_position()) \
+               + ")"
 
     def initialize(self):
         subsystems.lift.set_position(self.target_position)
@@ -102,16 +95,16 @@ class LiftSet(Command):
             return False
         elif self.can_finish is True:
             if self.target_position is Position.BOTH_UP:
-                return (abs(subsystems.lift.get_front_position() <= robotmap.lift_height + 1000) and abs(
-                    subsystems.lift.get_back_position() <= robotmap.lift_height + 1000))
+                return (abs(subsystems.lift.get_front_position() <= 1000) and abs(
+                    subsystems.lift.get_back_position() <= 1000))
             elif self.target_position is Position.BOTH_DOWN:
                 return not subsystems.lift.get_back_limit() and not subsystems.lift.get_back_limit()
             elif self.target_position is Position.FRONT_DOWN:
                 return not subsystems.lift.get_front_limit() and (
-                        abs(subsystems.lift.get_back_position()) <= robotmap.lift_height + 1000)
+                        abs(subsystems.lift.get_back_position()) <= 1000)
             elif self.target_position is Position.BACK_DOWN:
                 return not subsystems.lift.get_back_limit() and (
-                        abs(subsystems.lift.get_front_position()) <= robotmap.lift_height + 1000)
+                        abs(subsystems.lift.get_front_position()) <= 1000)
 
     def interrupted(self):
         self.logger.warning(
@@ -120,4 +113,8 @@ class LiftSet(Command):
         self.end()
 
     def end(self):
-        self.logger.info("The Target Position " + str(self) + " has been reached")
+        if self.target_position is Position.BOTH_DOWN:
+            subsystems.lift.set_back(robotmap.lift_height)
+            subsystems.lift.set_front(robotmap.lift_height)
+
+        self.logger.warning("The Target Position " + str(self) + " has been reached")
