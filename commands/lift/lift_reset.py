@@ -14,13 +14,13 @@ class LiftReset(Command):
 
     def initialize(self):
         subsystems.lift.set_front(-robotmap.spd_lift_front)
-        subsystems.lift.set_back(robotmap.spd_lift_back)
+        subsystems.lift.set_back(-robotmap.spd_lift_back)
 
     def execute(self):
         pass
 
     def isFinished(self):
-        return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
+        return False
 
     def interrupted(self):
         self.end()

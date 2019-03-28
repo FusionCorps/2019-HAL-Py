@@ -38,7 +38,7 @@ spd_intake = 0.5
 spd_intake_shoot = -0.8
 
 spd_lift_front = 0.5
-spd_lift_up = 0.25
+spd_lift_up = 0.4
 spd_lift_back = 0.4
 
 # Limelight variables

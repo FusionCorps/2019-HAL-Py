@@ -16,9 +16,9 @@ class LiftGroup(CommandGroup):
         self.addSequential(LiftSet(Position.BOTH_DOWN))
         self.addSequential(LiftDrive(0.6, 3))
         self.addSequential(ChassisDrive(0.5, 0.0, 2))
-        self.addSequential(LiftSet(Position.FRONT_UP))
+        self.addSequential(LiftSet(Position.BACK_DOWN))
         self.addParallel(ChassisDrive(0.5, 0.0, 3))
-        self.addSequential(LiftSet(Position.BACK_UP))
+        self.addSequential(LiftSet(Position.BOTH_UP))
 
     def initialize(self):
         pass
