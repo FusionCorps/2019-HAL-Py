@@ -7,15 +7,18 @@ import subsystems
 
 
 class LiftReset(Command):
-    def __init__(self):
+    def __init__(self, target=1):
         super().__init__("LiftReset")
         self.requires(subsystems.lift)
         self.logger = logging.getLogger("LiftReset")
+        self.target = target
 
     def initialize(self):
         self.logger.warning("Lift is driving up to reset")
-        subsystems.lift.set_front(-robotmap.spd_lift_front, target=1)
-        subsystems.lift.set_back(-robotmap.spd_lift_back, target=1)
+        if self.target is 1:
+            subsystems.lift.set_back(-robotmap.spd_lift_back, target=1)
+        elif self.target is 0:
+            subsystems.lift.set_front(-robotmap.spd_lift_front, target=1)
 
     def execute(self):
         pass

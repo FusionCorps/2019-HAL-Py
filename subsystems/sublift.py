@@ -15,8 +15,8 @@ class Position(Enum):
 
     BOTH_DOWN = (robotmap.lift_height, robotmap.lift_height)
     BOTH_UP = (0, 0)
-    BACK_DOWN = (robotmap.lift_height, 0)
-    FRONT_DOWN = (0, robotmap.lift_height)
+    FRONT_DOWN = (robotmap.lift_height, 0)
+    BACK_DOWN = (0, robotmap.lift_height)
 
 
 class SubLift(Subsystem):

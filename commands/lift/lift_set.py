@@ -81,12 +81,10 @@ class LiftSet(Command):
         ):
             if (
                     not subsystems.lift.get_front_limit()
-                    and subsystems.lift.get_front_position() is not robotmap.lift_height
             ):
                 subsystems.lift.stop_front()
             if (
                     not subsystems.lift.get_back_limit()
-                    and subsystems.lift.get_back_position() is not robotmap.lift_height
             ):
                 subsystems.lift.stop_back()
 
@@ -110,6 +108,8 @@ class LiftSet(Command):
         self.logger.warning(
             "The Target Position " + str(self) + " was Interrupted"
         )
+        subsystems.lift.stop_back()
+        subsystems.lift.stop_front()
         self.end()
 
     def end(self):
