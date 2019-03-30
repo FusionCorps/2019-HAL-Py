@@ -7,6 +7,7 @@ from subsystems.sublift import Position
 
 
 class LiftDrive(Command):
+    """Drives front lift bottom motor"""
     def __init__(self, spd_new, time=None):
         super().__init__("LiftDrive", timeout=time)
         self.logger = logging.getLogger("LiftDrive")

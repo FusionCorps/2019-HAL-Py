@@ -7,6 +7,7 @@ import subsystems
 
 
 class LiftReset(Command):
+    """Manual reset used to flush the lift system"""
     def __init__(self, target=1):
         super().__init__("LiftReset")
         self.requires(subsystems.lift)
