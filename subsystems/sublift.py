@@ -20,6 +20,7 @@ class Position(Enum):
 
 
 class SubLift(Subsystem):
+    """Subsystem used to raise robot to Hab 3"""
     def __init__(self):
         super().__init__("Lift")
         self.logger = logging.getLogger("Lift")

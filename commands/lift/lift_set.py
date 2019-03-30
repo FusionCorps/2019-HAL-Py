@@ -9,6 +9,7 @@ from subsystems.sublift import Position
 
 
 class LiftSet(Command):
+    """Sets the position of the lift using CTRE's MotionMagic system"""
     def __init__(self, target_position, can_finish=True):
         self.target_position = target_position
         self.logger = logging.getLogger("LiftSet")
@@ -121,9 +122,6 @@ class LiftSet(Command):
 
     def end(self):
         if self.target_position is Position.CLIMB:
-            subsystems.lift.stop_front()
-            subsystems.lift.stop_back()
-        if self.target_position is Position.FLUSH:
             subsystems.lift.stop_front()
             subsystems.lift.stop_back()
         self.logger.warning(str(self) + " Reached")

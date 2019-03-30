@@ -18,6 +18,7 @@ class StateIntake(Enum):
 
 
 class SubIntake(Subsystem):
+    """Subsystem used to intake and eject cargo"""
     def __init__(self):
         super().__init__("Intake")
         self._victor = VictorSPX(robotmap.talon_intake)

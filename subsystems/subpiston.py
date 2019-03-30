@@ -17,6 +17,7 @@ class StatePiston(Enum):
 
 
 class SubPiston(Subsystem):
+    """Subsystem used to push hatches off Duckbill"""
     def __init__(self):
         super().__init__("Piston")
         self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)

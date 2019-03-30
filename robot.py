@@ -12,7 +12,7 @@ class Hal(CommandBasedRobot):
         import oi
         import commands
         import dashboard
-        # import common.cameras
+        import common.cameras
 
         self.logger = logging.getLogger("Core")
 
@@ -20,7 +20,7 @@ class Hal(CommandBasedRobot):
         subsystems.init()
         commands.init()
         dashboard.init()
-        # common.cameras.init()
+        common.cameras.init()
 
         self.logger.info("Robot initialized")
 
