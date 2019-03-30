@@ -25,20 +25,20 @@ class LiftSet(Command):
                + self.target_position.name \
                + " -> " \
                + subsystems.lift.get_current_position().name \
-               + " ] (Front: " \
+               + " ] (F: " \
                + str(subsystems.lift.get_front_position()) \
-               + ", Back: " \
+               + ", B: " \
                + str(subsystems.lift.get_back_position()) \
                + ")"
 
     def initialize(self):
-        if self.target_position is Position.BOTH_DOWN:
+        if self.target_position is Position.CLIMB:
             pass
-        elif self.target_position is Position.BACK_DOWN:
+        elif self.target_position is Position.LBACK:
             subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
-        elif self.target_position is Position.FRONT_DOWN:
+        elif self.target_position is Position.LFRONT:
             pass
-        elif self.target_position is Position.BOTH_UP:
+        elif self.target_position is Position.FLUSH:
             pass
         subsystems.lift.set_position(self.target_position)
         self.timer.reset()
@@ -83,7 +83,7 @@ class LiftSet(Command):
                     subsystems.lift.set_front(output_F * 0.8)
 
         if (
-                self.target_position is Position.BOTH_DOWN
+                self.target_position is Position.CLIMB
         ):
             if (
                     not subsystems.lift.get_front_limit()
@@ -93,12 +93,12 @@ class LiftSet(Command):
                     not subsystems.lift.get_back_limit()
             ):
                 subsystems.lift.stop_back()
-        elif self.target_position is Position.FRONT_DOWN:
+        elif self.target_position is Position.LFRONT:
             if not subsystems.lift.get_front_limit():
                 subsystems.lift.stop_front()
             if abs(subsystems.lift.get_back_position()) <= 1000:
                 subsystems.lift.stop_back()
-        elif self.target_position is Position.BACK_DOWN:
+        elif self.target_position is Position.LBACK:
             if not subsystems.lift.get_back_limit():
                 subsystems.lift.stop_back()
             if abs(subsystems.lift.get_front_position()) <= 1000:
@@ -108,26 +108,26 @@ class LiftSet(Command):
         if self.can_finish is False:
             return False
         elif self.can_finish is True:
-            if self.target_position is Position.BOTH_UP:
-                return abs(subsystems.lift.get_front_position()) <= 1000 and abs(
-                    subsystems.lift.get_back_position()) <= 1000
-            elif self.target_position is Position.BOTH_DOWN:
+            if self.target_position is Position.FLUSH:
+                return (abs(subsystems.lift.get_front_position()) <= 1000) and (abs(
+                    subsystems.lift.get_back_position()) <= 1000)
+            elif self.target_position is Position.CLIMB:
                 return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
-            elif self.target_position is Position.FRONT_DOWN:
+            elif self.target_position is Position.LFRONT:
                 return not subsystems.lift.get_front_limit() and (
                         abs(subsystems.lift.get_back_position()) <= 1000)
-            elif self.target_position is Position.BACK_DOWN:
+            elif self.target_position is Position.LBACK:
                 return not subsystems.lift.get_back_limit() and (
                         abs(subsystems.lift.get_front_position()) <= 1000)
 
     def interrupted(self):
         self.logger.warning(
-            "The Target Position " + str(self) + " was Interrupted"
+            str(self) + " Interrupted"
         )
         self.end()
 
     def end(self):
-        if self.target_position is Position.BOTH_DOWN:
+        if self.target_position is Position.CLIMB:
             subsystems.lift.stop_front()
             subsystems.lift.stop_back()
-        self.logger.warning("The Target Position " + str(self) + " has been reached")
+        self.logger.warning(str(self) + " Reached")

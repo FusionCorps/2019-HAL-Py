@@ -1,4 +1,3 @@
-from ctre import ControlMode
 from wpilib.command import Command
 
 import subsystems
@@ -24,4 +23,4 @@ class IntakeSet(Command):
         self.end()
 
     def end(self):
-        subsystems.intake._victor.set(ControlMode.PercentOutput, 0.0)
+        subsystems.intake.set_victor(0.0)

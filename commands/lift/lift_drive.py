@@ -14,9 +14,6 @@ class LiftDrive(Command):
 
     def initialize(self):
         subsystems.lift.set_drive(self.spd_new)
-        if subsystems.lift.position_current != Position.BOTH_DOWN:
-            self.logger.warning("The Lift is not Down!")
-            self.cancel()
 
     def execute(self):
         if not subsystems.lift.get_back_limit():
@@ -24,7 +21,7 @@ class LiftDrive(Command):
         if not subsystems.lift.get_front_limit():
             subsystems.lift.stop_front()
         if subsystems.lift.get_back_limit():
-            subsystems.lift.set_position(Position.BOTH_DOWN)
+            subsystems.lift.set_position(Position.CLIMB)
 
     def isFinished(self):
         return self.isTimedOut()

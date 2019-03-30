@@ -31,8 +31,8 @@ def init():
     # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
     # oi.bumper_L.toggleWhenPressed(LiftReset(0))
     # oi.bumper_R.toggleWhenPressed(LiftReset(1))
-    oi.A.whenPressed(LiftSet(Position.BOTH_UP))
-    oi.B.whenPressed(LiftSet(Position.BOTH_DOWN))
+    oi.A.whenPressed(LiftSet(Position.FLUSH))
+    oi.B.whenPressed(LiftSet(Position.CLIMB))
     # oi.X.whenPressed(LiftSet(Position.FRONT_DOWN))
     # oi.Y.whenPressed(LiftSet(Position.BACK_DOWN))
 
