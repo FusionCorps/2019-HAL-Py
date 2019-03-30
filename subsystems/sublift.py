@@ -80,6 +80,12 @@ class SubLift(Subsystem):
     def is_motion_magic_active(self):
         return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
 
+    def set_front_fpid(self, fpid):
+        self.talon_drive_CBack.config_kF(0, fpid[0], 0)
+        self.talon_drive_CBack.config_kP(0, fpid[1], 0)
+        self.talon_drive_CBack.config_kI(0, fpid[2], 0)
+        self.talon_drive_CBack.config_kD(0, fpid[3], 0)
+
     def set_back(self, target_magnitude, target=0):
         """Sets Back Lift Talon to new MotionMagic position specified in `pos_new`
         Parameters

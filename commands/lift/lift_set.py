@@ -32,6 +32,14 @@ class LiftSet(Command):
                + ")"
 
     def initialize(self):
+        if self.target_position is Position.BOTH_DOWN:
+            pass
+        elif self.target_position is Position.BACK_DOWN:
+            subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
+        elif self.target_position is Position.FRONT_DOWN:
+            pass
+        elif self.target_position is Position.BOTH_UP:
+            pass
         subsystems.lift.set_position(self.target_position)
         self.timer.reset()
 
