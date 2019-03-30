@@ -21,15 +21,15 @@ class LiftSet(Command):
         self.timer = Timer()
 
     def __str__(self):
-        return "[ " \
-               + self.target_position.name \
-               + " -> " \
-               + subsystems.lift.get_current_position().name \
-               + " ] (Front: " \
-               + str(subsystems.lift.get_front_position()) \
-               + ", Back: " \
-               + str(subsystems.lift.get_back_position()) \
-               + ")"
+        return ("[ "
+                + self.target_position.name
+                + " -> "
+                + subsystems.lift.get_current_position().name
+                + " ] (Front: "
+                + str(subsystems.lift.get_front_position())
+                + ", Back: "
+                + str(subsystems.lift.get_back_position())
+                + ")")
 
     def initialize(self):
         subsystems.lift.set_position(self.target_position)
