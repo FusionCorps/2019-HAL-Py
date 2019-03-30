@@ -122,7 +122,7 @@ class LiftSet(Command):
 
     def interrupted(self):
         self.logger.warning(
-            "The Target Position " + str(self) + " was Interrupted"
+            "Target " + str(self) + " Interrupted"
         )
         self.end()
 
@@ -130,4 +130,4 @@ class LiftSet(Command):
         if self.target_position is Position.BOTH_DOWN:
             subsystems.lift.stop_front()
             subsystems.lift.stop_back()
-        self.logger.warning("The Target Position " + str(self) + " has been reached")
+        self.logger.warning("Target " + str(self) + " reached")

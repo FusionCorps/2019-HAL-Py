@@ -139,7 +139,7 @@ class SubLift(Subsystem):
         if position_target is not None:
             if position_target is not self.position_current:
                 self.logger.warning(
-                    "Target State is [ "
+                    "Target [ "
                     + self.position_current.name
                     + " -> "
                     + position_target.name
