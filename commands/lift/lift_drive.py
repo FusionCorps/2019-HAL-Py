@@ -13,6 +13,7 @@ class LiftDrive(Command):
         self.spd_new = spd_new
 
     def initialize(self):
+        self.logger.warning("Starting")
         subsystems.lift.set_drive(self.spd_new)
 
     def execute(self):

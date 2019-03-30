@@ -32,5 +32,6 @@ class LiftReset(Command):
     def end(self):
         subsystems.lift.stop_front()
         subsystems.lift.stop_back()
+        self.logger.warning(str(subsystems.lift.get_front_position()) + " " + str(subsystems.lift.get_back_position()))
         subsystems.lift.reset_encoders()
         self.logger.warning("Lift has stopped driving up, encoders reset")

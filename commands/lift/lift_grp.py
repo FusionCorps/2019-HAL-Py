@@ -14,9 +14,9 @@ class LiftGroup(CommandGroup):
         self.logger = logging.getLogger("LiftGroup")
 
         self.addSequential(LiftSet(Position.CLIMB))
-        self.addSequential(LiftDrive(0.6, 3))
+        self.addSequential(LiftDrive(0.6, 2.5))
         self.addSequential(LiftSet(Position.LBACK))
-        self.addParallel(ChassisDrive(0.3, 0.0, 1.5))
+        self.addSequential(ChassisDrive(0.3, 0.0, 1.5))
         self.addSequential(LiftSet(Position.FLUSH))
         self.addSequential(ChassisDrive(0.3, 0.0, 0.5))
 

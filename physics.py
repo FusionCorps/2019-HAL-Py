@@ -52,7 +52,7 @@ class PhysicsEngine(object):
 
         # Encoder change values off to simulate different load conditions
         spd_f = int(4096 * 4 * f_lift["value"] * tm_diff)
-        spd_b = int(4096 * 3 * b_lift["value"] * tm_diff)
+        spd_b = int(4096 * 3.8 * b_lift["value"] * tm_diff)
 
         f_lift["quad_position"] += spd_f
         f_lift["quad_velocity"] = spd_f

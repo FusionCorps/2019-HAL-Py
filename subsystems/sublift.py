@@ -16,7 +16,7 @@ class Position(Enum):
     CLIMB = (robotmap.lift_height, robotmap.lift_height)
     FLUSH = (0, 0)
     LBACK = (robotmap.lift_height, 0)
-    LFRONT = (0, robotmap.lift_height)
+    FRONT = (0, robotmap.lift_height)
 
 
 class SubLift(Subsystem):
@@ -63,8 +63,8 @@ class SubLift(Subsystem):
         self.talon_drive_CFront.config_kI(0, robotmap.lift_front_fpid[2], 0)
         self.talon_drive_CFront.config_kD(0, robotmap.lift_front_fpid[3], 0)
 
-        self.talon_drive_CBack.setSensorPhase(True)
-        self.talon_drive_CBack.setInverted(True)
+        # self.talon_drive_CBack.setSensorPhase(True)
+        # self.talon_drive_CBack.setInverted(True)
         self.talon_drive_CBack.config_kF(0, robotmap.lift_back_fpid[0], 0)
         self.talon_drive_CBack.config_kP(0, robotmap.lift_back_fpid[1], 0)
         self.talon_drive_CBack.config_kI(0, robotmap.lift_back_fpid[2], 0)
@@ -144,13 +144,7 @@ class SubLift(Subsystem):
         """Sets the position (from the `Position` enum) of the lift"""
         if position_target is not None:
             if position_target is not self.position_current:
-                self.logger.warning(
-                    "[ "
-                    + self.position_current.name
-                    + " -> "
-                    + position_target.name
-                    + " ]"
-                )
+                self.logger.warning("[ " + self.position_current.name + " -> " + position_target.name + " ]")
 
             self.set_back(position_target.value[0])
             self.set_front(position_target.value[1])
