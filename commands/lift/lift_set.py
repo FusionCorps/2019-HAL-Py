@@ -76,8 +76,6 @@ class LiftSet(Command):
 
         if (
                 self.target_position is Position.BOTH_DOWN
-                or self.target_position is Position.FRONT_DOWN
-                or self.target_position is Position.BACK_DOWN
         ):
             if (
                     not subsystems.lift.get_front_limit()
@@ -87,6 +85,16 @@ class LiftSet(Command):
                     not subsystems.lift.get_back_limit()
             ):
                 subsystems.lift.stop_back()
+        elif self.target_position is Position.FRONT_DOWN:
+            if subsystems.lift.get_front_limit():
+                subsystems.lift.stop_front()
+            if abs(subsystems.lift.get_back_position()) <= 1000:
+                subsystems.lift.stop_back()
+        elif self.target_position is Position.BACK_DOWN:
+            if not subsystems.lift.get_back_limit():
+                subsystems.lift.stop_back()
+            if not abs(subsystems.lift.get_front_position()) <= 1000:
+                subsystems.lift.stop_front()
 
     def isFinished(self):
         if self.can_finish is False:
@@ -113,4 +121,7 @@ class LiftSet(Command):
         self.end()
 
     def end(self):
+        if self.target_position is Position.BOTH_DOWN:
+            subsystems.lift.stop_front()
+            subsystems.lift.stop_back()
         self.logger.warning("The Target Position " + str(self) + " has been reached")

@@ -15,8 +15,8 @@ class Position(Enum):
 
     BOTH_DOWN = (robotmap.lift_height, robotmap.lift_height)
     BOTH_UP = (0, 0)
-    FRONT_DOWN = (robotmap.lift_height, 0)
-    BACK_DOWN = (0, robotmap.lift_height)
+    BACK_DOWN = (robotmap.lift_height, 0)
+    FRONT_DOWN = (0, robotmap.lift_height)
 
 
 class SubLift(Subsystem):
@@ -77,6 +77,9 @@ class SubLift(Subsystem):
 
         self.position_current = Position.BOTH_UP
 
+    def is_motion_magic_active(self):
+        return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
+
     def set_back(self, target_magnitude, target=0):
         """Sets Back Lift Talon to new MotionMagic position specified in `pos_new`
         Parameters
@@ -120,8 +123,10 @@ class SubLift(Subsystem):
         `spd` (int) The new speed to be set"""
         if target is 1:
             self.talon_drive_CDRive.set(ControlMode.MotionMagic, target_magnitude)
-        elif target is 0:
-            self.talon_drive_CDRive.set(ControlMode.PercentOutput, target_magnitude)
+        elif target is 0 and not (target_magnitude is self.get_drive()[0]):
+            self.talon_drive_CDRive.set(mode=ControlMode.PercentOutput, demand0=target_magnitude)
+        else:
+            pass
 
     def set_position(self, position_target=None):
         """Sets the position (from the `Position` enum) of the lift"""

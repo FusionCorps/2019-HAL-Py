@@ -14,14 +14,14 @@ class LiftGroup(CommandGroup):
         self.logger = logging.getLogger("LiftGroup")
 
         self.addSequential(LiftSet(Position.BOTH_DOWN))
-        self.addSequential(LiftDrive(0.6, 2))
+        self.addSequential(LiftDrive(0.6, 4))
         self.addSequential(ChassisDrive(0.5, 0.0, 2))
         self.addSequential(LiftSet(Position.BACK_DOWN))
         self.addParallel(ChassisDrive(0.5, 0.0, 2))
         self.addSequential(LiftSet(Position.BOTH_UP))
 
     def initialize(self):
-        self.logger.warning("Starting...")
+        self.logger.warning("Starting Lift Group")
 
     def execute(self):
         pass
