@@ -15,7 +15,6 @@ class LiftGroup(CommandGroup):
 
         self.addSequential(LiftSet(Position.BOTH_DOWN))
         self.addSequential(LiftDrive(0.6, 3))
-        # self.addSequential(ChassisDrive(0.3, 0.0, 2))
         self.addSequential(LiftSet(Position.BACK_DOWN))
         self.addParallel(ChassisDrive(0.3, 0.0, 2))
         self.addSequential(LiftSet(Position.BOTH_UP))
