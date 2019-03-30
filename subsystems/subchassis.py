@@ -110,7 +110,7 @@ class SubChassis(Subsystem):
             self.sonar.setAutomaticMode(False)
 
     def get_distance(self):
-        """Gets Ultrasonic distance in MM"""
+        """Gets Ultrasonic distance in mm"""
         return self.sonar.getRangeMM()
 
     def joystick_drive(self):
