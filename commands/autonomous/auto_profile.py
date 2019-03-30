@@ -14,6 +14,7 @@ class AutoProfile(Command):
         super().__init__("AutoProfile")
         self.requires(subsystems.chassis)
         self.points = []
+        self.left, self.right, self.trajectory, self.encoder_followers, self.modifier = None, None, None, None, None
         self.logger = logging.getLogger("AutoProfile")
 
         for loc in args:
