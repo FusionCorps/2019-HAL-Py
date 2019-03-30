@@ -78,7 +78,76 @@ class SubLift(Subsystem):
         self.position_current = Position.BOTH_UP
 
     def is_motion_magic_active(self):
+        """Returns whether both lift talons are operating in the Motion Magic Control Mode"""
         return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
+
+    def get_current_position(self):
+        """Returns the internal target Lift position"""
+        return self.position_current
+
+    def get_front(self):
+        """Returns a tuple of the front lift's output amount and the Control Mode"""
+        return self.talon_drive_CFront.get(), self.talon_drive_CFront.getControlMode()
+
+    def get_back(self):
+        """Returns a tuple of the back lift's output amount and the Control Mode"""
+        return self.talon_drive_CBack.get(), self.talon_drive_CBack.getControlMode()
+
+    def get_drive(self):
+        """Returns a tuple of the drive motor's output amount and the Control Mode"""
+        return self.talon_drive_CDRive.get(), self.talon_drive_CDRive.getControlMode()
+
+    def get_front_limit(self):
+        """Returns the front limit state"""
+        return self.CFront_limit.get()
+
+    def get_back_limit(self):
+        """Returns the back limit state"""
+        return self.CBack_limit.get()
+
+    def get_front_position(self, target=0):
+        """Returns either the quad or pulse-width position of the front lift
+        Parameters
+        ---
+        `target`: (int) The target device (`0` for quad, `1` for pulse)"""
+        if target is 0:
+            return self.talon_drive_CFront.getQuadraturePosition()
+        elif target is 1:
+            return self.talon_drive_CFront.getPulseWidthPosition()
+
+    def get_back_position(self, target=0):
+        """Returns either the quad or pulse-width position of the back lift
+        Parameters
+        ---
+        `target`: (int) The target device (`0` for quad, `1` for pulse)"""
+        if target is 0:
+            return self.talon_drive_CBack.getQuadraturePosition()
+        elif target is 1:
+            return self.talon_drive_CBack.getPulseWidthPosition()
+        else:
+            pass
+
+    def get_drive_position(self, target=0):
+        """"""
+        if target is 0:
+            return self.talon_drive_CDRive.getQuadraturePosition()
+        elif target is 1:
+            return self.talon_drive_CDRive.getPulseWidthPosition()
+
+    def reset_front_encoder(self):
+        """Sets the front quadrature encoder to 0"""
+        self.logger.info("Zeroing front encoder")
+        self.talon_drive_CFront.setQuadraturePosition(0, 0)
+
+    def reset_back_encoder(self):
+        """Sets the back quadrature encoder to 0"""
+        self.logger.info("Zeroing back encoder")
+        self.talon_drive_CBack.setQuadraturePosition(0, 0)
+
+    def reset_encoders(self):
+        """Sets both the front and back quadrature encoders to 0"""
+        self.reset_back_encoder()
+        self.reset_front_encoder()
 
     def set_back(self, target_magnitude, target=0):
         """Sets Back Lift Talon to new MotionMagic position specified in `pos_new`
@@ -99,22 +168,6 @@ class SubLift(Subsystem):
             self.talon_drive_CFront.set(ControlMode.MotionMagic, target_magnitude)
         elif target is 1:
             self.talon_drive_CFront.set(ControlMode.PercentOutput, target_magnitude)
-
-    def stop_back(self):
-        """Stops Back Lift Talon"""
-        if (
-                self.talon_drive_CBack.get() is not 0.0
-                or self.talon_drive_CBack.getControlMode() is not ControlMode.PercentOutput
-        ):
-            self.talon_drive_CBack.set(ControlMode.PercentOutput, 0.0)
-
-    def stop_front(self):
-        """Stops Front Lift Talon"""
-        if (
-                self.talon_drive_CFront.get() is not 0.0
-                or self.talon_drive_CFront.getControlMode() is not ControlMode.PercentOutput
-        ):
-            self.talon_drive_CFront.set(ControlMode.PercentOutput, 0.0)
 
     def set_drive(self, target_magnitude, target=0):
         """Sets Lift Drive Talon to new speed
@@ -148,31 +201,12 @@ class SubLift(Subsystem):
         else:
             pass
 
-    def get_current_position(self):
-        """Returns the internal target Lift position"""
-        return self.position_current
-
-    def get_front(self):
-        return self.talon_drive_CFront.get(), self.talon_drive_CFront.getControlMode()
-
-    def get_back(self):
-        return self.talon_drive_CBack.get(), self.talon_drive_CBack.getControlMode()
-
-    def get_drive(self):
-        return self.talon_drive_CDRive.get(), self.talon_drive_CDRive.getControlMode()
-
-    def get_front_limit(self):
-        return self.CFront_limit.get()
-
-    def get_back_limit(self):
-        return self.CBack_limit.get()
-
     def set_front_position(self, pos_new, target=0):
         """Sets either the front quadrature or pulse-width encoder to `pos_new`
         Parameters
         ---
         `pos_new`: (int) Number of ticks
-        
+
         `target`: (int) The target device (default `0` for quad, `1` for pulse)"""
         if target is 0:
             self.talon_drive_CFront.setQuadraturePosition(pos_new, 0)
@@ -184,52 +218,25 @@ class SubLift(Subsystem):
         Parameters
         ---
         `pos_new`: (int) Number of ticks
-        
+
         `target`: (int) The target device (default `0` for quad, `1` for pulse)"""
         if target is 0:
             self.talon_drive_CBack.setQuadraturePosition(pos_new, 0)
         elif target is 1:
             self.talon_drive_CBack.setPulseWidthPosition(pos_new, 0)
 
-    def get_front_position(self, target=0):
-        """Returns either the quad or pulse-width position of the front lift
-        Parameters
-        ---
-        `target`: (int) The target device (`0` for quad, `1` for pulse)"""
-        if target is 0:
-            return self.talon_drive_CFront.getQuadraturePosition()
-        elif target is 1:
-            return self.talon_drive_CFront.getPulseWidthPosition()
+    def stop_back(self):
+        """Stops Back Lift Talon"""
+        if (
+                self.talon_drive_CBack.get() is not 0.0
+                or self.talon_drive_CBack.getControlMode() is not ControlMode.PercentOutput
+        ):
+            self.talon_drive_CBack.set(ControlMode.PercentOutput, 0.0)
 
-    def get_back_position(self, target=0):
-        """Returns either the quad or pulse-width position of the back lift
-        Parameters
-        ---
-        `target`: (int) The target device (`0` for quad, `1` for pulse)"""
-        if target is 0:
-            return self.talon_drive_CBack.getQuadraturePosition()
-        elif target is 1:
-            return self.talon_drive_CBack.getPulseWidthPosition()
-        else:
-            pass
-
-    def get_drive_position(self, target=0):
-        if target is 0:
-            return self.talon_drive_CDRive.getQuadraturePosition()
-        elif target is 1:
-            return self.talon_drive_CDRive.getPulseWidthPosition()
-
-    def reset_front_encoder(self):
-        """Sets the front quadrature encoder to 0"""
-        self.logger.info("Zeroing front encoder")
-        self.talon_drive_CFront.setQuadraturePosition(0, 0)
-
-    def reset_back_encoder(self):
-        """Sets the back quadrature encoder to 0"""
-        self.logger.info("Zeroing back encoder")
-        self.talon_drive_CBack.setQuadraturePosition(0, 0)
-
-    def reset_encoders(self):
-        """Sets both the front and back quadrature encoders to 0"""
-        self.reset_back_encoder()
-        self.reset_front_encoder()
+    def stop_front(self):
+        """Stops Front Lift Talon"""
+        if (
+                self.talon_drive_CFront.get() is not 0.0
+                or self.talon_drive_CFront.getControlMode() is not ControlMode.PercentOutput
+        ):
+            self.talon_drive_CFront.set(ControlMode.PercentOutput, 0.0)
