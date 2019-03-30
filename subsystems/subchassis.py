@@ -62,6 +62,12 @@ class SubChassis(Subsystem):
             self.logger.info("Calibrating gyro")
             self.gyro.calibrate()
 
+    def set_left_output(self, spd_new):
+        self._group_L.set(spd_new)
+
+    def set_right_output(self, spd_new):
+        self._group_R.set(spd_new)
+
     def get_x(self):
         """Returns relative x position"""
         return self.accel_x - self._get_x()
@@ -114,11 +120,15 @@ class SubChassis(Subsystem):
         return self.ultrasonic.getRangeMM()
 
     def joystick_drive(self):
+        self.logger.info("Calling joystick drive")
+
         self.drive.curvatureDrive(
             -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
             oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
             True,
         )
+        # self.drive.arcadeDrive(-(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
+        #                        oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate, True)
 
     def initDefaultCommand(self):
         from commands.joystick_drive import JoystickDrive

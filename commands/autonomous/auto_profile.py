@@ -73,7 +73,7 @@ class AutoProfile(Command):
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.chassis_max_vel), 0)
+            follower.configurePIDVA(0.8, 0, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()
@@ -88,8 +88,8 @@ class AutoProfile(Command):
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-        subsystems.chassis._group_L.set(-output_L + turn_output)
-        subsystems.chassis._group_R.set(output_R - turn_output)
+        subsystems.chassis.set_left_output.set(-output_L + turn_output)
+        subsystems.chassis.set_right_output.set(output_R - turn_output)
 
     def isFinished(self):
         return self.left.isFinished() and self.right.isFinished()
