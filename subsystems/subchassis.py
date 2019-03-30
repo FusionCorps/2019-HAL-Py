@@ -45,7 +45,7 @@ class SubChassis(Subsystem):
         self.drive = DifferentialDrive(self._group_L, self._group_R)
 
         # Sensors
-        self.sonar = Ultrasonic(
+        self.ultrasonic = Ultrasonic(
             robotmap.ultrasonic_ping,
             robotmap.ultrasonic_echo,
             Ultrasonic.Unit.kMillimeters,
@@ -103,15 +103,15 @@ class SubChassis(Subsystem):
 
     def set_ultrasonic(self, state):
         """Sets Ultrasonic state"""
-        self.sonar.setEnabled(state)
+        self.ultrasonic.setEnabled(state)
         if state is True:
-            self.sonar.setAutomaticMode(True)
+            self.ultrasonic.setAutomaticMode(True)
         elif state is False:
-            self.sonar.setAutomaticMode(False)
+            self.ultrasonic.setAutomaticMode(False)
 
     def get_distance(self):
         """Gets Ultrasonic distance in mm"""
-        return self.sonar.getRangeMM()
+        return self.ultrasonic.getRangeMM()
 
     def joystick_drive(self):
         self.drive.curvatureDrive(
