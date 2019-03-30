@@ -1,7 +1,7 @@
 import logging
-from math import radians
 
 import pathfinder as pf
+from math import radians
 from pathfinder.followers import EncoderFollower
 from wpilib.command import Command
 
@@ -14,7 +14,12 @@ class AutoProfile(Command):
         super().__init__("AutoProfile")
         self.requires(subsystems.chassis)
         self.points = []
+        self.left, self.right, self.trajectory, self.modifier, self.encoder_followers = None, None, None, None, None
         self.logger = logging.getLogger("AutoProfile")
+
+        if not len(args) > 1:
+            self.logger.error("AutoProfile must have more than one point!")
+            self.end()
 
         for loc in args:
             # Check to make sure angle is not -0
@@ -94,5 +99,7 @@ class AutoProfile(Command):
 
     def end(self):
         self.logger.info("Ending")
-        self.left.reset()
-        self.right.reset()
+
+        if not (self.left is None or self.right is None):
+            self.left.reset()
+            self.right.reset()

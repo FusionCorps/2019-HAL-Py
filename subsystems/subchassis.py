@@ -59,6 +59,7 @@ class SubChassis(Subsystem):
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
 
         if robotmap.chassis_zero_acceleration_on_start:
+            self.logger.info("Calibrating gyro")
             self.gyro.calibrate()
 
     def get_x(self):
