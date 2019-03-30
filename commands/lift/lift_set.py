@@ -109,8 +109,8 @@ class LiftSet(Command):
             return False
         elif self.can_finish is True:
             if self.target_position is Position.BOTH_UP:
-                return (abs(subsystems.lift.get_front_position() <= 1000) and abs(
-                    subsystems.lift.get_back_position() <= 1000))
+                return abs(subsystems.lift.get_front_position()) <= 1000 and abs(
+                    subsystems.lift.get_back_position()) <= 1000
             elif self.target_position is Position.BOTH_DOWN:
                 return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
             elif self.target_position is Position.FRONT_DOWN:
