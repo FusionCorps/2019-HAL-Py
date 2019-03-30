@@ -1,5 +1,21 @@
 
 pyfrc
+robotpy-installer
+robotpy-hal-sim
+wpilib
+pint
+pynetconsole
+pytest
+robotpy-wpilib-utilities
+robotpy-hal-base
+pynetworktables
+pluggy
+colorama
+more-itertools
+atomicwrites
+six
+attrs
+setuptools
 coverage
 robotpy-ctre
 numpy

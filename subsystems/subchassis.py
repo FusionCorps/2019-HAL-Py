@@ -5,6 +5,7 @@ from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, SpeedControllerGroup, Ul
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
 
+import oi
 import robotmap
 
 
@@ -103,41 +104,21 @@ class SubChassis(Subsystem):
     def set_ultrasonic(self, state):
         """Sets Ultrasonic state"""
         self.sonar.setEnabled(state)
+        if state is True:
+            self.sonar.setAutomaticMode(True)
+        elif state is False:
+            self.sonar.setAutomaticMode(False)
 
     def get_distance(self):
         """Gets Ultrasonic distance in MM"""
         return self.sonar.getRangeMM()
 
     def joystick_drive(self):
-        # self.drive.curvatureDrive(
-        #     -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
-        #     oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
-        #     True,
-        # )
-        pass
-
-    # def pid_drive(self):
-    #     self._talon_FL.set(
-    #         ControlMode.MotionMagic,
-    #         (self.get_z_output(0.8) + self.get_x_output(0.8)) * 30000,
-    #     )
-    #     self._talon_FR.set(
-    #         ControlMode.MotionMagic,
-    #         (self.get_z_output(0.8) - self.get_x_output(0.8)) * 30000,
-    #     )
-    #     self._talon_BL.follow(self._talon_FL)
-    #     self._talon_BR.follow(self._talon_FR)
-    #
-    # @staticmethod
-    # def get_x_output(spd_limit, deadband=0.2):
-    #     if -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive < deadband:
-    #         return 0.0
-    #     else:
-    #         return -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive
-    #
-    # @staticmethod
-    # def get_z_output(spd_limit, deadband=0.2):
-    #     return oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate
+        self.drive.curvatureDrive(
+            -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
+            oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
+            True,
+        )
 
     def initDefaultCommand(self):
         from commands.joystick_drive import JoystickDrive
