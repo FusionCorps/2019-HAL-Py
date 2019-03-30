@@ -15,7 +15,7 @@ class IntakeJoystick(Command):
 
     def execute(self):
         subsystems.intake.set_victor(
-            (oi.joystick.getRawAxis(2) * robotmap.spd_intake) - (oi.joystick.getRawAxis(4) * robotmap.spd_intake))
+            (oi.joystick.getRawAxis(2) * robotmap.spd_intake) - (oi.joystick.getRawAxis(3) * robotmap.spd_intake))
 
     def isFinished(self):
         return False
