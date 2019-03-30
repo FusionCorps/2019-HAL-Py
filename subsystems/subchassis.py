@@ -25,11 +25,11 @@ class SubChassis(Subsystem):
             talon.configMotionCruiseVelocity(30000, 0)
             talon.configMotionAcceleration(1000, 0)
 
-            talon.config_kP(0, 0.2, 0)
-            talon.config_kI(0, 0.2, 0)
-            talon.config_kD(0, 0.2, 0)
-            talon.config_kF(0, 0.05, 0)
-            talon.config_IntegralZone(0, 0.025, 0)
+            talon.config_kP(0, 0.8, 0)
+            talon.config_kI(0, 0, 0)
+            talon.config_kD(0, 0, 0)
+            talon.config_kF(0, 0, 0)
+            talon.config_IntegralZone(0, 0, 0)
 
             talon.configPeakOutputForward(1.0, 0)
             talon.configPeakOutputReverse(-1.0, 0)
