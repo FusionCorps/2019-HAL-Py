@@ -14,7 +14,6 @@ from .lift.lift_grp import LiftGroup
 from .lift.lift_reset import LiftReset
 from .lift.lift_set import LiftSet
 from .piston.piston_set import PistonSet, PistonSet
-from .switch_control_mode import SwitchControlMode
 
 
 def init():

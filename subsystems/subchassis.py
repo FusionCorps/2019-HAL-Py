@@ -21,7 +21,6 @@ class SubChassis(Subsystem):
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         for talon in self._talons:
-            # 17 ft/sec
             talon.configMotionCruiseVelocity(30000, 0)
             talon.configMotionAcceleration(1000, 0)
 
@@ -117,6 +116,6 @@ class SubChassis(Subsystem):
         )
 
     def initDefaultCommand(self):
-        from commands.joystick_drive import JoystickDrive
+        from commands.chassis.joystick_drive import JoystickDrive
 
         self.setDefaultCommand(JoystickDrive())

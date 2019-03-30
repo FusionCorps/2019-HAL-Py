@@ -94,7 +94,7 @@ class LiftSet(Command):
             ):
                 subsystems.lift.stop_back()
         elif self.target_position is Position.FRONT_DOWN:
-            if subsystems.lift.get_front_limit():
+            if not subsystems.lift.get_front_limit():
                 subsystems.lift.stop_front()
             if abs(subsystems.lift.get_back_position()) <= 1000:
                 subsystems.lift.stop_back()
