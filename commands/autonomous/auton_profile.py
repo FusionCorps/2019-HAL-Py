@@ -224,7 +224,7 @@ class Auton_Profile(Command):
             talon.clearMotionProfileTrajectories()
 
     def initialize(self):
-        self.logger.info("Initializing Motion Profile " + self.trajectory_name_prefix)
+        self.logger.info("Initialiing Motion Profile " + self.trajectory_name_prefix)
         self.start_motion_profile()
 
     def execute(self):

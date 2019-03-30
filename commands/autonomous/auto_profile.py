@@ -14,12 +14,7 @@ class AutoProfile(Command):
         super().__init__("AutoProfile")
         self.requires(subsystems.chassis)
         self.points = []
-        self.left, self.right, self.trajectory, self.modifier, self.encoder_followers = None, None, None, None, None
         self.logger = logging.getLogger("AutoProfile")
-
-        if not len(args) > 1:
-            self.logger.error("AutoProfile must have more than one point!")
-            self.end()
 
         for loc in args:
             # Check to make sure angle is not -0
@@ -73,7 +68,7 @@ class AutoProfile(Command):
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(0.8, 0, 0.0, (1 / robotmap.chassis_max_vel), 0)
+            follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()
@@ -88,8 +83,8 @@ class AutoProfile(Command):
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-        subsystems.chassis.set_left_output.set(-output_L + turn_output)
-        subsystems.chassis.set_right_output.set(output_R - turn_output)
+        subsystems.chassis._group_L.set(-output_L + turn_output)
+        subsystems.chassis._group_R.set(output_R - turn_output)
 
     def isFinished(self):
         return self.left.isFinished() and self.right.isFinished()
@@ -99,7 +94,5 @@ class AutoProfile(Command):
 
     def end(self):
         self.logger.info("Ending")
-
-        if not (self.left is None or self.right is None):
-            self.left.reset()
-            self.right.reset()
+        self.left.reset()
+        self.right.reset()

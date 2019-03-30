@@ -21,15 +21,15 @@ class LiftSet(Command):
         self.timer = Timer()
 
     def __str__(self):
-        return ("[ "
-                + self.target_position.name
-                + " -> "
-                + subsystems.lift.get_current_position().name
-                + " ] (Front: "
-                + str(subsystems.lift.get_front_position())
-                + ", Back: "
-                + str(subsystems.lift.get_back_position())
-                + ")")
+        return "[ " \
+               + self.target_position.name \
+               + " -> " \
+               + subsystems.lift.get_current_position().name \
+               + " ] (Front: " \
+               + str(subsystems.lift.get_front_position()) \
+               + ", Back: " \
+               + str(subsystems.lift.get_back_position()) \
+               + ")"
 
     def initialize(self):
         if self.target_position is Position.BOTH_DOWN:
@@ -112,7 +112,7 @@ class LiftSet(Command):
                 return (abs(subsystems.lift.get_front_position() <= 1000) and abs(
                     subsystems.lift.get_back_position() <= 1000))
             elif self.target_position is Position.BOTH_DOWN:
-                return not subsystems.lift.get_back_limit() and not subsystems.lift.get_back_limit()
+                return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
             elif self.target_position is Position.FRONT_DOWN:
                 return not subsystems.lift.get_front_limit() and (
                         abs(subsystems.lift.get_back_position()) <= 1000)
@@ -122,7 +122,7 @@ class LiftSet(Command):
 
     def interrupted(self):
         self.logger.warning(
-            "Target " + str(self) + " Interrupted"
+            "The Target Position " + str(self) + " was Interrupted"
         )
         self.end()
 
@@ -130,4 +130,4 @@ class LiftSet(Command):
         if self.target_position is Position.BOTH_DOWN:
             subsystems.lift.stop_front()
             subsystems.lift.stop_back()
-        self.logger.warning("Target " + str(self) + " reached")
+        self.logger.warning("The Target Position " + str(self) + " has been reached")

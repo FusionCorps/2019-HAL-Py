@@ -14,19 +14,19 @@ class ChassisDrive(Command):
         self.spd_z = spd_z
 
     def initialize(self):
-        self.logger.warning("Starting")
+        self.logger.info("Starting")
         subsystems.chassis.drive.curvatureDrive(self.spd_x, self.spd_z, True)
 
     def execute(self):
         pass
 
     def interrupted(self):
-        self.logger.warning("Interrupted")
+        self.logger.info("Interrupted")
         self.end()
 
     def isFinished(self):
         return self.isTimedOut()
 
     def end(self):
-        self.logger.warning("Ending")
+        self.logger.info("Ending")
         subsystems.chassis.drive.curvatureDrive(0.0, 0.0, True)

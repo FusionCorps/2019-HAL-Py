@@ -21,14 +21,15 @@ class SubChassis(Subsystem):
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         for talon in self._talons:
+            # 17 ft/sec
             talon.configMotionCruiseVelocity(30000, 0)
             talon.configMotionAcceleration(1000, 0)
 
-            talon.config_kP(0, 0.8, 0)
-            talon.config_kI(0, 0, 0)
-            talon.config_kD(0, 0, 0)
-            talon.config_kF(0, 0, 0)
-            talon.config_IntegralZone(0, 0, 0)
+            talon.config_kP(0, 0.2, 0)
+            talon.config_kI(0, 0.2, 0)
+            talon.config_kD(0, 0.2, 0)
+            talon.config_kF(0, 0.05, 0)
+            talon.config_IntegralZone(0, 0.025, 0)
 
             talon.configPeakOutputForward(1.0, 0)
             talon.configPeakOutputReverse(-1.0, 0)
@@ -44,7 +45,7 @@ class SubChassis(Subsystem):
         self.drive = DifferentialDrive(self._group_L, self._group_R)
 
         # Sensors
-        self.ultrasonic = Ultrasonic(
+        self.sonar = Ultrasonic(
             robotmap.ultrasonic_ping,
             robotmap.ultrasonic_echo,
             Ultrasonic.Unit.kMillimeters,
@@ -59,14 +60,7 @@ class SubChassis(Subsystem):
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
 
         if robotmap.chassis_zero_acceleration_on_start:
-            self.logger.info("Calibrating gyro")
             self.gyro.calibrate()
-
-    def set_left_output(self, spd_new):
-        self._group_L.set(spd_new)
-
-    def set_right_output(self, spd_new):
-        self._group_R.set(spd_new)
 
     def get_x(self):
         """Returns relative x position"""
@@ -109,26 +103,18 @@ class SubChassis(Subsystem):
 
     def set_ultrasonic(self, state):
         """Sets Ultrasonic state"""
-        self.ultrasonic.setEnabled(state)
-        if state is True:
-            self.ultrasonic.setAutomaticMode(True)
-        elif state is False:
-            self.ultrasonic.setAutomaticMode(False)
+        self.sonar.setEnabled(state)
 
     def get_distance(self):
-        """Gets Ultrasonic distance in mm"""
-        return self.ultrasonic.getRangeMM()
+        """Gets Ultrasonic distance in MM"""
+        return self.sonar.getRangeMM()
 
     def joystick_drive(self):
-        self.logger.info("Calling joystick drive")
-
         self.drive.curvatureDrive(
             -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
             oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
             True,
         )
-        # self.drive.arcadeDrive(-(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
-        #                        oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate, True)
 
     def initDefaultCommand(self):
         from commands.joystick_drive import JoystickDrive

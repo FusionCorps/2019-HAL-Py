@@ -53,8 +53,8 @@ class SubLift(Subsystem):
             talon.selectProfileSlot(0, 0)
             talon.configMotionAcceleration(robotmap.lift_acceleration, 0)
             talon.configMotionCruiseVelocity(robotmap.lift_cruise_velocity, 0)
-            talon.configPeakOutputForward(1.0, 0)
-            talon.configPeakOutputReverse(-1.0, 0)
+            talon.configPeakOutputForward(0.8, 0)
+            talon.configPeakOutputReverse(-0.8, 0)
 
             talon.set(0.0)
 
@@ -139,7 +139,7 @@ class SubLift(Subsystem):
         if position_target is not None:
             if position_target is not self.position_current:
                 self.logger.warning(
-                    "Target [ "
+                    "Target State is [ "
                     + self.position_current.name
                     + " -> "
                     + position_target.name

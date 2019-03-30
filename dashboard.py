@@ -1,8 +1,6 @@
-from wpilib import SendableChooser, SmartDashboard
-from wpilib.shuffleboard import BuiltInWidgets, Shuffleboard
+from wpilib import SmartDashboard
 
 import robotmap
-import subsystems
 
 
 def init():
