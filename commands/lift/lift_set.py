@@ -93,7 +93,7 @@ class LiftSet(Command):
         elif self.target_position is Position.BACK_DOWN:
             if not subsystems.lift.get_back_limit():
                 subsystems.lift.stop_back()
-            if not abs(subsystems.lift.get_front_position()) <= 1000:
+            if abs(subsystems.lift.get_front_position()) <= 1000:
                 subsystems.lift.stop_front()
 
     def isFinished(self):
@@ -116,8 +116,6 @@ class LiftSet(Command):
         self.logger.warning(
             "The Target Position " + str(self) + " was Interrupted"
         )
-        subsystems.lift.stop_back()
-        subsystems.lift.stop_front()
         self.end()
 
     def end(self):

@@ -37,9 +37,9 @@ spd_chassis_vision_seeking = 0.3
 spd_intake = 0.5
 spd_intake_shoot = -0.8
 
-spd_lift_front = 0.5
+spd_lift_front = 0.3
 spd_lift_up = 0.4
-spd_lift_back = 0.5
+spd_lift_back = 0.3
 
 # Limelight variables
 limelight_pipeline = 1
@@ -58,8 +58,8 @@ chassis_zero_acceleration_on_start = False
 
 # Lift constants
 lift_height = 22000
-lift_cruise_velocity = 400
-lift_acceleration = 50
+lift_cruise_velocity = 800
+lift_acceleration = 100
 lift_front_limit = 5
 lift_back_limit = 6
 lift_front_fpid = (0, 0.8, 0.0, 0.0)

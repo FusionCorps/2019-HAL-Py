@@ -5,7 +5,6 @@ from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, SpeedControllerGroup, Ul
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
 
-import oi
 import robotmap
 
 
@@ -110,11 +109,12 @@ class SubChassis(Subsystem):
         return self.sonar.getRangeMM()
 
     def joystick_drive(self):
-        self.drive.curvatureDrive(
-            -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
-            oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
-            True,
-        )
+        # self.drive.curvatureDrive(
+        #     -(oi.joystick.getRawAxis(1)) * robotmap.spd_chassis_drive,
+        #     oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate,
+        #     True,
+        # )
+        pass
 
     # def pid_drive(self):
     #     self._talon_FL.set(

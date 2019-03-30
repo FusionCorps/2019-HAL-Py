@@ -26,7 +26,8 @@ def init():
 
     # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
     # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
-    oi.stick_L.whenPressed(LiftGroup())
+    # oi.stick_L.whenPressed(LiftGroup())
+    oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
     oi.bumper_L.toggleWhenPressed(LiftReset(0))
     oi.bumper_R.toggleWhenPressed(LiftReset(1))
     oi.A.whenPressed(LiftSet(Position.BOTH_UP))

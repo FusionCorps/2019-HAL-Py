@@ -7,15 +7,11 @@ import subsystems
 
 class ChassisDrive(Command):
     def __init__(self, spd_x, spd_z=0.0, time=None):
-        super().__init__("ChassisDrive")
+        super().__init__("ChassisDrive", timeout=time)
         self.requires(subsystems.chassis)
         self.logger = logging.getLogger("ChassisDrive")
         self.spd_x = spd_x
         self.spd_z = spd_z
-        if time is None:
-            self.timeout = 1000
-        else:
-            self.timeout = time
 
     def initialize(self):
         self.logger.info("Starting")
