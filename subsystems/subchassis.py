@@ -35,7 +35,6 @@ class SubChassis(Subsystem):
             talon.configPeakOutputReverse(-1.0, 0)
 
             talon.set(0.0)
-            talon.setSafetyEnabled(False)
 
         # Speed Controller Groups
         self._group_L = SpeedControllerGroup(self._talon_BL, self._talon_FL)
