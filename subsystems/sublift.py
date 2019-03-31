@@ -81,7 +81,7 @@ class SubLift(Subsystem):
         return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
 
     def set_back_fpid(self, fpid):
-        self.logger.warning("Back FPID to " + str(fpid))
+        self.logger.warning("Back  FPID to " + str(fpid))
         self.talon_drive_CBack.config_kF(0, fpid[0], 0)
         self.talon_drive_CBack.config_kP(0, fpid[1], 0)
         self.talon_drive_CBack.config_kI(0, fpid[2], 0)
