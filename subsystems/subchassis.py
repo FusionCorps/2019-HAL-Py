@@ -18,6 +18,7 @@ class SubChassis(Subsystem):
         self._talon_FR = WPI_TalonSRX(robotmap.talon_front_right)
         self._talon_BL = WPI_TalonSRX(robotmap.talon_back_left)
         self._talon_BR = WPI_TalonSRX(robotmap.talon_back_right)
+
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         for talon in self._talons:
@@ -36,6 +37,7 @@ class SubChassis(Subsystem):
             talon.set(0.0)
             talon.setSafetyEnabled(False)
 
+        # Drive class instance & following
         self.drive = DifferentialDrive(self._talon_FL, self._talon_FR)
         self._talon_BL.follow(self._talon_FL)
         self._talon_BR.follow(self._talon_FR)
