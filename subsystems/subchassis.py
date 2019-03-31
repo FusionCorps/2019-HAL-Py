@@ -1,7 +1,7 @@
 import logging
 
 from ctre import WPI_TalonSRX
-from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, SpeedControllerGroup, Ultrasonic
+from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, Ultrasonic
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
 
@@ -18,6 +18,7 @@ class SubChassis(Subsystem):
         self._talon_FR = WPI_TalonSRX(robotmap.talon_front_right)
         self._talon_BL = WPI_TalonSRX(robotmap.talon_back_left)
         self._talon_BR = WPI_TalonSRX(robotmap.talon_back_right)
+
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         for talon in self._talons:
@@ -36,12 +37,10 @@ class SubChassis(Subsystem):
             talon.set(0.0)
             talon.setSafetyEnabled(False)
 
-        # Speed Controller Groups
-        self._group_L = SpeedControllerGroup(self._talon_BL, self._talon_FL)
-        self._group_R = SpeedControllerGroup(self._talon_BR, self._talon_FR)
-
-        # Drive class instance
-        self.drive = DifferentialDrive(self._group_L, self._group_R)
+        # Drive class instance & following
+        self.drive = DifferentialDrive(self._talon_FL, self._talon_FR)
+        self._talon_BL.follow(self._talon_FL)
+        self._talon_BR.follow(self._talon_FR)
 
         # Sensors
         self.sonar = Ultrasonic(
