@@ -3,3 +3,5 @@
     to test basic functionality of just about any robot.
 '''
 
+# noinspection PyUnresolvedReferences
+from pyfrc.tests import *

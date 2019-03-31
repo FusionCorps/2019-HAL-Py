@@ -25,7 +25,7 @@ class AutoProfile(Command):
                 a = radians(loc[2])
 
             # Check whether list has a first element
-            if len(self.points) == 0:
+            if len(self.points) is 0:
                 self.points.append(pf.Waypoint(loc[0], loc[1], a))
                 continue
 

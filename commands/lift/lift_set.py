@@ -37,9 +37,10 @@ class LiftSet(Command):
         elif self.target_position is Position.LBACK:
             subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
         elif self.target_position is Position.FRONT:
-            pass
+            subsystems.lift.set_back_fpid(robotmap.lift_back_retract_fpid)
         elif self.target_position is Position.FLUSH:
-            pass
+            subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
+            subsystems.lift.set_back_fpid(robotmap.lift_back_retract_fpid)
         subsystems.lift.set_position(self.target_position)
         self.timer.reset()
 
@@ -124,4 +125,7 @@ class LiftSet(Command):
         if self.target_position is Position.CLIMB:
             subsystems.lift.stop_front()
             subsystems.lift.stop_back()
+
+        subsystems.lift.set_front_fpid(robotmap.lift_front_fpid)
+        subsystems.lift.set_back_fpid(robotmap.lift_back_fpid)
         self.logger.warning(str(self) + " Reached")

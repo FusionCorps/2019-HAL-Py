@@ -64,4 +64,5 @@ lift_front_limit = 5
 lift_back_limit = 6
 lift_front_fpid = (0, 0.8, 0.0, 0.0)
 lift_front_retract_fpid = (0, 1.5, 0.0, 0.0)
+lift_back_retract_fpid = (0, 1.5, 0.0, 0.0)
 lift_back_fpid = (0, 0.8, 0.0, 0.0)
