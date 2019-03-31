@@ -10,6 +10,7 @@ import robotmap
 
 
 class SubChassis(Subsystem):
+    """Chassis Subsystem for drivetrain, etc."""
     def __init__(self):
         super().__init__("Chassis")
         self.logger = logging.getLogger("Chassis")
@@ -35,7 +36,6 @@ class SubChassis(Subsystem):
             talon.configPeakOutputReverse(-1.0, 0)
 
             talon.set(0.0)
-            talon.setSafetyEnabled(False)
 
         # Drive class instance & following
         self.drive = DifferentialDrive(self._talon_FL, self._talon_FR)

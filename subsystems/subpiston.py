@@ -7,9 +7,7 @@ import robotmap
 
 
 class StatePiston(Enum):
-    """
-    Piston state enum that stores tuple with (left, right) values
-    """
+    """Piston state enum that stores tuple with (left, right) values"""
 
     HALT = (False, False)
     IN = (True, False)
@@ -17,6 +15,8 @@ class StatePiston(Enum):
 
 
 class SubPiston(Subsystem):
+    """Subsystem used to push hatches away from the Duckbill"""
+
     def __init__(self):
         super().__init__("Piston")
         self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)

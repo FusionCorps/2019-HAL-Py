@@ -17,6 +17,7 @@ class StateDuckbill(Enum):
 
 
 class SubDuckbill(Subsystem):
+    """Subsystem used to hold and release hatches"""
     def __init__(self):
         super().__init__("Duckbill")
         self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_B)

@@ -9,6 +9,7 @@ from subsystems.sublift import Position
 
 
 class LiftGroup(CommandGroup):
+    """CommandGroup for climbing Hab 3"""
     def __init__(self):
         super().__init__("LiftGroup")
         self.logger = logging.getLogger("LiftGroup")
@@ -21,7 +22,7 @@ class LiftGroup(CommandGroup):
         self.addSequential(ChassisDrive(0.3, 0.0, 0.5))
 
     def initialize(self):
-        self.logger.warning("Starting Lift Group")
+        self.logger.warning("Starting")
 
     def execute(self):
         pass
