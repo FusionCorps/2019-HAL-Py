@@ -1,6 +1,5 @@
 import logging
 
-from wpilib import Timer
 from wpilib.command import Command
 
 import robotmap
@@ -19,7 +18,7 @@ class LiftSet(Command):
         self.can_finish = can_finish
         self.can_correct = False
         self.is_correcting = False
-        self.timer = Timer()
+        # self.timer = Timer()
 
     def __str__(self):
         return ("[ "
@@ -33,7 +32,8 @@ class LiftSet(Command):
 
     def initialize(self):
         if self.target_position is Position.CLIMB:
-            pass
+            subsystems.lift.set_front_fpid(robotmap.lift_front_fpid)
+            subsystems.lift.set_back_fpid(robotmap.lift_back_fpid)
         elif self.target_position is Position.LBACK:
             subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
         elif self.target_position is Position.FRONT:
@@ -42,47 +42,9 @@ class LiftSet(Command):
             subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
             subsystems.lift.set_back_fpid(robotmap.lift_back_retract_fpid)
         subsystems.lift.set_position(self.target_position)
-        self.timer.reset()
+        # self.timer.reset()
 
     def execute(self):
-        # if self.can_correct:
-        #     # Lift offset correction code
-        #     lift_offset = subsystems.lift.get_front_position() - subsystems.lift.get_back_position()
-        #
-        #     output_F = subsystems.lift.talon_drive_CFront.get()[0]
-        #     output_B = subsystems.lift.talon_drive_CBack.get()[0]
-        #
-        #     time_temp = self.timer.get()
-        #
-        #     if lift_offset <= -4096 and not self.is_correcting:
-        #         self.logger.info("Lift is unbalanced, correcting...")
-        #         self.timer.start()
-        #         self.is_correcting = True
-        #     elif lift_offset >= 4096 and not self.is_correcting:
-        #         self.logger.info("Lift is unbalanced, correcting...")
-        #         self.timer.start()
-        #         self.is_correcting = True
-        #
-        #     if lift_offset <= -4096 and self.is_correcting and not subsystems.lift.get_front_position() >= \
-        #                                                            robotmap.lift_height:
-        #         if subsystems.lift.get_back_position() >= robotmap.lift_height:
-        #             subsystems.lift.set_back(robotmap.lift_height)
-        #         else:
-        #             subsystems.lift.set_back(output_B * 0.8)
-        #
-        #     elif (-2048 < lift_offset < 2048) and self.is_correcting:
-        #         self.logger.info("Lift balanced, stopping alignment")
-        #         self.timer.stop()
-        #         self.timer.reset()
-        #         subsystems.lift.set_position(self.target_position)
-        #         self.is_correcting = False
-        #
-        #     elif lift_offset >= 4096 and self.is_correcting:
-        #         if subsystems.lift.get_front_position() >= robotmap.lift_height:
-        #             subsystems.lift.set_front(robotmap.lift_height)
-        #         else:
-        #             subsystems.lift.set_front(output_F * 0.8)
-
         if self.target_position is Position.CLIMB:
             if not subsystems.lift.get_front_limit():
                 subsystems.lift.stop_front()
