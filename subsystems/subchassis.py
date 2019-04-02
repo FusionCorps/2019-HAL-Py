@@ -1,7 +1,7 @@
 import logging
 
 from ctre import WPI_TalonSRX
-from math import e, pow
+from math import e, log, pow
 from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, Timer, Ultrasonic
 from wpilib.command import Subsystem
 from wpilib.drive import DifferentialDrive
@@ -171,6 +171,7 @@ class SubChassis(Subsystem):
         # self._talon_FR.set(self.r_output)
         #
 
+        # TODO Replace fixed 0.01 "jumpstart" value with variable magnitude based on spd_target and spd_current
         # Uses set_left and set_right methods to output
         self.set_left(self.calculate_logistic_curve(1.0, -self._talon_FL.get() + 0.01,
                                                     time_differential))  # Current spd is negated b/c left side
@@ -184,7 +185,11 @@ class SubChassis(Subsystem):
         a = (spd_max / spd_current) - 1  # Starting velocity used as logistic variable
         b = 1  # Aggressiveness of curve
         f = (spd_max / (1 + a * (pow(e, -b * time_step))))  # Resultant velocity output to motors
-        # i = ((log(a) / b), (v_max / 2))
+
+        if not (a > 0):  # Input for log can't be zero
+            i = ((log(a) / b), (spd_max / 2))  # TODO Use inflection point in future calculations
+        else:
+            i = 0
 
         return f
 
