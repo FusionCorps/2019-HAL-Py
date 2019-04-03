@@ -17,6 +17,9 @@ class Position(Enum):
     FLUSH = (0, 0)
     LBACK = (robotmap.lift_height, 0)
     FRONT = (0, robotmap.lift_height)
+    CLIMB2 = (robotmap.lift_height_2, robotmap.lift_height_2)
+    LBACK2 = (robotmap.lift_height_2, 0)
+    FRONT2 = (0, robotmap.lift_height_2)
 
 
 class SubLift(Subsystem):

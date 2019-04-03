@@ -10,7 +10,8 @@ from subsystems.sublift import Position
 
 class LiftSet(Command):
     """Sets the position of the lift using CTRE's MotionMagic system"""
-    def __init__(self, target_position, can_finish=True):
+
+    def __init__(self, target_position, can_finish=True, target=3):
         self.target_position = target_position
         self.logger = logging.getLogger("LiftSet")
         super().__init__(self.__class__.__name__ + " " + str(target_position))
@@ -19,6 +20,7 @@ class LiftSet(Command):
         self.can_finish = can_finish
         self.can_correct = False
         self.is_correcting = False
+        self.target = target
         self.timer = Timer()
 
     def __str__(self):
@@ -32,6 +34,9 @@ class LiftSet(Command):
                 + ")")
 
     def initialize(self):
+        if self.target == 3:
+            pass
+
         if self.target_position is Position.CLIMB:
             subsystems.lift.set_front_fpid(robotmap.lift_front_fpid)
             subsystems.lift.set_back_fpid(robotmap.lift_back_fpid)
