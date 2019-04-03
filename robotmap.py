@@ -33,6 +33,7 @@ joystick = 0
 spd_chassis_drive = 0.5
 spd_chassis_rotate = 0.4
 spd_chassis_vision_seeking = 0.3
+accel_chassis_max = 3.0
 
 spd_intake = 0.5
 spd_intake_shoot = -0.8

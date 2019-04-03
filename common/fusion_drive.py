@@ -4,6 +4,8 @@ from math import e, pow
 from wpilib import Timer
 from wpilib.drive import DifferentialDrive
 
+import robotmap
+
 
 class FusionDrive(DifferentialDrive):
     def __init__(self, l_motor, r_motor):
@@ -30,22 +32,23 @@ class FusionDrive(DifferentialDrive):
 
     @staticmethod
     def expand(value):
+        """Undoes shrink. Returns values in a range -1.0 to 1.0"""
         return (2 * value) - 1
 
     def get_logistic_output(self, spd_max, spd_current, time_step) -> float:
-        z = 3
+        """Returns results of logistic calculations from certain preconditions"""
+        z = (robotmap.accel_chassis_max / 2)
         c = self.shrink(spd_max)
         v = self.shrink(spd_current)
 
         if c > v:
-            pass
+            return self.expand(self.calculate_logistic(c, z, v, time_step))
         elif c < v:
-            pass
+            return self.expand(-self.calculate_logistic(c, z, v, time_step) + 1)
         elif c == v:
-            pass
-
-        return 0.0
-        # raise ValueError
+            return 0.0
+        else:
+            raise ValueError
 
     @staticmethod
     def normalize(value):
