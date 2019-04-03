@@ -26,7 +26,7 @@ def init():
     oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
 
     # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
-    # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
+    oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
     oi.start.whenPressed(LiftGroup())
     # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
     # oi.bumper_L.toggleWhenPressed(LiftReset(0))

@@ -35,7 +35,7 @@ class FusionDrive(DifferentialDrive):
 
     @staticmethod
     def shrink(value):
-        """Used to shrink -1.0 to 1.0 range into a 0.0 to 1.0 range so that logistic calculations are manageable."""
+        """Used to shrink -1.0 to 1.0 range into a 0.0 to 1.0 range so logistic calculations are manageable."""
         return (1 + value) / 2
 
     @staticmethod

@@ -24,7 +24,7 @@ class PhysicsEngine(object):
         # fmt: off
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,  # motor configuration
-            110 * units.lbs,  # robot mass
+            120 * units.lbs,  # robot mass
             10.71,  # drivetrain gear ratio
             2,  # motors per side
             26 * units.inch,  # robot wheelbase
@@ -33,6 +33,13 @@ class PhysicsEngine(object):
             8 * units.inch,  # wheel diameter
         )
         # fmt: on
+
+    @staticmethod
+    def encode(item, tm_diff, rate=1.0, ticks=4096):
+        """Updates encoder pos and velocity in simulation"""
+        spd = int(ticks * rate * item["value"] * tm_diff)
+        item["quad_position"] += spd
+        item["quad_velocity"] = spd
 
     def update_sim(self, hal_data, now, tm_diff):
         """
@@ -47,17 +54,14 @@ class PhysicsEngine(object):
         # Simulate the drivetrain
         l_motor = hal_data["CAN"][21]
         r_motor = hal_data["CAN"][11]
+        # Simulate lift system
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][3]
 
-        # Encoder change values off to simulate different load conditions
-        spd_f = int(4096 * 4 * f_lift["value"] * tm_diff)
-        spd_b = int(4096 * 3.8 * b_lift["value"] * tm_diff)
-
-        f_lift["quad_position"] += spd_f
-        f_lift["quad_velocity"] = spd_f
-        b_lift["quad_position"] += spd_b
-        b_lift["quad_velocity"] = spd_f
+        self.encode(f_lift, tm_diff, rate=4.0)
+        self.encode(b_lift, tm_diff, rate=3.8)
+        self.encode(l_motor, tm_diff)
+        self.encode(r_motor, tm_diff)
 
         # gyro = hal_data["Spi"][0]
 
