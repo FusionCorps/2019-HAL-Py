@@ -70,7 +70,7 @@ class FusionDrive(DifferentialDrive):
         else:
             raise ValueError
 
-    def logistic_drive(self, x_spd, z_rot, logistic_deadzone=0.2):
+    def logistic_drive(self, x_spd, z_rot):
         """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
         # if self.timer.running is False:
         #     self.timer.start()
