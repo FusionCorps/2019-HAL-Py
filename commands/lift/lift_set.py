@@ -104,8 +104,8 @@ class LiftSet(Command):
             return False
         elif self.can_finish is True:
             if self.target_position is Position.FLUSH:
-                return (abs(subsystems.lift.get_front_position()) <= 1000) and (
-                        abs(subsystems.lift.get_back_position()) <= 1000)
+                return (abs(subsystems.lift.get_front_position()) <= 3000) and (
+                        abs(subsystems.lift.get_back_position()) <= 3000)
             elif self.target_position is Position.CLIMB:
                 return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
             elif self.target_position is Position.FRONT:
