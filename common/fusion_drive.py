@@ -17,42 +17,30 @@ class FusionDrive(DifferentialDrive):
         self.logger = logging.getLogger("FusionDrive")
 
     @staticmethod
-    def calculate_logistic(c, z, v, x, offset=0):
+    def calculate_logistic(c, z, v, x):
         a = (c / v) - 1
         b = 4 * (z / c)
         f = (c / (1 + a * (pow(e, -b * x))))
         return f
 
+    @staticmethod
+    def shrink_value(value):
+        """Used to shrink -1.0 to 1.0 range into a 0.0 to 1.0 range so that logistic calculations are manageable."""
+        return (1 + value) / 2
+
     def get_logistic_output(self, spd_max, spd_current, time_step) -> float:
         z = 3
-        c = spd_max
+        c = self.shrink_value(spd_max)
+        v = self.shrink_value(spd_current)
 
-        if c < 0:
-            c *= -1
-            v = spd_current
-            if v < 0:
-                v *= -1
-                return -self.calculate_logistic(c, z, v, time_step)
-            elif v == 0:
-                v = 0.01
-                return -self.calculate_logistic(c, z, v, time_step)
-            elif v > 0:
-                return -self.calculate_logistic((c + (2 * v)), z, v, time_step) + (2 * v)
-            else:
-                return 0.0
-        elif c > 0:
-            v = spd_current
-            if v < 0:
-                return self.calculate_logistic((c + (2 * v)), z, v, time_step) - (2 * v)
-            elif v == 0:
-                v = 0.01
-                return self.calculate_logistic(c, z, v, time_step)
-            elif v > 0:
-                return self.calculate_logistic(c, z, v, time_step)
-            else:
-                return 0.0
-        else:
-            return 0.0
+        if c > v:
+            pass
+        elif c < v:
+            pass
+        elif c == v:
+            pass
+
+        raise ValueError
 
     @staticmethod
     def normalize(value):
