@@ -43,6 +43,7 @@ class LiftSet(Command):
             subsystems.lift.set_back_fpid(robotmap.lift_back_retract_fpid)
         subsystems.lift.set_position(self.target_position)
         self.timer.reset()
+        self.timer.start()
 
     def execute(self):
         # if self.can_correct:
@@ -128,4 +129,5 @@ class LiftSet(Command):
 
         subsystems.lift.set_front_fpid(robotmap.lift_front_fpid)
         subsystems.lift.set_back_fpid(robotmap.lift_back_fpid)
-        self.logger.warning(str(self) + " Reached")
+        self.timer.stop()
+        self.logger.warning(str(self) + " Reached in " + str(round(self.timer.get(), 2)))
