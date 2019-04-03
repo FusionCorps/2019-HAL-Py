@@ -1,6 +1,8 @@
 from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units
 
+import robotmap
+
 
 class PhysicsEngine(object):
     """
@@ -58,8 +60,11 @@ class PhysicsEngine(object):
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][3]
 
-        self.encode(f_lift, tm_diff, rate=4.0)
-        self.encode(b_lift, tm_diff, rate=3.8)
+        f_switch = hal_data["dio"][5]
+        b_switch = hal_data["dio"][6]
+
+        self.encode(f_lift, tm_diff, rate=3.0)
+        self.encode(b_lift, tm_diff, rate=3.0)
         self.encode(l_motor, tm_diff)
         self.encode(r_motor, tm_diff)
 
@@ -70,24 +75,11 @@ class PhysicsEngine(object):
         )
         self.physics_controller.distance_drive(x, y, angle)
 
-        # update position (use tm_diff so the rate is constant)
-        # self.position += hal_data["pwm"][4]["value"] * tm_diff * 3
-
-        # update limit switches based on position
-        # if self.position <= 0:
-        #     switch1 = True
-        #     switch2 = False
-
-        # elif self.position > 10:
-        #     switch1 = False
-        #     switch2 = True
-
-        # else:
-        #     switch1 = False
-        #     switch2 = False
-
-        # set values here
-        # hal_data["dio"][1]["value"] = switch1
-        # hal_data["dio"][2]["value"] = switch2
-
-        # hal_data["analog_in"][2]["voltage"] = self.position
+        if abs(f_lift["quad_position"]) > robotmap.lift_height:
+            f_switch["value"] = False
+        else:
+            f_switch["value"] = True
+        if abs(b_lift["quad_position"]) > robotmap.lift_height:
+            b_switch["value"] = False
+        else:
+            b_switch["value"] = True

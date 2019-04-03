@@ -17,9 +17,9 @@ class LiftGroup(CommandGroup):
         self.addSequential(LiftSet(Position.CLIMB))
         self.addSequential(LiftDrive(0.6, 2))
         self.addSequential(LiftSet(Position.LBACK))
-        self.addSequential(ChassisDrive(0.3, 0.0, 1))
+        self.addSequential(ChassisDrive(0.3, 0.0, 1.5))
         self.addSequential(LiftSet(Position.FLUSH))
-        self.addSequential(ChassisDrive(0.3, 0.0, 0.5))
+        self.addSequential(ChassisDrive(0.3, 0.0, 1))
 
     def initialize(self):
         self.logger.warning("Starting")

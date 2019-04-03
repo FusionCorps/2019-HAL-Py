@@ -81,6 +81,20 @@ class SubLift(Subsystem):
     def is_motion_magic_active(self):
         return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
 
+    def set_front_characteristics(self, chars):
+        self.logger.info("Front characteristics to " + str(chars))
+        self.talon_drive_CFront.configMotionCruiseVelocity(chars[0])
+        self.talon_drive_CFront.configMotionAcceleration(chars[1])
+
+    def set_back_characteristics(self, chars):
+        self.logger.info("Back characteristics to " + str(chars))
+        self.talon_drive_CBack.configMotionCruiseVelocity(chars[0])
+        self.talon_drive_CBack.configMotionAcceleration(chars[1])
+
+    def set_both_characteristics(self, chars):
+        self.set_front_characteristics(chars)
+        self.set_back_characteristics(chars)
+
     def set_back_fpid(self, fpid):
         self.logger.info("Back  FPID to " + str(fpid))
         self.talon_drive_CBack.config_kF(0, fpid[0], 0)
