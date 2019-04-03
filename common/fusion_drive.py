@@ -14,15 +14,23 @@ class FusionDrive(DifferentialDrive):
         self.r_motor = r_motor
 
         self.adm_joystick_last_called = 0
-        self.timer = Timer()
+        self.timer = Timer()  # Used to get current system time
 
         self.logger = logging.getLogger("FusionDrive")
 
     @staticmethod
     def logistic(c, z, v, x):
-        a = (c / v) - 1
-        b = 4 * (z / c)
-        f = (c / (1 + a * (pow(e, -b * x))))
+        """Logistic curve function used to calculate the next output speed. `c` and `v` must be shrunk beforehand.
+
+        :param c: Speed target/max (0 to 1.0)
+        :param z: Max acceleration (positive int)
+        :param v: Current speed between 0 and 1.0
+        :param x: Time delta since it was last called
+        :return: The next speed value to be set based on the logistic curve
+        """
+        a = (c / v) - 1  # Determines the y-intercept
+        b = 4 * (z / c)  # Determines the aggressiveness/max slope of the curve at the inflection point
+        f = (c / (1 + a * (pow(e, -b * x))))  # Resultant logistic value
         return f
 
     @staticmethod
@@ -32,11 +40,12 @@ class FusionDrive(DifferentialDrive):
 
     @staticmethod
     def expand(value):
-        """Undoes shrink. Returns values in a range -1.0 to 1.0"""
+        """Undoes shrink. Returns values in a range -1.0 to 1.0."""
         return (2 * value) - 1
 
     @staticmethod
     def normalize(value):
+        """Takes an expanded value and ensures it's within a -1.0 to 1.0 range."""
         if value > 1.0:
             return 1.0
         elif value < -1.0:
@@ -46,32 +55,44 @@ class FusionDrive(DifferentialDrive):
 
     def get_logistic(self, spd_max, spd_current, time_step) -> float:
         """Returns results of logistic calculations from certain preconditions"""
-        z = (robotmap.accel_chassis_max / 2)
+        z = (robotmap.accel_chassis_max / 2)  # Maximum accel must be divided by 2 because of shrinking
+        z_d = (robotmap.decel_chassis_max / 2)  # Unused variable for maximum deceleration
         c = self.shrink(spd_max)
         v = self.shrink(spd_current)
 
-        if c > v:
+        # Cases for logistic curve calculations to satisfy
+        if c > v:  # If spd_target > spd_current
             return self.expand(self.logistic(c, z, v, time_step))
-        elif c < v:
-            return self.expand(-self.logistic(c, z, v, time_step) + 1)
-        elif c == v:
+        elif c < v:  # If spd_target < spd_current
+            return self.expand(-self.logistic((1 - c), z, (1 - v), time_step) + 1)
+        elif c == v:  # If they are equal, then the spd_target has been met
             return self.expand(v)
         else:
             raise ValueError
 
     def logistic_drive(self, x_spd, z_rot, logistic_deadzone=0.2):
+        """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
+        if self.timer.running is False:
+            self.timer.start()
         current_time = self.timer.getFPGATimestamp()
         time_differential = current_time - self.adm_joystick_last_called
 
-        if abs(x_spd) < 0:
-            sign = -1
-        else:
-            sign = 1
-
-        self.l_motor.set(
-            sign * -(self.get_logistic(x_spd, sign * -self.l_motor.get(), time_differential) + z_rot))
-        self.r_motor.set(
-            sign * self.get_logistic(x_spd, sign * self.r_motor.get(), time_differential) - z_rot)
+        self.set_left(
+            self.get_logistic(x_spd + z_rot, self.get_left(), time_differential))
+        self.set_right(
+            self.get_logistic(x_spd - z_rot, self.get_right(), time_differential))
 
         self.feed()
         self.adm_joystick_last_called = self.timer.getFPGATimestamp()
+
+    def set_left(self, spd):
+        self.l_motor.set(-spd)
+
+    def set_right(self, spd):
+        self.r_motor.set(spd)
+
+    def get_left(self):
+        return -self.l_motor.get()
+
+    def get_right(self):
+        return self.r_motor.get()
