@@ -19,7 +19,7 @@ class FusionDrive(DifferentialDrive):
         self.logger = logging.getLogger("FusionDrive")
 
     @staticmethod
-    def calculate_logistic(c, z, v, x):
+    def logistic(c, z, v, x):
         a = (c / v) - 1
         b = 4 * (z / c)
         f = (c / (1 + a * (pow(e, -b * x))))
@@ -35,21 +35,6 @@ class FusionDrive(DifferentialDrive):
         """Undoes shrink. Returns values in a range -1.0 to 1.0"""
         return (2 * value) - 1
 
-    def get_logistic_output(self, spd_max, spd_current, time_step) -> float:
-        """Returns results of logistic calculations from certain preconditions"""
-        z = (robotmap.accel_chassis_max / 2)
-        c = self.shrink(spd_max)
-        v = self.shrink(spd_current)
-
-        if c > v:
-            return self.expand(self.calculate_logistic(c, z, v, time_step))
-        elif c < v:
-            return self.expand(-self.calculate_logistic(c, z, v, time_step) + 1)
-        elif c == v:
-            return 0.0
-        else:
-            raise ValueError
-
     @staticmethod
     def normalize(value):
         if value > 1.0:
@@ -59,22 +44,34 @@ class FusionDrive(DifferentialDrive):
         else:
             return value
 
+    def get_logistic(self, spd_max, spd_current, time_step) -> float:
+        """Returns results of logistic calculations from certain preconditions"""
+        z = (robotmap.accel_chassis_max / 2)
+        c = self.shrink(spd_max)
+        v = self.shrink(spd_current)
+
+        if c > v:
+            return self.expand(self.logistic(c, z, v, time_step))
+        elif c < v:
+            return self.expand(-self.logistic(c, z, v, time_step) + 1)
+        elif c == v:
+            return self.expand(v)
+        else:
+            raise ValueError
+
     def logistic_drive(self, x_spd, z_rot, logistic_deadzone=0.2):
         current_time = self.timer.getFPGATimestamp()
         time_differential = current_time - self.adm_joystick_last_called
 
-        # l_target = self.limit(x_spd + z_rot)
-        # r_target = self.limit(x_spd - z_rot)
-
-        if abs(x_spd) <= logistic_deadzone:
-            self.l_motor.set(-(x_spd + z_rot))
+        if abs(x_spd) < 0:
+            sign = -1
         else:
-            self.l_motor.set(-(self.get_logistic_output(x_spd, -self.l_motor.get(), time_differential) + z_rot))
+            sign = 1
 
-        if abs(x_spd) <= logistic_deadzone:
-            self.r_motor.set(x_spd - z_rot)
-        else:
-            self.r_motor.set(self.get_logistic_output(x_spd, self.r_motor.get(), time_differential) - z_rot)
+        self.l_motor.set(
+            sign * -(self.get_logistic(x_spd, sign * -self.l_motor.get(), time_differential) + z_rot))
+        self.r_motor.set(
+            sign * self.get_logistic(x_spd, sign * self.r_motor.get(), time_differential) - z_rot)
 
         self.feed()
         self.adm_joystick_last_called = self.timer.getFPGATimestamp()
