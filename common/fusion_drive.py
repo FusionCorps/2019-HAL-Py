@@ -24,14 +24,18 @@ class FusionDrive(DifferentialDrive):
         return f
 
     @staticmethod
-    def shrink_value(value):
+    def shrink(value):
         """Used to shrink -1.0 to 1.0 range into a 0.0 to 1.0 range so that logistic calculations are manageable."""
         return (1 + value) / 2
 
+    @staticmethod
+    def expand(value):
+        return (2 * value) - 1
+
     def get_logistic_output(self, spd_max, spd_current, time_step) -> float:
         z = 3
-        c = self.shrink_value(spd_max)
-        v = self.shrink_value(spd_current)
+        c = self.shrink(spd_max)
+        v = self.shrink(spd_current)
 
         if c > v:
             pass
@@ -40,7 +44,8 @@ class FusionDrive(DifferentialDrive):
         elif c == v:
             pass
 
-        raise ValueError
+        return 0.0
+        # raise ValueError
 
     @staticmethod
     def normalize(value):
