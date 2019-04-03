@@ -44,14 +44,14 @@ class FusionDrive(DifferentialDrive):
         return (2 * value) - 1
 
     @staticmethod
-    def normalize(value):
+    def normalize_spd(l_spd, r_spd):
         """Takes an expanded value and ensures it's within a -1.0 to 1.0 range."""
-        if value > 1.0:
-            return 1.0
-        elif value < -1.0:
-            return -1.0
-        else:
-            return value
+        l, r = l_spd, r_spd
+        maximum = max(abs(l), abs(r))
+        if maximum > 1.0:
+            l = l_spd / maximum
+            r = r_spd / maximum
+        return round(l, 2), round(r, 2)
 
     def get_logistic(self, spd_max, spd_current, time_step) -> float:
         """Returns results of logistic calculations from certain preconditions"""
@@ -72,15 +72,21 @@ class FusionDrive(DifferentialDrive):
 
     def logistic_drive(self, x_spd, z_rot, logistic_deadzone=0.2):
         """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
-        if self.timer.running is False:
-            self.timer.start()
+        # if self.timer.running is False:
+        #     self.timer.start()
+
         current_time = self.timer.getFPGATimestamp()
         time_differential = current_time - self.adm_joystick_last_called
 
-        self.set_left(
-            self.get_logistic(x_spd + z_rot, self.get_left(), time_differential))
-        self.set_right(
-            self.get_logistic(x_spd - z_rot, self.get_right(), time_differential))
+        l_output, r_output = self.normalize_spd(x_spd + z_rot, x_spd - z_rot)
+
+        # if self.timer.hasPeriodPassed(5):
+        #     self.logger.info(
+        #         f'Added (L {str(round(x_spd + z_rot, 2))} R {str(round(x_spd - z_rot, 2))}) Normalized (L {round(
+        #         l_output, 2)} R {round(r_output, 2)})')
+
+        self.set_left(self.get_logistic(l_output * robotmap.spd_chassis_drive, self.get_left(), time_differential))
+        self.set_right(self.get_logistic(r_output * robotmap.spd_chassis_drive, self.get_right(), time_differential))
 
         self.feed()
         self.adm_joystick_last_called = self.timer.getFPGATimestamp()
