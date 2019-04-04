@@ -34,19 +34,19 @@ class LiftSet(Command):
                 + ")")
 
     def initialize(self):
-        if self.target_position is Position.CLIMB or Position.CLIMB2:
+        if self.target_position == Position.CLIMB or self.target_position == Position.CLIMB2:
             subsystems.lift.set_front_fpid(robotmap.lift_front_fpid)
             subsystems.lift.set_back_fpid(robotmap.lift_back_fpid)
             subsystems.lift.set_both_characteristics(robotmap.lift_characteristics)
-        elif self.target_position is Position.LBACK or Position.LBACK2:
+        elif self.target_position == Position.LBACK or self.target_position == Position.LBACK2:
             subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
             subsystems.lift.set_front_characteristics(robotmap.lift_characteristics_retract)
             subsystems.lift.set_back_characteristics(robotmap.lift_characteristics)
-        elif self.target_position is Position.FRONT or Position.FRONT2:
+        elif self.target_position == Position.FRONT or self.target_position == Position.FRONT2:
             subsystems.lift.set_back_fpid(robotmap.lift_back_retract_fpid)
             subsystems.lift.set_front_characteristics(robotmap.lift_characteristics)
             subsystems.lift.set_back_characteristics(robotmap.lift_characteristics_retract)
-        elif self.target_position is Position.FLUSH:
+        elif self.target_position == Position.FLUSH:
             subsystems.lift.set_front_fpid(robotmap.lift_front_retract_fpid)
             subsystems.lift.set_back_fpid(robotmap.lift_back_retract_fpid)
             subsystems.lift.set_both_characteristics(robotmap.lift_characteristics_retract)
@@ -55,26 +55,21 @@ class LiftSet(Command):
         self.timer.start()
 
     def execute(self):
-        if self.target_position is Position.CLIMB or Position.CLIMB2:
+        if self.target_position == Position.CLIMB or self.target_position == Position.CLIMB2:
             if not subsystems.lift.get_front_limit():
                 subsystems.lift.stop_front()
             if not subsystems.lift.get_back_limit():
                 subsystems.lift.stop_back()
-        elif self.target_position is Position.FRONT or Position.FRONT2:
+        elif self.target_position == Position.FRONT or self.target_position == Position.FRONT2:
             if not subsystems.lift.get_front_limit():
                 subsystems.lift.stop_front()
             if abs(subsystems.lift.get_back_position()) <= 1000:
                 subsystems.lift.stop_back()
-        elif self.target_position is Position.LBACK or Position.LBACK2:
+        elif (self.target_position == Position.LBACK) or (self.target_position == Position.LBACK2):
             if not subsystems.lift.get_back_limit():
                 subsystems.lift.stop_back()
             if abs(subsystems.lift.get_front_position()) <= 1000:
                 subsystems.lift.stop_front()
-
-        # if abs(subsystems.lift.get_front_position()) > robotmap.lift_height:
-        #     self.logger.warning("Front exceeded its setpoint!")
-        # if abs(subsystems.lift.get_back_position()) > robotmap.lift_height:
-        #     self.logger.warning("Back exceeded its setpoint!")
 
     def isFinished(self):
         if self.can_finish is False:
@@ -92,7 +87,7 @@ class LiftSet(Command):
                 return not subsystems.lift.get_back_limit() and (
                         abs(subsystems.lift.get_front_position()) <= 1000)
             elif self.target_position is Position.CLIMB2:
-                return subsystems.lift.get_front_position() > robotmap.lift_height_2 and abs(
+                return abs(subsystems.lift.get_front_position()) > robotmap.lift_height_2 and abs(
                     subsystems.lift.get_back_position()) > robotmap.lift_height_2
             elif self.target_position is Position.FRONT2:
                 return abs(subsystems.lift.get_back_position()) <= 1000 and abs(
@@ -111,6 +106,13 @@ class LiftSet(Command):
         if self.target_position is Position.CLIMB:
             subsystems.lift.stop_front()
             subsystems.lift.stop_back()
+        elif self.target_position is Position.CLIMB2:
+            subsystems.lift.stop_back()
+            subsystems.lift.stop_front()
+        elif self.target_position is Position.LBACK2:
+            subsystems.lift.stop_back()
+        elif self.target_position is Position.FRONT2:
+            subsystems.lift.stop_front()
 
         self.timer.stop()
         self.logger.warning(str(self) + " Reached in " + str(round(self.timer.get(), 2)))
