@@ -95,6 +95,18 @@ class SubChassis(Subsystem):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
+    def get_left_position(self, target=0):
+        if target == 0:
+            return self._talon_FL.getQuadraturePosition()
+        elif target == 1:
+            return self._talon_FL.getPulseWidthPosition()
+
+    def get_right_position(self, target=0):
+        if target == 0:
+            return self._talon_FR.getQuadraturePosition()
+        elif target == 1:
+            return self._talon_FR.getPulseWidthPosition()
+
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
