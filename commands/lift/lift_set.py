@@ -75,24 +75,24 @@ class LiftSet(Command):
         if self.can_finish is False:
             return False
         elif self.can_finish is True:
-            if self.target_position is Position.FLUSH:
+            if self.target_position == Position.FLUSH:
                 return (abs(subsystems.lift.get_front_position()) <= 1000) and (
                         abs(subsystems.lift.get_back_position()) <= 1000)
-            elif self.target_position is Position.CLIMB:
+            elif self.target_position == Position.CLIMB:
                 return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
-            elif self.target_position is Position.FRONT:
+            elif self.target_position == Position.FRONT:
                 return not subsystems.lift.get_front_limit() and (
                         abs(subsystems.lift.get_back_position()) <= 1000)
-            elif self.target_position is Position.LBACK:
+            elif self.target_position == Position.LBACK:
                 return not subsystems.lift.get_back_limit() and (
                         abs(subsystems.lift.get_front_position()) <= 1000)
-            elif self.target_position is Position.CLIMB2:
+            elif self.target_position == Position.CLIMB2:
                 return abs(subsystems.lift.get_front_position()) > robotmap.lift_height_2 and abs(
                     subsystems.lift.get_back_position()) > robotmap.lift_height_2
-            elif self.target_position is Position.FRONT2:
+            elif self.target_position == Position.FRONT2:
                 return abs(subsystems.lift.get_back_position()) <= 1000 and abs(
                     subsystems.lift.get_front_position()) > robotmap.lift_height_2
-            elif self.target_position is Position.LBACK2:
+            elif self.target_position == Position.LBACK2:
                 return abs(subsystems.lift.get_front_position()) <= 1000 and abs(
                     subsystems.lift.get_back_position()) > robotmap.lift_height_2
 

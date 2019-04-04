@@ -55,8 +55,6 @@ class LiftDrive2(Command):
             subsystems.lift.stop_back()
         if not subsystems.lift.get_front_limit():
             subsystems.lift.stop_front()
-        # if subsystems.lift.get_back_limit():
-        #     subsystems.lift.set_position(Position.CLIMB2)
 
     def isFinished(self):
         return self.isTimedOut()

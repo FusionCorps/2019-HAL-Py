@@ -44,7 +44,7 @@ class LiftGroup2(CommandGroup):
         self.logger = logging.getLogger("LiftGroup")
 
         self.addSequential(LiftSet(Position.CLIMB2))
-        self.addSequential(LiftDrive2(0.3, 2))
+        self.addSequential(LiftDrive2(0.5, 2))
         self.addSequential(LiftSet(Position.LBACK2))
         self.addSequential(ChassisDrive(0.3, 0.0, 2))
         self.addSequential(LiftSet(Position.FLUSH))
