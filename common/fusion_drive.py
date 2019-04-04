@@ -13,7 +13,7 @@ class FusionDrive(DifferentialDrive):
         self.l_motor = l_motor
         self.r_motor = r_motor
 
-        self.adm_joystick_last_called = 0
+        self.logistic_last_called = 0
         self.timer = Timer()  # Used to get current system time
 
         self.logger = logging.getLogger("FusionDrive")
@@ -76,7 +76,7 @@ class FusionDrive(DifferentialDrive):
         #     self.timer.start()
 
         current_time = self.timer.getFPGATimestamp()
-        time_differential = current_time - self.adm_joystick_last_called
+        time_differential = current_time - self.logistic_last_called
 
         l_output, r_output = self.normalize_spd(x_spd + z_rot, x_spd - z_rot)
 
@@ -88,8 +88,8 @@ class FusionDrive(DifferentialDrive):
         self.set_left(self.get_logistic(l_output * robotmap.spd_chassis_drive, self.get_left(), time_differential))
         self.set_right(self.get_logistic(r_output * robotmap.spd_chassis_drive, self.get_right(), time_differential))
 
+        self.logistic_last_called = self.timer.getFPGATimestamp()
         self.feed()
-        self.adm_joystick_last_called = self.timer.getFPGATimestamp()
 
     def set_left(self, spd):
         self.l_motor.set(-spd)
