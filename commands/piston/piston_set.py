@@ -18,6 +18,9 @@ class PistonSet(Command):
     def isFinished(self):
         return self.isTimedOut()
 
+    def interrupted(self):
+        self.end()
+
     def end(self):
         from subsystems.subpiston import StatePiston
 

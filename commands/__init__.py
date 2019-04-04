@@ -3,7 +3,6 @@ import logging
 import oi
 from subsystems.subduckbill import StateDuckbill
 # from subsystems.sublift import Position
-from subsystems.subpiston import StatePiston
 from .autonomous.auto_profile import AutoProfile
 from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet
@@ -13,6 +12,7 @@ from .lift.lift_drive import LiftDrive, LiftDrive2
 from .lift.lift_grp import LiftGroup, LiftGroup2
 from .lift.lift_reset import LiftReset
 from .lift.lift_set import LiftSet
+from .piston.piston_grp import PistonGrp
 from .piston.piston_set import PistonSet
 
 
@@ -24,8 +24,8 @@ def init():
     logger = logging.getLogger("Commands")
 
     oi.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
-    oi.bumper_R.whenPressed(PistonSet(StatePiston.OUT))
-    oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
+    oi.bumper_R.whenPressed(PistonGrp())
+    # oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
     oi.start.whenPressed(LiftGroup())
     oi.back.whenPressed(LiftGroup2())
 
