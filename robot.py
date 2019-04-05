@@ -31,6 +31,7 @@ class Hal(CommandBasedRobot):
 
         self.logger.info("Robot initialized")
 
+        subsystems.chassis.gyro.calibrate()
         subsystems.chassis.reset_encoders()
         self.watchdog.setTimeout(1)
 
