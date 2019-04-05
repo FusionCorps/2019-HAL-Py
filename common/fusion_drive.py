@@ -76,7 +76,7 @@ class FusionDrive(DifferentialDrive):
         #     self.timer.start()
 
         current_time = self.timer.getFPGATimestamp()
-        time_differential = current_time - self.logistic_last_called
+        time_differential = current_time - self.logistic_last_called  # Used to feed back into logistic curve
 
         l_output, r_output = self.normalize_spd(x_spd + z_rot, x_spd - z_rot)
 
@@ -92,13 +92,17 @@ class FusionDrive(DifferentialDrive):
         self.feed()
 
     def set_left(self, spd):
+        """Sets left motor speed"""
         self.l_motor.set(-spd)
 
     def set_right(self, spd):
+        """Sets right motor speed"""
         self.r_motor.set(spd)
 
     def get_left(self):
+        """Returns left motor speed (-1.0 to 1.0)"""
         return -self.l_motor.get()
 
     def get_right(self):
+        """Returns right motor speed (-1.0 to 1.0)"""
         return self.r_motor.get()
