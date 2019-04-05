@@ -48,7 +48,7 @@ def init():
     oi.stick_L.whenPressed(
         ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="straight5"))
     # # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
-    oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
+    # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
     # # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
 
     logger.info("Commands initialized")
