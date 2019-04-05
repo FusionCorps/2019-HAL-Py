@@ -13,9 +13,10 @@ class ProfileGenerator(object):
         self.left, self.right = None, None
         self.v_max, self.a_max, self.j_max, self.name = None, None, None, None
 
+        self.logger.warning(f"Profilegenerator called with args: {args}. Called with kwargs: {kwargs}")
         for loc in args:
             # Check to make sure angle is not -0
-            if loc[2] is 0:
+            if loc[2] == 0:
                 a = loc[2]
             else:
                 a = radians(loc[2])
@@ -32,7 +33,7 @@ class ProfileGenerator(object):
                 else:
                     self.points.append(pf.Waypoint(loc[0], loc[1], a))
 
-        for key, value in kwargs:
+        for key, value in kwargs.items():
             if key == 'name':
                 self.name = value
             elif key == 'v_max':

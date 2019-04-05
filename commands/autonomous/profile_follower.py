@@ -10,8 +10,8 @@ import subsystems
 
 
 class ProfileFollower(Command):
-    def __init__(self, file_name="none"):
-        self.file_name = f"AutoProfile_{file_name}"
+    def __init__(self, file_loc="none", name="none"):
+        self.file_name = f"{file_loc}AutoProfile_{name}"
         super().__init__(f"{self.file_name}")
 
         if self.file_name == "AutoProfile_none":

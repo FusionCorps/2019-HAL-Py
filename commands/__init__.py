@@ -32,7 +32,8 @@ def init():
     oi.start.whenPressed(LiftGroup())
     oi.back.whenPressed(LiftGroup2())
 
-    oi.stick_L.whenPressed(ProfileFollower("((1, 0, 0), (3, 2, 0))"))
+    oi.stick_L.whenPressed(
+        ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="left"))
     # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
     # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (-3, 0, 0)))
     # # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
