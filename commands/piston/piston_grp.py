@@ -28,7 +28,7 @@ class PistonGrp(Command):
                 subsystems.piston.set_state(StatePiston.IN)
                 self.step = 2
             elif self.step == 2 and self.timer.hasPeriodPassed(1.5):
-                self.step = 5
+                self.step = 3
         else:
             pass
 

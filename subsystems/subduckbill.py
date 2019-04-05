@@ -35,7 +35,7 @@ class SubDuckbill(Subsystem):
             self.solenoid_duckbill_T.set(state_target.value[1])
 
         self.state = self.get_state()
-        self.logger.warning(f"State target is {self.get_state().name}")
+        self.logger.warning(f"Duckbill {self.state}")
 
     def get_state(self):
         """Returns current StateDuckbill"""
@@ -44,6 +44,8 @@ class SubDuckbill(Subsystem):
         elif self.solenoid_duckbill_T.get() and not self.solenoid_duckbill_B.get():
             return StateDuckbill.DOWN
         elif not self.solenoid_duckbill_B.get() and not self.solenoid_duckbill_T.get():
+            return StateDuckbill.HALT
+        else:
             return StateDuckbill.HALT
 
     def initDefaultCommand(self):

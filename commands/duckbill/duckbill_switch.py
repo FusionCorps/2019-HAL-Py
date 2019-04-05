@@ -17,8 +17,8 @@ class DuckbillSwitch(Command):
             subsystems.duckbill.set_state(StateDuckbill.UP)
         elif subsystems.duckbill.get_state() is StateDuckbill.UP:
             subsystems.duckbill.set_state(StateDuckbill.DOWN)
-        else:
-            subsystems.duckbill.set_state(StateDuckbill.HALT)
+        elif subsystems.duckbill.get_state() is StateDuckbill.HALT:
+            subsystems.duckbill.set_state(StateDuckbill.DOWN)
 
     def isFinished(self):
         return True

@@ -30,7 +30,7 @@ gyro = 0
 joystick = 0
 
 # Speed Constants
-spd_chassis_drive = 0.6
+spd_chassis_drive = 0.55
 spd_chassis_rotate = 0.4
 spd_chassis_vision_seeking = 0.3
 accel_chassis_max = 5.5
