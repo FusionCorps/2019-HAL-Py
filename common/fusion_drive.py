@@ -8,6 +8,8 @@ import robotmap
 
 
 class FusionDrive(DifferentialDrive):
+    """Class that implements the logistic drive accelerated drivetrain."""
+
     def __init__(self, l_motor, r_motor):
         super().__init__(l_motor, r_motor)
         self.l_motor = l_motor
