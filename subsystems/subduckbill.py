@@ -34,11 +34,17 @@ class SubDuckbill(Subsystem):
         if self.solenoid_duckbill_T.get() is not state_target.value[1]:
             self.solenoid_duckbill_T.set(state_target.value[1])
 
-        self.state = state_target
+        self.state = self.get_state()
+        self.logger.warning(f"State target is {self.get_state()}")
 
     def get_state(self):
         """Returns current StateDuckbill"""
-        return self.state
+        if self.solenoid_duckbill_B.get() is True:
+            return StateDuckbill.UP
+        elif self.solenoid_duckbill_T.get() is True:
+            return StateDuckbill.DOWN
+        elif self.solenoid_duckbill_B.get() is False and self.solenoid_duckbill_T.get() is False:
+            return StateDuckbill.HALT
 
     def initDefaultCommand(self):
         from commands.duckbill.duckbill_set import DuckbillSet
