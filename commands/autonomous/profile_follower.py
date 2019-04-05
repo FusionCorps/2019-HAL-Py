@@ -32,6 +32,9 @@ class ProfileFollower(Command):
         self.right = EncoderFollower(self.modifier.getRightTrajectory())
         self.encoder_followers = [self.left, self.right]
 
+        for follower in self.encoder_followers:
+            follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
+
         self.left.configureEncoder(
             subsystems.chassis.get_right_position(),
             robotmap.chassis_encoder_counts_per_rev,
@@ -42,9 +45,6 @@ class ProfileFollower(Command):
             robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
-
-        for follower in self.encoder_followers:
-            follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
         self.logger.warning("Profile Initialized.")
 
@@ -62,10 +62,7 @@ class ProfileFollower(Command):
         subsystems.chassis.set_right(output_r - turn_output)
 
     def isFinished(self):
-        if not self.is_done_loading:
-            return False
-        if self.is_done_loading:
-            return self.left.isFinished() and self.right.isFinished()
+        return self.left.isFinished() and self.right.isFinished()
 
     def interrupted(self):
         self.end()
