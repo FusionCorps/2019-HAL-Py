@@ -13,7 +13,7 @@ class Hal(CommandBasedRobot):
         import commands
         import dashboard
         # noinspection PyUnresolvedReferences
-        # from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
+        from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
 
         self.logger = logging.getLogger("Core")
 
@@ -22,12 +22,12 @@ class Hal(CommandBasedRobot):
         commands.init()
         dashboard.init()
 
-        # limelight_http = HttpCamera("limelight_http", "http://10.66.72.11:5800")
-        # cs = CameraServer.getInstance()
-        # cs.enableLogging()
-        # usb_0 = cs.startAutomaticCapture(dev=0)
-        # usb_1 = cs.startAutomaticCapture(dev=1)
-        # limelight_http = cs.startAutomaticCapture(camera=limelight_http)
+        limelight_http = HttpCamera("limelight_http", "http://10.66.72.11:5800")
+        cs = CameraServer.getInstance()
+        cs.enableLogging()
+        usb_0 = cs.startAutomaticCapture(dev=0)
+        usb_1 = cs.startAutomaticCapture(dev=1)
+        limelight_http = cs.startAutomaticCapture(camera=limelight_http)
 
         self.logger.info("Robot initialized")
 
