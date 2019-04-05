@@ -3,14 +3,16 @@ import pickle
 
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
+from wpilib.command import Command
 
 import robotmap
 import subsystems
 
 
-class ProfileFollower(object):
+class ProfileFollower(Command):
     def __init__(self, file_name="none"):
         self.file_name = f"AutoProfile_{file_name}"
+        super().__init__(f"{self.file_name}")
         if self.file_name == "AutoProfile_none":
             raise ValueError
         with open(f"{self.file_name}", "rb") as f:
@@ -43,12 +45,9 @@ class ProfileFollower(object):
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()
 
-        output_l = self.left.calculate(
-            subsystems.chassis.get_left_position()
-        )
-        output_r = self.right.calculate(
-            subsystems.chassis.get_right_position()
-        )
+        output_l = self.left.calculate(subsystems.chassis.get_left_position())
+        output_r = self.right.calculate(subsystems.chassis.get_right_position())
+
         heading_target = pf.r2d(self.left.getHeading())
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
