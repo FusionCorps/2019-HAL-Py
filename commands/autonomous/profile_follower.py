@@ -1,5 +1,4 @@
 import logging
-import pickle
 
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
@@ -13,16 +12,19 @@ class ProfileFollower(Command):
     def __init__(self, file_loc="none", name="none"):
         self.file_name = f"{file_loc}AutoProfile_{name}"
         super().__init__(f"{self.file_name}")
+        self.logger = logging.getLogger("ProfileFollower")
+        self.is_done_loading = False
+        self.trajectory = []
 
         if self.file_name == "AutoProfile_none":
             raise ValueError
 
-        with open(f"{self.file_name}", "rb") as f:
-            self.trajectory = pickle.load(f)
         self.left, self.right, self.trajectory, self.encoder_followers, self.modifier = None, None, None, None, None
-        self.logger = logging.getLogger("ProfileFollower")
 
     def initialize(self):
+        self.logger.warning(f"File name is {self.file_name}")
+        self.trajectory = pf.deserialize_csv(f"{self.file_name}")
+
         self.logger.warning(f"{self.file_name} is starting...")
         self.modifier = pf.modifiers.TankModifier(self.trajectory).modify(0.0254)
 
@@ -44,6 +46,8 @@ class ProfileFollower(Command):
         for follower in self.encoder_followers:
             follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
+        self.logger.warning("Profile Initialized.")
+
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()
 
@@ -58,7 +62,10 @@ class ProfileFollower(Command):
         subsystems.chassis.set_right(output_r - turn_output)
 
     def isFinished(self):
-        return self.left.isFinished() and self.right.isFinished()
+        if not self.is_done_loading:
+            return False
+        if self.is_done_loading:
+            return self.left.isFinished() and self.right.isFinished()
 
     def interrupted(self):
         self.end()

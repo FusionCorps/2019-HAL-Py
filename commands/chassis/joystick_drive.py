@@ -10,7 +10,7 @@ class JoystickDrive(InstantCommand):
         self.requires(subsystems.chassis)
 
     def execute(self):
-        subsystems.chassis.drive.logistic_drive(oi.joystick.getRawAxis(1), -oi.joystick.getRawAxis(4))
+        subsystems.chassis.drive.curvatureDrive(oi.joystick.getRawAxis(1), -oi.joystick.getRawAxis(4), True)
 
     def interrupted(self):
         self.end()

@@ -1,5 +1,4 @@
 import logging
-import pickle
 
 import pathfinder as pf
 from math import radians
@@ -46,7 +45,7 @@ class ProfileGenerator(object):
                 continue
 
         if self.name is None:
-            self.name = f"{str(args)}"
+            self.name = f"{str(args).strip(' ')}"
         if self.v_max is None:
             self.v_max = 5000
         if self.a_max is None:
@@ -69,5 +68,5 @@ class ProfileGenerator(object):
 
         self.logger.error("Trajectory generated")
 
-        with open(f"AutoProfile_{self.name}", "wb") as f:
-            pickle.dump(trajectory, f)
+        # with open(f"AutoProfile_{self.name}", "wb") as f:
+        pf.serialize_csv(f"AutoProfile_{self.name}", trajectory)

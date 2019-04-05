@@ -1,8 +1,7 @@
 import logging
 
 import oi
-from subsystems.subduckbill import StateDuckbill
-# from subsystems.sublift import Position
+from subsystems.sublift import Position
 # from .autonomous.auto_profile import AutoProfile
 from .autonomous.profile_follower import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
@@ -24,8 +23,8 @@ def init():
     """Adds all commands to controller"""
     logger = logging.getLogger("Commands")
 
-    oi.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
-    oi.bumper_R.whenPressed(PistonGrp())
+    # oi.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
+    # oi.bumper_R.whenPressed(PistonGrp())
 
     # oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
 
@@ -38,17 +37,17 @@ def init():
     # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (-3, 0, 0)))
     # # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
 
-    # oi.bumper_L.toggleWhenPressed(LiftReset(0))
-    # oi.bumper_R.toggleWhenPressed(LiftReset(1))
+    oi.bumper_L.toggleWhenPressed(LiftReset(0))
+    oi.bumper_R.toggleWhenPressed(LiftReset(1))
 
     # oi.A.whenPressed(LiftSet(Position.FLUSH))
     # oi.B.whenPressed(LiftSet(Position.CLIMB2))
     # oi.X.whenPressed(LiftSet(Position.FRONT2))
     # oi.Y.whenPressed(LiftSet(Position.LBACK2))
 
-    # oi.A.whenPressed(LiftSet(Position.FLUSH))
-    # oi.B.whenPressed(LiftSet(Position.CLIMB))
-    # oi.X.whenPressed(LiftSet(Position.FRONT))
-    # oi.Y.whenPressed(LiftSet(Position.LBACK))
+    oi.A.whenPressed(LiftSet(Position.FLUSH))
+    oi.X.whenPressed(LiftSet(Position.FRONT))
+    oi.Y.whenPressed(LiftSet(Position.LBACK))
+    oi.B.whenPressed(LiftSet(Position.CLIMB))
 
     logger.info("Commands initialized")

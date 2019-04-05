@@ -108,3 +108,8 @@ class FusionDrive(DifferentialDrive):
     def get_right(self):
         """Returns right motor speed (-1.0 to 1.0)"""
         return self.r_motor.get()
+
+    def curvatureDrive(
+            self, xSpeed: float, zRotation: float, isQuickTurn: bool
+    ) -> None:
+        super().curvatureDrive(xSpeed, zRotation, isQuickTurn)
