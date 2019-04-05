@@ -5,9 +5,9 @@ import pathfinder as pf
 from math import radians
 
 
-class AutoGenerator(object):
+class ProfileGenerator(object):
     def __init__(self, *args, **kwargs):
-        super(AutoGenerator, self).__init__()
+        super(ProfileGenerator, self).__init__()
         self.logger = logging.getLogger("ProfileGenerator")
         self.points = []
         self.left, self.right = None, None
@@ -45,7 +45,7 @@ class AutoGenerator(object):
                 continue
 
         if self.name is None:
-            self.name = f"AutoProfile_{str(args)}"
+            self.name = f"{str(args)}"
         if self.v_max is None:
             self.v_max = 5000
         if self.a_max is None:
