@@ -10,7 +10,7 @@ import subsystems
 
 
 class AutoProfile(Command):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args):
         super().__init__("AutoProfile")
         self.requires(subsystems.chassis)
         self.points = []
@@ -58,34 +58,34 @@ class AutoProfile(Command):
         self.encoder_followers = [self.left, self.right]
 
         self.left.configureEncoder(
-            subsystems.chassis._talon_FL.getQuadraturePosition(),
+            subsystems.chassis.get_right_position(),
             robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
         self.right.configureEncoder(
-            subsystems.chassis._talon_FR.getQuadraturePosition(),
+            subsystems.chassis.get_left_position(),
             robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(0.9, 0.2, 0.0, (1 / robotmap.chassis_max_vel), 0)
+            follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()
 
-        output_L = self.left.calculate(
-            subsystems.chassis._talon_FL.getQuadraturePosition()
+        output_l = self.left.calculate(
+            subsystems.chassis.get_left_position()
         )
-        output_R = self.right.calculate(
-            subsystems.chassis._talon_FR.getQuadraturePosition()
+        output_r = self.right.calculate(
+            subsystems.chassis.get_right_position()
         )
         heading_target = pf.r2d(self.left.getHeading())
         heading_diff = pf.boundHalfDegrees(heading_target - heading)
         turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-        subsystems.chassis._group_L.set(-output_L + turn_output)
-        subsystems.chassis._group_R.set(output_R - turn_output)
+        subsystems.chassis.set_left(output_l + turn_output)
+        subsystems.chassis.set_right(output_r - turn_output)
 
     def isFinished(self):
         return self.left.isFinished() and self.right.isFinished()

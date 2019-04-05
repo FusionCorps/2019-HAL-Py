@@ -1,3 +1,6 @@
+pathfinder
+pynetworktables
+wpilib
 
 pyfrc
 coverage

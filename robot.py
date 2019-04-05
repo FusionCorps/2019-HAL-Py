@@ -12,7 +12,8 @@ class Hal(CommandBasedRobot):
         import oi
         import commands
         import dashboard
-        import common.cameras
+        # noinspection PyUnresolvedReferences
+        from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
 
         self.logger = logging.getLogger("Core")
 
@@ -20,17 +21,18 @@ class Hal(CommandBasedRobot):
         subsystems.init()
         commands.init()
         dashboard.init()
-        common.cameras.init()
+
+        limelight_http = HttpCamera("limelight_http", "http://10.66.72.11:5800")
+        cs = CameraServer.getInstance()
+        cs.enableLogging()
+        usb_0 = cs.startAutomaticCapture(dev=0)
+        usb_1 = cs.startAutomaticCapture(dev=1)
+        limelight_http = cs.startAutomaticCapture(camera=limelight_http)
 
         self.logger.info("Robot initialized")
 
         subsystems.chassis.reset_encoders()
         self.watchdog.setTimeout(1)
-
-        # from commands.update_sd import UpdateSD
-        #
-        # self.update_smartdashboard = UpdateSD()
-        # self.update_smartdashboard.start()
 
     def robotPeriodic(self):
         pass

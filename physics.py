@@ -1,6 +1,8 @@
 from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units
 
+import robotmap
+
 
 class PhysicsEngine(object):
     """
@@ -24,7 +26,7 @@ class PhysicsEngine(object):
         # fmt: off
         self.drivetrain = tankmodel.TankModel.theory(
             motor_cfgs.MOTOR_CFG_CIM,  # motor configuration
-            110 * units.lbs,  # robot mass
+            120 * units.lbs,  # robot mass
             10.71,  # drivetrain gear ratio
             2,  # motors per side
             26 * units.inch,  # robot wheelbase
@@ -33,6 +35,13 @@ class PhysicsEngine(object):
             8 * units.inch,  # wheel diameter
         )
         # fmt: on
+
+    @staticmethod
+    def encode(item, tm_diff, rate=1.0, ticks=4096):
+        """Updates encoder pos and velocity in simulation"""
+        spd = int(ticks * rate * item["value"] * tm_diff)
+        item["quad_position"] += spd
+        item["quad_velocity"] = spd
 
     def update_sim(self, hal_data, now, tm_diff):
         """
@@ -47,17 +56,17 @@ class PhysicsEngine(object):
         # Simulate the drivetrain
         l_motor = hal_data["CAN"][21]
         r_motor = hal_data["CAN"][11]
+        # Simulate lift system
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][3]
 
-        # Encoder change values off to simulate different load conditions
-        spd_f = int(4096 * 4 * f_lift["value"] * tm_diff)
-        spd_b = int(4096 * 3.8 * b_lift["value"] * tm_diff)
+        f_switch = hal_data["dio"][5]
+        b_switch = hal_data["dio"][6]
 
-        f_lift["quad_position"] += spd_f
-        f_lift["quad_velocity"] = spd_f
-        b_lift["quad_position"] += spd_b
-        b_lift["quad_velocity"] = spd_f
+        self.encode(f_lift, tm_diff, rate=3.0)
+        self.encode(b_lift, tm_diff, rate=3.0)
+        self.encode(l_motor, tm_diff)
+        self.encode(r_motor, tm_diff)
 
         # gyro = hal_data["Spi"][0]
 
@@ -66,24 +75,11 @@ class PhysicsEngine(object):
         )
         self.physics_controller.distance_drive(x, y, angle)
 
-        # update position (use tm_diff so the rate is constant)
-        # self.position += hal_data["pwm"][4]["value"] * tm_diff * 3
-
-        # update limit switches based on position
-        # if self.position <= 0:
-        #     switch1 = True
-        #     switch2 = False
-
-        # elif self.position > 10:
-        #     switch1 = False
-        #     switch2 = True
-
-        # else:
-        #     switch1 = False
-        #     switch2 = False
-
-        # set values here
-        # hal_data["dio"][1]["value"] = switch1
-        # hal_data["dio"][2]["value"] = switch2
-
-        # hal_data["analog_in"][2]["voltage"] = self.position
+        if abs(f_lift["quad_position"]) + 800 > robotmap.lift_height:
+            f_switch["value"] = False
+        else:
+            f_switch["value"] = True
+        if abs(b_lift["quad_position"]) + 800 > robotmap.lift_height:
+            b_switch["value"] = False
+        else:
+            b_switch["value"] = True

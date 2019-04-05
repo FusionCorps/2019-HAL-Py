@@ -4,8 +4,8 @@ import subsystems
 
 
 class DuckbillSet(Command):
-    def __init__(self, state_target):
-        super().__init__(self.__class__.__name__)
+    def __init__(self, state_target, timeout=0):
+        super().__init__(self.__class__.__name__, timeout=0)
         self.requires(subsystems.duckbill)
         self.state_target = state_target
 

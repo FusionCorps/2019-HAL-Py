@@ -1,5 +1,6 @@
 from wpilib.command import InstantCommand
 
+import oi
 import subsystems
 
 
@@ -9,7 +10,7 @@ class JoystickDrive(InstantCommand):
         self.requires(subsystems.chassis)
 
     def execute(self):
-        subsystems.chassis.joystick_drive()
+        subsystems.chassis.drive.logistic_drive(oi.joystick.getRawAxis(1), -oi.joystick.getRawAxis(4))
 
     def interrupted(self):
         self.end()
