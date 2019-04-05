@@ -21,7 +21,7 @@ class DuckbillSwitch(Command):
             subsystems.duckbill.set_state(StateDuckbill.HALT)
 
     def isFinished(self):
-        return False
+        return True
 
     def execute(self):
         pass
