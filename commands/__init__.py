@@ -3,7 +3,8 @@ import logging
 import oi
 from subsystems.subduckbill import StateDuckbill
 # from subsystems.sublift import Position
-from .autonomous.auto_profile import AutoProfile
+# from .autonomous.auto_profile import AutoProfile
+from .autonomous.profile_follower import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet
 from .intake.intake_joystick import IntakeJoystick
@@ -25,10 +26,13 @@ def init():
 
     oi.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
     oi.bumper_R.whenPressed(PistonGrp())
+
     # oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
+
     oi.start.whenPressed(LiftGroup())
     oi.back.whenPressed(LiftGroup2())
 
+    oi.stick_L.whenPressed(ProfileFollower("((1, 0, 0), (3, 2, 0))"))
     # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
     # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (-3, 0, 0)))
     # # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))

@@ -13,8 +13,10 @@ class ProfileFollower(Command):
     def __init__(self, file_name="none"):
         self.file_name = f"AutoProfile_{file_name}"
         super().__init__(f"{self.file_name}")
+
         if self.file_name == "AutoProfile_none":
             raise ValueError
+
         with open(f"{self.file_name}", "rb") as f:
             self.trajectory = pickle.load(f)
         self.left, self.right, self.trajectory, self.encoder_followers, self.modifier = None, None, None, None, None
