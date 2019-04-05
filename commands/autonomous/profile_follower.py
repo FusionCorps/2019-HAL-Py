@@ -9,7 +9,7 @@ import subsystems
 
 
 class ProfileFollower(Command):
-    def __init__(self, file_loc="none", name="none"):
+    def __init__(self, file_loc="", name="none"):
         self.file_name = f"{file_loc}AutoProfile_{name}"
         super().__init__(f"{self.file_name}")
         self.logger = logging.getLogger("ProfileFollower")
@@ -32,26 +32,26 @@ class ProfileFollower(Command):
         self.right = EncoderFollower(self.modifier.getRightTrajectory())
         self.encoder_followers = [self.left, self.right]
 
-        for follower in self.encoder_followers:
-            follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
-
         self.left.configureEncoder(
             subsystems.chassis.get_right_position(),
             robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
         self.right.configureEncoder(
-            subsystems.chassis.get_left_position(),
-            robotmap.chassis_encoder_counts_per_rev,
+            -subsystems.chassis.get_left_position(),
+            -robotmap.chassis_encoder_counts_per_rev,
             robotmap.chassis_whl_diameter,
         )
+
+        for follower in self.encoder_followers:
+            follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
         self.logger.warning("Profile Initialized.")
 
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()
 
-        output_l = self.left.calculate(subsystems.chassis.get_left_position())
+        output_l = self.left.calculate(-subsystems.chassis.get_left_position())
         output_r = self.right.calculate(subsystems.chassis.get_right_position())
 
         heading_target = pf.r2d(self.left.getHeading())

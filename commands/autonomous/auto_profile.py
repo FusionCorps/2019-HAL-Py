@@ -41,7 +41,7 @@ class AutoProfile(Command):
 
         info, self.trajectory = pf.generate(
             self.points,
-            pf.FIT_HERMITE_CUBIC,
+            pf.FIT_HERMITE_QUINTIC,
             pf.SAMPLES_HIGH,
             0.05,
             robotmap.chassis_max_vel,
@@ -69,7 +69,7 @@ class AutoProfile(Command):
         )
 
         for follower in self.encoder_followers:
-            follower.configurePIDVA(0.9, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
+            follower.configurePIDVA(0.8, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0)
 
     def execute(self):
         heading = subsystems.chassis.gyro.getAngle()

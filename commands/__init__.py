@@ -1,6 +1,7 @@
 import logging
 
 import oi
+from commands.autonomous.auto_profile import AutoProfile
 # from .autonomous.auto_profile import AutoProfile
 from .autonomous.profile_follower import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
@@ -44,10 +45,10 @@ def init():
     # oi.Y.whenPressed(LiftSet(Position.LBACK))
     # oi.B.whenPressed(LiftSet(Position.CLIMB))
 
-    # oi.stick_L.whenPressed(
-    #     ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="left"))
-    # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
-    # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (-3, 0, 0)))
+    oi.stick_L.whenPressed(
+        ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="straight5"))
+    # # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
+    oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
     # # oi.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
 
     logger.info("Commands initialized")
