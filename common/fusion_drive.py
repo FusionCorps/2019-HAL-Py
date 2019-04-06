@@ -58,7 +58,7 @@ class FusionDrive(DifferentialDrive):
     def get_logistic(self, spd_max, spd_current, time_step) -> float:
         """Returns results of logistic calculations from certain preconditions"""
         z = (robotmap.accel_chassis_max / 2)  # Maximum accel must be divided by 2 because of shrinking
-        z_d = (robotmap.decel_chassis_max / 2)  # Unused variable for maximum deceleration
+        z_d = (robotmap.decel_chassis_max / 2)  # Unused constant for maximum deceleration
         c = self.shrink(spd_max)
         v = self.shrink(spd_current)
 

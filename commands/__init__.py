@@ -1,8 +1,13 @@
 import logging
 
+import hal
+
 import oi
+import robotmap
 from commands.autonomous.auto_profile import AutoProfile
+from subsystems.sublift import Position
 # from .autonomous.auto_profile import AutoProfile
+# from .piston.piston_grp import PistonGrp
 from .autonomous.profile_follower import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet
@@ -17,33 +22,32 @@ from .piston.piston_grp import PistonGrp
 from .piston.piston_set import PistonSet
 
 
-# from .piston.piston_grp import PistonGrp
-
-
 def init():
     """Adds all commands to controller"""
     logger = logging.getLogger("Commands")
 
-    # oi.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
     oi.bumper_L.toggleWhenPressed(DuckbillSwitch())
     oi.bumper_R.whenPressed(PistonGrp())
-    # oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
-
     oi.start.whenPressed(LiftGroup())
     oi.back.whenPressed(LiftGroup2())
 
+    if hal.isSimulation() and robotmap.simulation_lift_target is 0:
+        oi.A.whenPressed(LiftSet(Position.FLUSH))
+        oi.X.whenPressed(LiftSet(Position.FRONT))
+        oi.Y.whenPressed(LiftSet(Position.LBACK))
+        oi.B.whenPressed(LiftSet(Position.CLIMB))
+
+    if hal.isSimulation() and robotmap.simulation_lift_target is 1:
+        oi.A.whenPressed(LiftSet(Position.FLUSH))
+        oi.B.whenPressed(LiftSet(Position.CLIMB2))
+        oi.X.whenPressed(LiftSet(Position.FRONT2))
+        oi.Y.whenPressed(LiftSet(Position.LBACK2))
+
+    # oi.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
+    # oi.bumper_R.whenReleased(PistonSet(StatePiston.IN))
+
     # oi.bumper_L.toggleWhenPressed(LiftReset(0))
     # oi.bumper_R.toggleWhenPressed(LiftReset(1))
-
-    # oi.A.whenPressed(LiftSet(Position.FLUSH))
-    # oi.B.whenPressed(LiftSet(Position.CLIMB2))
-    # oi.X.whenPressed(LiftSet(Position.FRONT2))
-    # oi.Y.whenPressed(LiftSet(Position.LBACK2))
-
-    # oi.A.whenPressed(LiftSet(Position.FLUSH))
-    # oi.X.whenPressed(LiftSet(Position.FRONT))
-    # oi.Y.whenPressed(LiftSet(Position.LBACK))
-    # oi.B.whenPressed(LiftSet(Position.CLIMB))
 
     # oi.stick_L.whenPressed(
     #     # ProfileFollower(file_loc="/home/lvuser/py/commands/autonomous/", name="diagonal"))

@@ -18,6 +18,7 @@ class Process_Buffer:
 
 
 class Auton_Profile(Command):
+    """DEPRECATED -> Do Not Use"""
     def __init__(self, trajectory_name_prefix):
         super().__init__("Auton_Profile " + trajectory_name_prefix)
 
