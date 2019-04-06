@@ -22,6 +22,7 @@ class SubIntake(Subsystem):
     def __init__(self):
         super().__init__("Intake")
         self._victor = VictorSPX(robotmap.talon_intake)
+        self.state = None
         self.set_state(StateIntake.HALT)
 
     def set_victor(self, spd_target, mode=ControlMode.PercentOutput):
