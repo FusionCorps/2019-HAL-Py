@@ -23,13 +23,15 @@ class SubChassis(Subsystem):
         self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
 
         for talon in self._talons:
-            talon.configMotionCruiseVelocity(30000, 0)
-            talon.configMotionAcceleration(1000, 0)
+            talon.configMotionCruiseVelocity(
+                (robotmap.chassis_max_vel / robotmap.chassis_whl_diameter) * robotmap.chassis_encoder_counts_per_rev, 0)
+            talon.configMotionAcceleration(
+                (robotmap.chassis_max_vel / robotmap.chassis_whl_diameter) * robotmap.chassis_encoder_counts_per_rev, 0)
 
-            talon.config_kP(0, 0.8, 0)
-            talon.config_kI(0, 0, 0)
-            talon.config_kD(0, 0, 0)
-            talon.config_kF(0, 0, 0)
+            talon.config_kF(0, robotmap.chassis_fpid[0], 0)
+            talon.config_kP(0, robotmap.chassis_fpid[1], 0)
+            talon.config_kI(0, robotmap.chassis_fpid[2], 0)
+            talon.config_kD(0, robotmap.chassis_fpid[3], 0)
             talon.config_IntegralZone(0, 0, 0)
 
             talon.configPeakOutputForward(1.0, 0)
@@ -101,7 +103,7 @@ class SubChassis(Subsystem):
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
-            talon.setQuadraturePosition(0, 50)
+            talon.setQuadraturePosition(0, 20)
 
     def reset_gyro(self):
         """Zeroes the gyro"""
