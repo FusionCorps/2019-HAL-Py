@@ -55,8 +55,8 @@ class SubLift(Subsystem):
             )
 
             talon.selectProfileSlot(0, 0)
-            talon.configMotionAcceleration(robotmap.lift_acceleration, 0)
-            talon.configMotionCruiseVelocity(robotmap.lift_cruise_velocity, 0)
+            talon.configMotionAcceleration(robotmap.lift_characteristics[0], 0)
+            talon.configMotionCruiseVelocity(robotmap.lift_characteristics[1], 0)
             talon.configPeakOutputForward(0.8, 0)
             talon.configPeakOutputReverse(-0.8, 0)
 
