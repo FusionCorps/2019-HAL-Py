@@ -19,6 +19,7 @@ class StateIntake(Enum):
 
 class SubIntake(Subsystem):
     """Subsystem used to intake and eject cargo"""
+
     def __init__(self):
         super().__init__("Intake")
         self._victor = VictorSPX(robotmap.talon_intake)
@@ -34,19 +35,17 @@ class SubIntake(Subsystem):
         Parameters
         ---
         `state_target`: (IntakeState) Value to set (e.g. `INTAKING`)"""
-        if (
-            state_target is not None
-            and self._victor.getMotorOutputPercent() is not state_target.value
-        ):
+        if state_target is not None and self.get_state() is not state_target:
             self.set_victor(state_target.value, mode=ControlMode.PercentOutput)
-        elif state_target is None:
+        else:
             pass
-
-        self.state = state_target
 
     def get_state(self):
         """Returns current IntakeState"""
-        return self.state
+        for name, value in StateIntake.__members__.items():
+            if self._victor.getMotorOutputPercent() == value.value:
+                return value
+        raise LookupError
 
     def initDefaultCommand(self):
         from commands.intake.intake_joystick import IntakeJoystick

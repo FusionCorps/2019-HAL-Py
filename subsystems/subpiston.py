@@ -33,11 +33,12 @@ class SubPiston(Subsystem):
         if self.solenoid_piston_R.get() is not state_target.value[1]:
             self.solenoid_piston_R.set(state_target.value[1])
 
-        self.state = state_target
-
     def get_state(self):
         """Gets the current `StatePiston` of the Piston"""
-        return self.state
+        for name, value in StatePiston.__members__.items():
+            if self.solenoid_piston_L.get() == value.value[0] and self.solenoid_piston_R.get() == value.value[1]:
+                return value
+        raise LookupError
 
     def initDefaultCommand(self):
         from commands.piston.piston_set import PistonSet
