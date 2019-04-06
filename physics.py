@@ -75,11 +75,11 @@ class PhysicsEngine(object):
         )
         self.physics_controller.distance_drive(x, y, angle)
 
-        if abs(f_lift["quad_position"]) + 800 > robotmap.lift_height:
+        if abs(f_lift["quad_position"]) + 580 > robotmap.lift_height:
             f_switch["value"] = False
         else:
             f_switch["value"] = True
-        if abs(b_lift["quad_position"]) + 800 > robotmap.lift_height:
+        if abs(b_lift["quad_position"]) + 580 > robotmap.lift_height:
             b_switch["value"] = False
         else:
             b_switch["value"] = True

@@ -24,9 +24,13 @@ class SubChassis(Subsystem):
 
         for talon in self._talons:
             talon.configMotionCruiseVelocity(
-                (robotmap.chassis_max_vel / robotmap.chassis_whl_diameter) * robotmap.chassis_encoder_counts_per_rev, 0)
+                int((
+                                robotmap.chassis_max_vel / robotmap.chassis_whl_diameter) * robotmap.chassis_encoder_counts_per_rev),
+                0)
             talon.configMotionAcceleration(
-                (robotmap.chassis_max_vel / robotmap.chassis_whl_diameter) * robotmap.chassis_encoder_counts_per_rev, 0)
+                int((
+                                robotmap.chassis_max_vel / robotmap.chassis_whl_diameter) * robotmap.chassis_encoder_counts_per_rev),
+                0)
 
             talon.config_kF(0, robotmap.chassis_fpid[0], 0)
             talon.config_kP(0, robotmap.chassis_fpid[1], 0)

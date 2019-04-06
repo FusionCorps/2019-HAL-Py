@@ -87,7 +87,7 @@ class SubLift(Subsystem):
         self._talon_lift_front.configMotionAcceleration(chars[1])
 
     def set_back_characteristics(self, chars):
-        self.logger.info(f"Back characteristics to {str(chars)}")
+        self.logger.info(f"Back  characteristics to {str(chars)}")
         self._talon_lift_back.configMotionCruiseVelocity(chars[0])
         self._talon_lift_back.configMotionAcceleration(chars[1])
 
