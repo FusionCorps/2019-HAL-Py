@@ -4,11 +4,10 @@ import hal
 
 import oi
 import robotmap
-from commands.autonomous.auto_profile import AutoProfile
 from subsystems.sublift import Position
 # from .autonomous.auto_profile import AutoProfile
 # from .piston.piston_grp import PistonGrp
-from .autonomous.profile_follower import ProfileFollower
+from .autonomous.profile import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet
 from .duckbill.duckbill_switch import DuckbillSwitch
