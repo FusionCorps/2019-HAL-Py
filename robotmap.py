@@ -53,9 +53,9 @@ limelight_y_fov = 41
 # Chassis Constants
 chassis_whl_diameter = 0.2032
 chassis_encoder_counts_per_rev = 4096
-chassis_max_vel = 0.5
-chassis_max_acceleration = 0.2
-chassis_max_jerk = 0.1
+chassis_max_vel = 5
+chassis_max_acceleration = 2
+chassis_max_jerk = 1
 chassis_zero_acceleration_on_start = True
 
 # Lift constants

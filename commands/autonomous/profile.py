@@ -12,7 +12,6 @@ import subsystems
 
 class ProfileGenerator(object):
     def __init__(self):
-        super(ProfileGenerator, self).__init__()
         self.logger = logging.getLogger("ProfileGenerator")
         self.logger.setLevel(level=logging.DEBUG)
 
@@ -31,7 +30,6 @@ class ProfileGenerator(object):
             # Check whether list has a first element
             if len(points) is 0:
                 points.append(pf.Waypoint(loc[0], loc[1], a))
-                continue
 
             # Append new points that are not the last point
             if len(points) > 0:
@@ -87,14 +85,24 @@ class ProfileGenerator(object):
 
 
 class ProfileFollower(Command):
-    def __init__(self, file_loc="", name="none"):
-        self.file_name = f"{file_loc}AutoProfile_{name}"
-        super().__init__(f"{self.file_name}")
-
+    def __init__(self, *args, **kwargs):
+        self.args, self.kwargs = args, kwargs
+        file_loc, file_name = None, None
+        for value in args:
+            pass
+        for key, value in kwargs:
+            if key == 'file_loc':
+                file_loc = value
+            elif key == 'file_name':
+                file_name = value
+            elif key == 'generate':
+                self.generate = value
+            else:
+                continue
+        self.file_name = f"{file_loc}AutoProfile_{file_name}"
+        super().__init__(f"{self.file_name}:^20")
         self.requires(subsystems.chassis)
         self.logger = logging.getLogger("ProfileFollower")
-        self.is_done_loading = False
-        self.trajectory = []
         self.critical_error = False
         self.timer = Timer()
 
@@ -104,6 +112,9 @@ class ProfileFollower(Command):
         self.left, self.right, self.trajectory, self.encoder_followers, self.modifier = None, None, None, None, None
 
     def initialize(self):
+        if self.generate:
+            ProfileGenerator().generate(self.args, self.kwargs)
+
         self.timer.reset()
         self.timer.start()
 
