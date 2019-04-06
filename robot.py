@@ -16,6 +16,7 @@ class Hal(CommandBasedRobot):
         if not hal.isSimulation():
             # noinspection PyUnresolvedReferences
             from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
+
             limelight_http = HttpCamera("limelight_http", "http://10.66.72.11:5800")
             cs = CameraServer.getInstance()
             cs.enableLogging()

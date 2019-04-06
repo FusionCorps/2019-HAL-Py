@@ -1,10 +1,8 @@
-hal
-pathfinder
-pynetworktables
+pyfrc
+robotpy-pathfinder
+robotpy-ctre
 wpilib
 
-pyfrc
+pynetworktables
 coverage
-robotpy-ctre
 numpy
-robotpy-pathfinder
