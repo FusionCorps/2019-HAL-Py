@@ -49,9 +49,9 @@ def init():
     # oi.bumper_L.toggleWhenPressed(LiftReset(0))
     # oi.bumper_R.toggleWhenPressed(LiftReset(1))
 
-    # oi.stick_L.whenPressed(
-    #     # ProfileFollower(file_loc="/home/lvuser/py/commands/autonomous/", name="diagonal"))
-    #     ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="test3"))
+    oi.stick_L.whenPressed(
+        # ProfileFollower(file_loc="/home/lvuser/py/commands/autonomous/", name="diagonal"))
+        ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="huge"))
 
     # # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
     # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))

@@ -3,16 +3,20 @@ import logging
 import pathfinder as pf
 from math import radians
 
+import robotmap
+
 
 class ProfileGenerator(object):
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super(ProfileGenerator, self).__init__()
         self.logger = logging.getLogger("ProfileGenerator")
-        self.points = []
-        self.left, self.right = None, None
-        self.v_max, self.a_max, self.j_max, self.name = None, None, None, None
+        self.logger.setLevel(level=logging.DEBUG)
 
-        self.logger.warning(f"Profilegenerator called with args: {args}. Called with kwargs: {kwargs}")
+    def generate(self, *args, **kwargs):
+        points = []
+        v, a, j, name = None, None, None, None
+
+        self.logger.warning(f"ProfileGenerator called with args: {args}. Called with kwargs: {kwargs}.")
         for loc in args:
             # Check to make sure angle is not -0
             if loc[2] == 0:
@@ -21,52 +25,58 @@ class ProfileGenerator(object):
                 a = radians(loc[2])
 
             # Check whether list has a first element
-            if len(self.points) is 0:
-                self.points.append(pf.Waypoint(loc[0], loc[1], a))
+            if len(points) is 0:
+                points.append(pf.Waypoint(loc[0], loc[1], a))
                 continue
 
             # Append new points that are not the last point
-            if len(self.points) > 0:
-                if loc == self.points[len(self.points) - 1]:
+            if len(points) > 0:
+                if loc == points[len(points) - 1]:
                     continue
                 else:
-                    self.points.append(pf.Waypoint(loc[0], loc[1], a))
+                    points.append(pf.Waypoint(loc[0], loc[1], a))
 
         for key, value in kwargs.items():
             if key == 'name':
-                self.name = value
-            elif key == 'v_max':
-                self.v_max = value
-            elif key == 'a_max':
-                self.a_max = value
-            elif key == 'j_max':
-                self.j_max = value
+                if value is not None:
+                    name = value
+                else:
+                    name = f"{str(args).strip(' ')}"
+            elif key == 'v':
+                if value is not None:
+                    v = float(value)
+                else:
+                    v = robotmap.chassis_max_vel
+            elif key == 'a':
+                if value is not None:
+                    a = float(value)
+                else:
+                    a = robotmap.chassis_max_acceleration
+            elif key == 'j':
+                if j is not None:
+                    j = float(value)
+                else:
+                    j = robotmap.chassis_max_jerk
             else:
                 continue
 
-        if self.name is None:
-            self.name = f"{str(args).strip(' ')}"
-        if self.v_max is None:
-            self.v_max = 5000
-        if self.a_max is None:
-            self.a_max = 1000
-        if self.j_max is None:
-            self.j_max = 500
+        self.logger.warning(f"Requested points {str(points)}.")
 
-    def generate(self):
-        self.logger.error(f"Requested points {str(self.points)}")
+        try:
+            info, trajectory = pf.generate(
+                points,
+                pf.FIT_HERMITE_CUBIC,
+                pf.SAMPLES_HIGH,
+                0.05,
+                v,
+                a,
+                j,
+            )
 
-        info, trajectory = pf.generate(
-            self.points,
-            pf.FIT_HERMITE_CUBIC,
-            pf.SAMPLES_HIGH,
-            0.05,
-            self.v_max,
-            self.a_max,
-            self.j_max,
-        )
+            self.logger.warning("Trajectory generated.")
 
-        self.logger.error("Trajectory generated")
+            pf.serialize_csv(f"AutoProfile_{name}", trajectory)
 
-        # with open(f"AutoProfile_{self.name}", "wb") as f:
-        pf.serialize_csv(f"AutoProfile_{self.name}", trajectory)
+            self.logger.warning("Trajectory saved.")
+        except ValueError as e:
+            self.logger.error(f"Trajectory generation failed! {e}")
