@@ -30,7 +30,7 @@ gyro = 0
 joystick = 0
 
 # Speed Constants
-spd_chassis_drive = 0.7
+spd_chassis_drive = 0.55
 spd_chassis_rotate = 0.4
 spd_chassis_vision_seeking = 0.3
 accel_chassis_max = 5.5
@@ -51,12 +51,12 @@ limelight_x_fov = 54
 limelight_y_fov = 41
 
 # Chassis Constants
-chassis_whl_diameter = 0.0254
+chassis_whl_diameter = 0.2032
 chassis_encoder_counts_per_rev = 4096
-chassis_max_vel = 1000
-chassis_max_acceleration = 50
-chassis_max_jerk = 25
-chassis_zero_acceleration_on_start = False
+chassis_max_vel = 1
+chassis_max_acceleration = 0.2
+chassis_max_jerk = 0.1
+chassis_zero_acceleration_on_start = True
 
 # Lift constants
 lift_height = 22000
@@ -71,3 +71,5 @@ lift_front_fpid = (0, 0.8, 0.0, 0.0)
 lift_back_fpid = lift_front_fpid
 lift_front_retract_fpid = (0.0, 0.8, 0.0, 0.0)
 lift_back_retract_fpid = lift_front_retract_fpid
+
+simulation_lift_target = 0
