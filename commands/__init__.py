@@ -5,8 +5,6 @@ import hal
 import oi
 import robotmap
 from subsystems.sublift import Position
-# from .autonomous.auto_profile import AutoProfile
-# from .piston.piston_grp import PistonGrp
 from .autonomous.profile import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
 from .duckbill.duckbill_set import DuckbillSet

@@ -67,8 +67,8 @@ lift_back_limit = 6
 lift_characteristics = (800, 100)  # (velocity_max, accel_max)
 lift_characteristics_retract = (4000, 1000)
 lift_front_fpid = (0, 0.8, 0.0, 0.0)
-lift_back_fpid = lift_front_fpid
 lift_front_retract_fpid = (0.0, 0.8, 0.0, 0.0)
+lift_back_fpid = lift_front_fpid
 lift_back_retract_fpid = lift_front_retract_fpid
 
 # Hal simulation conditions

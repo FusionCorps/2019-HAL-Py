@@ -38,7 +38,7 @@ class PhysicsEngine(object):
 
     @staticmethod
     def encode(item, tm_diff, rate=1.0, ticks=4096):
-        """Updates encoder pos and velocity in simulation"""
+        """Updates encoder pos and velocity in simulation."""
         spd = int(ticks * rate * item["value"] * tm_diff)
         item["quad_position"] += spd
         item["quad_velocity"] = spd
