@@ -60,16 +60,7 @@ class SubChassis(Subsystem):
         if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
 
-        self.accel_rate_l = 0.0
-        self.accel_rate_r = 0.0
-
-        self.l_output = 0.0
-        self.r_output = 0.0
-
-        self.jerk_rate = 0.05
-
         self.timer = Timer()
-        self.last_called = 0
 
     def get_x(self):
         """Returns relative x position"""
