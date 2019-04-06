@@ -22,8 +22,8 @@ class SubDuckbill(Subsystem):
 
     def __init__(self):
         super().__init__("Duckbill")
-        self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_B)
-        self.solenoid_duckbill_T = Solenoid(robotmap.solenoid_piston_T)
+        self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_b)
+        self.solenoid_duckbill_T = Solenoid(robotmap.solenoid_piston_t)
         self.logger = logging.getLogger("Duckbill")
         self.state = None
         self.set_state(StateDuckbill.UP)

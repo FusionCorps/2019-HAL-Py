@@ -15,12 +15,12 @@ class SubChassis(Subsystem):
         super().__init__("Chassis")
         self.logger = logging.getLogger("Chassis")
 
-        self._talon_FL = WPI_TalonSRX(robotmap.talon_front_left)
-        self._talon_FR = WPI_TalonSRX(robotmap.talon_front_right)
-        self._talon_BL = WPI_TalonSRX(robotmap.talon_back_left)
-        self._talon_BR = WPI_TalonSRX(robotmap.talon_back_right)
+        self._talon_f_l = WPI_TalonSRX(robotmap.talon_f_l)
+        self._talon_f_r = WPI_TalonSRX(robotmap.talon_f_r)
+        self._talon_b_l = WPI_TalonSRX(robotmap.talon_b_l)
+        self._talon_b_r = WPI_TalonSRX(robotmap.talon_b_r)
 
-        self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
+        self._talons = [self._talon_f_l, self._talon_f_r, self._talon_b_l, self._talon_b_r]
 
         for talon in self._talons:
             talon.configMotionCruiseVelocity(
@@ -42,9 +42,9 @@ class SubChassis(Subsystem):
             talon.set(0.0)
 
         # Drive class instance & following
-        self.drive = FusionDrive(self._talon_FL, self._talon_FR)
-        self._talon_BL.follow(self._talon_FL)
-        self._talon_BR.follow(self._talon_FR)
+        self.drive = FusionDrive(self._talon_f_l, self._talon_f_r)
+        self._talon_b_l.follow(self._talon_f_l)
+        self._talon_b_r.follow(self._talon_f_r)
 
         # Sensors
         self.sonar = Ultrasonic(
@@ -92,15 +92,15 @@ class SubChassis(Subsystem):
 
     def get_left_position(self, target=0):
         if target == 0:
-            return self._talon_FL.getQuadraturePosition()
+            return self._talon_f_l.getQuadraturePosition()
         elif target == 1:
-            return self._talon_FL.getPulseWidthPosition()
+            return self._talon_f_l.getPulseWidthPosition()
 
     def get_right_position(self, target=0):
         if target == 0:
-            return self._talon_FR.getQuadraturePosition()
+            return self._talon_f_r.getQuadraturePosition()
         elif target == 1:
-            return self._talon_FR.getPulseWidthPosition()
+            return self._talon_f_r.getPulseWidthPosition()
 
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
@@ -122,10 +122,10 @@ class SubChassis(Subsystem):
         self.sonar.setEnabled(state)
 
     def set_left(self, spd_new):
-        self._talon_FL.set(-spd_new)
+        self._talon_f_l.set(-spd_new)
 
     def set_right(self, spd_new):
-        self._talon_FR.set(spd_new)
+        self._talon_f_r.set(spd_new)
 
     def get_distance(self):
         """Gets Ultrasonic distance in MM"""

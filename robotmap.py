@@ -3,10 +3,10 @@ Stores all important robot variables. All units in metric.
 """
 
 # Speed Controller port IDs
-talon_front_left = 20
-talon_front_right = 11
-talon_back_left = 21
-talon_back_right = 10
+talon_f_l = 20
+talon_f_r = 11
+talon_b_l = 21
+talon_b_r = 10
 
 talon_intake = 1
 
@@ -15,10 +15,10 @@ talon_lift_front = 2
 talon_lift_back = 3
 
 # Solenoid Port IDs
-solenoid_piston_B = 0
-solenoid_piston_T = 1
-solenoid_piston_L = 2
-solenoid_piston_R = 3
+solenoid_piston_b = 0
+solenoid_piston_t = 1
+solenoid_piston_l = 2
+solenoid_piston_r = 3
 
 # Sensor Port IDs
 ultrasonic_ping = 21
