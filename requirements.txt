@@ -1,3 +1,4 @@
+hal
 pathfinder
 pynetworktables
 wpilib

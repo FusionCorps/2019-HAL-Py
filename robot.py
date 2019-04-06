@@ -1,5 +1,6 @@
 import logging
 
+import hal
 import wpilib
 from commandbased import CommandBasedRobot
 
@@ -12,8 +13,15 @@ class Hal(CommandBasedRobot):
         import oi
         import commands
         import dashboard
-        # noinspection PyUnresolvedReferences
-        # from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
+        if not hal.isSimulation():
+            # noinspection PyUnresolvedReferences
+            from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
+            limelight_http = HttpCamera("limelight_http", "http://10.66.72.11:5800")
+            cs = CameraServer.getInstance()
+            cs.enableLogging()
+            usb_0 = cs.startAutomaticCapture(dev=0)
+            usb_1 = cs.startAutomaticCapture(dev=1)
+            limelight_http = cs.startAutomaticCapture(camera=limelight_http)
 
         self.logger = logging.getLogger("Core")
 
@@ -21,13 +29,6 @@ class Hal(CommandBasedRobot):
         subsystems.init()
         commands.init()
         dashboard.init()
-
-        # limelight_http = HttpCamera("limelight_http", "http://10.66.72.11:5800")
-        # cs = CameraServer.getInstance()
-        # cs.enableLogging()
-        # usb_0 = cs.startAutomaticCapture(dev=0)
-        # usb_1 = cs.startAutomaticCapture(dev=1)
-        # limelight_http = cs.startAutomaticCapture(camera=limelight_http)
 
         self.logger.info("Robot initialized")
 

@@ -11,27 +11,18 @@ from subsystems.sublift import Position
 class LiftSet(Command):
     """Sets the position of the lift using CTRE's MotionMagic system"""
 
-    def __init__(self, target_position, can_finish=True, target=3):
-        self.target_position = target_position
-        self.logger = logging.getLogger("LiftSet")
-        super().__init__(self.__class__.__name__ + " " + str(target_position))
+    def __init__(self, target_position, can_finish=True):
+        super().__init__(f"{self.__class__.__name__} {str(target_position.name)}")
         self.requires(subsystems.lift)
-
+        self.target_position = target_position
         self.can_finish = can_finish
-        self.can_correct = False
-        self.is_correcting = False
-        self.target = target
+        self.logger = logging.getLogger("LiftSet")
         self.timer = Timer()
 
     def __str__(self):
-        return ("[ "
-                + self.target_position.name
-                + " -> "
-                + subsystems.lift.get_current_position().name
-                + " ]"
-                + f' (F: {str(subsystems.lift.get_front_position()):>6}'
-                + f', B: {str(subsystems.lift.get_back_position()):>6}'
-                + ")")
+        return (f"[ {self.target_position.name} -> {subsystems.lift.get_current_position().name} ] "
+                f"(F: {str(subsystems.lift.get_front_position()):>6}, "
+                f"B: {str(subsystems.lift.get_back_position()):>6})")
 
     def initialize(self):
         if self.target_position == Position.CLIMB or self.target_position == Position.CLIMB2:
@@ -97,9 +88,7 @@ class LiftSet(Command):
                     subsystems.lift.get_back_position()) > robotmap.lift_height_2
 
     def interrupted(self):
-        self.logger.warning(
-            str(self) + " Interrupted"
-        )
+        self.logger.warning(f"{str(self)} Interrupted")
         self.end()
 
     def end(self):
@@ -115,4 +104,4 @@ class LiftSet(Command):
             subsystems.lift.stop_front()
 
         self.timer.stop()
-        self.logger.warning(str(self) + " Reached in " + str(round(self.timer.get(), 2)))
+        self.logger.warning(f"{str(self)} Reached in {str(round(self.timer.get(), 2))}")
