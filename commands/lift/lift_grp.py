@@ -23,7 +23,7 @@ class ClimbHab3(CommandGroup):
         self.addSequential(ChassisDrive(0.35, 0.0, 0.8))
 
     def initialize(self):
-        self.logger.warning("Starting")
+        self.logger.warning("Starting to climb Hab 3")
 
     def execute(self):
         pass
@@ -35,7 +35,7 @@ class ClimbHab3(CommandGroup):
         self.end()
 
     def end(self):
-        self.logger.warning("Ended")
+        self.logger.warning("Finished climbing Hab 3")
 
 
 class ClimbHab2(CommandGroup):
@@ -53,7 +53,7 @@ class ClimbHab2(CommandGroup):
         self.addSequential(ChassisDrive(0.3, 0.0, 2))
 
     def initialize(self):
-        self.logger.warning("Starting")
+        self.logger.warning("Starting to climb Hab 2")
 
     def execute(self):
         pass
@@ -65,4 +65,4 @@ class ClimbHab2(CommandGroup):
         self.end()
 
     def end(self):
-        self.logger.warning("Ended")
+        self.logger.warning("Finished climbing Hab 2")
