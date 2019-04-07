@@ -8,11 +8,12 @@ from commands.lift.lift_set import LiftSet
 from subsystems.sublift import Position
 
 
-class LiftGroup(CommandGroup):
+class ClimbHab3(CommandGroup):
     """CommandGroup for climbing Hab 3"""
+
     def __init__(self):
-        super().__init__("LiftGroup")
-        self.logger = logging.getLogger("LiftGroup")
+        super().__init__("ClimbHab3")
+        self.logger = logging.getLogger("ClimbHab3")
 
         self.addSequential(LiftSet(Position.CLIMB))
         self.addSequential(LiftDrive(0.6, 2))
@@ -28,7 +29,7 @@ class LiftGroup(CommandGroup):
         pass
 
     def isFinished(self):
-        return False
+        return True not in [entry.command.isRunning() for entry in self.commands]
 
     def interrupted(self):
         self.end()
@@ -38,10 +39,10 @@ class LiftGroup(CommandGroup):
         self.logger.warning("Ended")
 
 
-class LiftGroup2(CommandGroup):
+class ClimbHab2(CommandGroup):
     def __init__(self):
-        super().__init__("LiftGrp2")
-        self.logger = logging.getLogger("LiftGroup")
+        super().__init__("ClimbHab2")
+        self.logger = logging.getLogger("ClimbHab2")
 
         self.addSequential(LiftSet(Position.CLIMB2))
         self.addSequential(LiftDrive2(0.5, 2))
@@ -57,7 +58,7 @@ class LiftGroup2(CommandGroup):
         pass
 
     def isFinished(self):
-        return False
+        return True not in [entry.command.isRunning() for entry in self.commands]
 
     def interrupted(self):
         self.end()

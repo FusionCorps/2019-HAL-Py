@@ -13,7 +13,7 @@ from .duckbill.duckbill_switch import DuckbillSwitch
 from .intake.intake_joystick import IntakeJoystick
 from .intake.intake_set import IntakeSet
 from .lift.lift_drive import LiftDrive, LiftDrive2
-from .lift.lift_grp import LiftGroup, LiftGroup2
+from .lift.lift_grp import ClimbHab2, ClimbHab3
 from .lift.lift_reset import LiftReset
 from .lift.lift_set import LiftSet
 from .piston.piston_grp import PistonGrp
@@ -26,8 +26,8 @@ def init():
 
     oi.bumper_L.toggleWhenPressed(DuckbillSwitch())
     oi.bumper_R.whenPressed(PistonGrp())
-    oi.start.whenPressed(LiftGroup())
-    oi.back.whenPressed(LiftGroup2())
+    oi.start.whenPressed(ClimbHab3())
+    oi.back.whenPressed(ClimbHab2())
     oi.stick_R.whenPressed(ChassisSwapMode())
 
     if hal.isSimulation() and robotmap.simulation_lift_target is 0:
