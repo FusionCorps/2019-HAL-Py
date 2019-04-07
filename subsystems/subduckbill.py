@@ -1,3 +1,4 @@
+import logging
 from enum import Enum
 
 from wpilib import Solenoid
@@ -18,10 +19,13 @@ class StateDuckbill(Enum):
 
 class SubDuckbill(Subsystem):
     """Subsystem used to hold and release hatches"""
+
     def __init__(self):
         super().__init__("Duckbill")
-        self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_B)
-        self.solenoid_duckbill_T = Solenoid(robotmap.solenoid_piston_T)
+        self.solenoid_duckbill_B = Solenoid(robotmap.solenoid_piston_b)
+        self.solenoid_duckbill_T = Solenoid(robotmap.solenoid_piston_t)
+        self.logger = logging.getLogger("Duckbill")
+        self.state = None
         self.set_state(StateDuckbill.UP)
 
     def set_state(self, state_target):
@@ -35,21 +39,14 @@ class SubDuckbill(Subsystem):
             self.solenoid_duckbill_T.set(state_target.value[1])
 
         self.state = self.get_state()
-        self.logger.warning(f"Duckbill {self.state}")
+        self.logger.warning(f"{self.state.name}")
 
-    def get_state(self):
-        """Returns current StateDuckbill"""
-        if self.solenoid_duckbill_B.get() and not self.solenoid_duckbill_T.get():
-            return StateDuckbill.UP
-        elif self.solenoid_duckbill_T.get() and not self.solenoid_duckbill_B.get():
-            return StateDuckbill.DOWN
-        elif not self.solenoid_duckbill_B.get() and not self.solenoid_duckbill_T.get():
-            return StateDuckbill.HALT
-        else:
-            return StateDuckbill.HALT
+    def get_state(self) -> StateDuckbill:
+        """Returns current StateDuckbill based on solenoid values"""
+        for name, value in StateDuckbill.__members__.items():
+            if self.solenoid_duckbill_B.get() == value.value[0] and self.solenoid_duckbill_T.get() == value.value[1]:
+                return value
+        raise LookupError
 
     def initDefaultCommand(self):
-        # from commands.duckbill.duckbill_set import DuckbillSet
-        #
-        # self.setDefaultCommand(DuckbillSet(StateDuckbill.UP))
         pass

@@ -7,6 +7,7 @@ from subsystems.subpiston import StatePiston
 
 
 class PistonGrp(Command):
+    """Command used to execute hatch deployment sequence"""
     def __init__(self):
         super().__init__("PistonGrp")
         self.requires(subsystems.duckbill)

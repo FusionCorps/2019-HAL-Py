@@ -4,18 +4,16 @@ import hal
 
 import oi
 import robotmap
-from commands.autonomous.auto_profile import AutoProfile
 from subsystems.sublift import Position
-# from .autonomous.auto_profile import AutoProfile
-# from .piston.piston_grp import PistonGrp
-from .autonomous.profile_follower import ProfileFollower
+from .autonomous.profile import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
+from .chassis.chassis_swap_mode import ChassisSwapMode
 from .duckbill.duckbill_set import DuckbillSet
 from .duckbill.duckbill_switch import DuckbillSwitch
 from .intake.intake_joystick import IntakeJoystick
 from .intake.intake_set import IntakeSet
 from .lift.lift_drive import LiftDrive, LiftDrive2
-from .lift.lift_grp import LiftGroup, LiftGroup2
+from .lift.lift_grp import ClimbHab2, ClimbHab3
 from .lift.lift_reset import LiftReset
 from .lift.lift_set import LiftSet
 from .piston.piston_grp import PistonGrp
@@ -28,8 +26,9 @@ def init():
 
     oi.bumper_L.toggleWhenPressed(DuckbillSwitch())
     oi.bumper_R.whenPressed(PistonGrp())
-    oi.start.whenPressed(LiftGroup())
-    oi.back.whenPressed(LiftGroup2())
+    oi.start.whenPressed(ClimbHab3())
+    oi.back.whenPressed(ClimbHab2())
+    oi.stick_R.whenPressed(ChassisSwapMode())
 
     if hal.isSimulation() and robotmap.simulation_lift_target is 0:
         oi.A.whenPressed(LiftSet(Position.FLUSH))
@@ -51,7 +50,11 @@ def init():
 
     # oi.stick_L.whenPressed(
     #     # ProfileFollower(file_loc="/home/lvuser/py/commands/autonomous/", name="diagonal"))
-    #     ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", name="test3"))
+    #     ProfileFollower(file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/", file_name="huge"))
+
+    # oi.stick_R.whenPressed(ProfileFollower((1, 0, 0), (2, 0, 0), (5, 5, 45), name="tiny",
+    #                                        file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/",
+    #                                        file_name="tiny", generate=True))
 
     # # oi.X.whileHeld(ChassisDrive(0.8, 0.0))
     # oi.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))

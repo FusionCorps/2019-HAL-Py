@@ -12,6 +12,7 @@ class StatePiston(Enum):
     HALT = (False, False)
     IN = (True, False)
     OUT = (False, True)
+    FULL = (True, True)
 
 
 class SubPiston(Subsystem):
@@ -19,8 +20,8 @@ class SubPiston(Subsystem):
 
     def __init__(self):
         super().__init__("Piston")
-        self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_L)
-        self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_R)
+        self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_l)
+        self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_r)
         self.set_state(StatePiston.IN)
 
     def set_state(self, state_target):
@@ -28,16 +29,17 @@ class SubPiston(Subsystem):
         Parameters
         ---
         `state_target`: (StatePiston) Value to set (e.g. `OUT`)"""
-        if self.solenoid_piston_L.get() is not state_target.value[0]:
+        if self.get_state().value[0] is not state_target.value[0]:
             self.solenoid_piston_L.set(state_target.value[0])
-        if self.solenoid_piston_R.get() is not state_target.value[1]:
+        if self.get_state().value[1] is not state_target.value[1]:
             self.solenoid_piston_R.set(state_target.value[1])
 
-        self.state = state_target
-
-    def get_state(self):
+    def get_state(self) -> StatePiston:
         """Gets the current `StatePiston` of the Piston"""
-        return self.state
+        for name, value in StatePiston.__members__.items():
+            if self.solenoid_piston_L.get() == value.value[0] and self.solenoid_piston_R.get() == value.value[1]:
+                return value
+        raise LookupError
 
     def initDefaultCommand(self):
         from commands.piston.piston_set import PistonSet
