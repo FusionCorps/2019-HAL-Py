@@ -35,11 +35,12 @@ class ClimbHab3(CommandGroup):
         self.end()
 
     def end(self):
-        self.clearRequirements()
         self.logger.warning("Ended")
 
 
 class ClimbHab2(CommandGroup):
+    """CommandGroup for climbing Hab 2"""
+
     def __init__(self):
         super().__init__("ClimbHab2")
         self.logger = logging.getLogger("ClimbHab2")
@@ -64,5 +65,4 @@ class ClimbHab2(CommandGroup):
         self.end()
 
     def end(self):
-        self.clearRequirements()
         self.logger.warning("Ended")

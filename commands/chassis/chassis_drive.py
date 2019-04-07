@@ -15,10 +15,9 @@ class ChassisDrive(Command):
 
     def initialize(self):
         self.logger.info("Starting")
-        subsystems.chassis.drive.curvatureDrive(self.spd_x, self.spd_z, True)
 
     def execute(self):
-        pass
+        subsystems.chassis.drive.logistic_drive(self.spd_x, self.spd_z, clear_accumulator=True)
 
     def interrupted(self):
         self.logger.info("Interrupted")
@@ -29,4 +28,4 @@ class ChassisDrive(Command):
 
     def end(self):
         self.logger.info("Ending")
-        subsystems.chassis.drive.curvatureDrive(0.0, 0.0, True)
+        subsystems.chassis.drive.stopMotor()

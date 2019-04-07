@@ -18,8 +18,8 @@ class JoystickDrive(Command):
             subsystems.chassis.drive.curvatureDrive(-robotmap.spd_chassis_drive * oi.joystick.getRawAxis(1),
                                                     robotmap.spd_chassis_rotate * oi.joystick.getRawAxis(4), True)
         elif robotmap.chassis_drive_mode is 'logistic':
-            subsystems.chassis.drive.logistic_drive(-oi.joystick.getRawAxis(1),
-                                                    oi.joystick.getRawAxis(4))
+            subsystems.chassis.drive.logistic_drive(-oi.joystick.getRawAxis(1) * robotmap.spd_chassis_drive,
+                                                    oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate)
         else:
             raise ValueError("Cannot drive using joystick control!")
 

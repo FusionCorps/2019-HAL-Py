@@ -72,13 +72,13 @@ class FusionDrive(DifferentialDrive):
         else:
             raise ValueError
 
-    def logistic_drive(self, x_spd, z_rot):
+    def logistic_drive(self, x_spd, z_rot, clear_accumulator=False):
         """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
         # if self.timer.running is False:
         #     self.timer.start()
 
         current_time = self.timer.getFPGATimestamp()
-        time_differential = current_time - self.logistic_last_called  # Used to feed back into logistic curve
+        time_differential = (current_time - self.logistic_last_called) if not clear_accumulator else 0.02
 
         l_output, r_output = self.normalize_spd(x_spd + z_rot, x_spd - z_rot)
 
@@ -87,8 +87,8 @@ class FusionDrive(DifferentialDrive):
         #         f'Added (L {str(round(x_spd + z_rot, 2))} R {str(round(x_spd - z_rot, 2))}) Normalized (L {round(
         #         l_output, 2)} R {round(r_output, 2)})')
 
-        self.set_left(self.get_logistic(l_output * robotmap.spd_chassis_drive, self.get_left(), time_differential))
-        self.set_right(self.get_logistic(r_output * robotmap.spd_chassis_drive, self.get_right(), time_differential))
+        self.set_left(self.get_logistic(l_output, self.get_left(), time_differential))
+        self.set_right(self.get_logistic(r_output, self.get_right(), time_differential))
 
         self.logistic_last_called = self.timer.getFPGATimestamp()
         self.feed()
