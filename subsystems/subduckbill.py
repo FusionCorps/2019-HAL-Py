@@ -41,7 +41,7 @@ class SubDuckbill(Subsystem):
         self.state = self.get_state()
         self.logger.warning(f"{self.state.name}")
 
-    def get_state(self):
+    def get_state(self) -> StateDuckbill:
         """Returns current StateDuckbill based on solenoid values"""
         for name, value in StateDuckbill.__members__.items():
             if self.solenoid_duckbill_B.get() == value.value[0] and self.solenoid_duckbill_T.get() == value.value[1]:

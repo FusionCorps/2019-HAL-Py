@@ -34,7 +34,7 @@ class SubPiston(Subsystem):
         if self.get_state().value[1] is not state_target.value[1]:
             self.solenoid_piston_R.set(state_target.value[1])
 
-    def get_state(self):
+    def get_state(self) -> StatePiston:
         """Gets the current `StatePiston` of the Piston"""
         for name, value in StatePiston.__members__.items():
             if self.solenoid_piston_L.get() == value.value[0] and self.solenoid_piston_R.get() == value.value[1]:

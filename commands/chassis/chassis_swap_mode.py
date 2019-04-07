@@ -5,7 +5,7 @@ from wpilib.command import InstantCommand
 import robotmap
 
 
-class ChassisSetMode(InstantCommand):
+class ChassisSwapMode(InstantCommand):
     def __init__(self, mode=None):
         super().__init__("ChassisSetMode")
         self.mode = mode

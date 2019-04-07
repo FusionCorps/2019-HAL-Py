@@ -90,17 +90,21 @@ class SubChassis(Subsystem):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
-    def get_left_position(self, target=0):
+    def get_left_position(self, target=0) -> int:
         if target == 0:
             return self._talon_f_l.getQuadraturePosition()
         elif target == 1:
             return self._talon_f_l.getPulseWidthPosition()
 
-    def get_right_position(self, target=0):
+    def get_right_position(self, target=0) -> int:
         if target == 0:
             return self._talon_f_r.getQuadraturePosition()
         elif target == 1:
             return self._talon_f_r.getPulseWidthPosition()
+
+    def get_distance(self) -> float:
+        """Gets Ultrasonic distance in MM"""
+        return self.sonar.getRangeMM()
 
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
@@ -126,10 +130,6 @@ class SubChassis(Subsystem):
 
     def set_right(self, spd_new):
         self._talon_f_r.set(spd_new)
-
-    def get_distance(self):
-        """Gets Ultrasonic distance in MM"""
-        return self.sonar.getRangeMM()
 
     def initDefaultCommand(self):
         from commands.chassis.joystick_drive import JoystickDrive

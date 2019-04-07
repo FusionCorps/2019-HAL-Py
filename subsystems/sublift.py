@@ -78,7 +78,7 @@ class SubLift(Subsystem):
 
         self.position_current = Position.FLUSH
 
-    def is_motion_magic_active(self):
+    def is_motion_magic_active(self) -> bool:
         return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
 
     def set_front_characteristics(self, chars):
@@ -171,23 +171,23 @@ class SubLift(Subsystem):
         else:
             pass
 
-    def get_current_position(self):
+    def get_current_position(self) -> Position:
         """Returns the internal target Lift position"""
         return self.position_current
 
-    def get_front(self):
+    def get_front(self) -> [bool, bool]:
         return self._talon_lift_front.get(), self._talon_lift_front.getControlMode()
 
-    def get_back(self):
+    def get_back(self) -> [bool, bool]:
         return self._talon_lift_back.get(), self._talon_lift_back.getControlMode()
 
-    def get_drive(self):
+    def get_drive(self) -> [bool, bool]:
         return self._talon_lift_drive.get(), self._talon_lift_drive.getControlMode()
 
-    def get_front_limit(self):
+    def get_front_limit(self) -> bool:
         return self._limit_front.get()
 
-    def get_back_limit(self):
+    def get_back_limit(self) -> bool:
         return self._limit_back.get()
 
     def set_front_position(self, pos_new, target=0):
@@ -214,7 +214,7 @@ class SubLift(Subsystem):
         elif target is 1:
             self._talon_lift_back.setPulseWidthPosition(pos_new, 0)
 
-    def get_front_position(self, target=0):
+    def get_front_position(self, target=0) -> int:
         """Returns either the quad or pulse-width position of the front lift
         Parameters
         ---
@@ -224,7 +224,7 @@ class SubLift(Subsystem):
         elif target is 1:
             return self._talon_lift_front.getPulseWidthPosition()
 
-    def get_back_position(self, target=0):
+    def get_back_position(self, target=0) -> int:
         """Returns either the quad or pulse-width position of the back lift
         Parameters
         ---
@@ -236,7 +236,7 @@ class SubLift(Subsystem):
         else:
             pass
 
-    def get_drive_position(self, target=0):
+    def get_drive_position(self, target=0) -> int:
         if target is 0:
             return self._talon_lift_drive.getQuadraturePosition()
         elif target is 1:

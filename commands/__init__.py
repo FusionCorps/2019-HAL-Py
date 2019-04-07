@@ -7,7 +7,7 @@ import robotmap
 from subsystems.sublift import Position
 from .autonomous.profile import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
-from .chassis.chassis_set_mode import ChassisSetMode
+from .chassis.chassis_swap_mode import ChassisSwapMode
 from .duckbill.duckbill_set import DuckbillSet
 from .duckbill.duckbill_switch import DuckbillSwitch
 from .intake.intake_joystick import IntakeJoystick
@@ -28,7 +28,7 @@ def init():
     oi.bumper_R.whenPressed(PistonGrp())
     oi.start.whenPressed(LiftGroup())
     oi.back.whenPressed(LiftGroup2())
-    oi.stick_R.whenPressed(ChassisSetMode())
+    oi.stick_R.whenPressed(ChassisSwapMode())
 
     if hal.isSimulation() and robotmap.simulation_lift_target is 0:
         oi.A.whenPressed(LiftSet(Position.FLUSH))

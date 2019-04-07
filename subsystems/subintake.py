@@ -40,7 +40,7 @@ class SubIntake(Subsystem):
         else:
             pass
 
-    def get_state(self):
+    def get_state(self) -> StateIntake:
         """Returns current IntakeState"""
         for name, value in StateIntake.__members__.items():
             if self._victor.getMotorOutputPercent() == value.value:

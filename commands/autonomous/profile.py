@@ -38,6 +38,8 @@ class ProfileGenerator(object):
                 else:
                     points.append(pf.Waypoint(loc[0], loc[1], a))
 
+            points = [pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args]
+
         for key, value in kwargs.items():
             if key == 'name':
                 if value is not None:
