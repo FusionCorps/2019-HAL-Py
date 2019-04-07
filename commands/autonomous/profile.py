@@ -1,7 +1,6 @@
 import logging
 
 import pathfinder as pf
-from math import radians
 from pathfinder.followers import EncoderFollower
 from wpilib.command import Command
 from wpilib.timer import Timer
@@ -16,29 +15,10 @@ class ProfileGenerator(object):
         self.logger.setLevel(level=logging.DEBUG)
 
     def generate(self, *args, **kwargs):
-        points = []
+        self.logger.warning(f"ProfileGenerator called with args: {args}. Called with kwargs: {kwargs}.")
         v, a, j, name = None, None, None, None
 
-        self.logger.warning(f"ProfileGenerator called with args: {args}. Called with kwargs: {kwargs}.")
-        for loc in args:
-            # Check to make sure angle is not -0
-            if loc[2] == 0:
-                a = loc[2]
-            else:
-                a = radians(loc[2])
-
-            # Check whether list has a first element
-            if len(points) is 0:
-                points.append(pf.Waypoint(loc[0], loc[1], a))
-
-            # Append new points that are not the last point
-            if len(points) > 0:
-                if loc == points[len(points) - 1]:
-                    continue
-                else:
-                    points.append(pf.Waypoint(loc[0], loc[1], a))
-
-            points = [pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args]
+        points = [pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args]
 
         for key, value in kwargs.items():
             if key == 'name':
@@ -67,20 +47,9 @@ class ProfileGenerator(object):
         self.logger.warning(f"Requested points {str(points)}.")
 
         try:
-            info, trajectory = pf.generate(
-                points,
-                pf.FIT_HERMITE_CUBIC,
-                pf.SAMPLES_HIGH,
-                0.05,
-                v,
-                a,
-                j,
-            )
-
+            info, trajectory = pf.generate(points, pf.FIT_HERMITE_CUBIC, pf.SAMPLES_HIGH, 0.05, v, a, j, )
             self.logger.warning("Trajectory generated.")
-
             pf.serialize_csv(f"AutoProfile_{name}", trajectory)
-
             self.logger.warning("Trajectory saved.")
         except ValueError as e:
             self.logger.error(f"Trajectory generation failed! {e}")
@@ -158,14 +127,11 @@ class ProfileFollower(Command):
     def execute(self):
         if not self.critical_error:
             heading = subsystems.chassis.gyro.getAngle()
-
             output_l = self.left.calculate(-subsystems.chassis.get_left_position())
             output_r = self.right.calculate(subsystems.chassis.get_right_position())
-
             heading_target = pf.r2d(self.left.getHeading())
             heading_diff = pf.boundHalfDegrees(heading_target - heading)
             turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
-
             subsystems.chassis.set_left((output_l - turn_output))
             subsystems.chassis.set_right((output_r - turn_output))
 
