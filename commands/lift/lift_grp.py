@@ -29,7 +29,7 @@ class ClimbHab3(CommandGroup):
         pass
 
     def isFinished(self):
-        return True not in [entry.command.isRunning() for entry in self.commands]
+        return not any([entry.command.isRunning() for entry in self.commands])
 
     def interrupted(self):
         self.end()
@@ -59,7 +59,7 @@ class ClimbHab2(CommandGroup):
         pass
 
     def isFinished(self):
-        return True not in [entry.command.isRunning() for entry in self.commands]
+        return not any([entry.command.isRunning() for entry in self.commands])
 
     def interrupted(self):
         self.end()

@@ -12,7 +12,7 @@ class Hal(CommandBasedRobot):
         import subsystems
         import oi
         import commands
-        import dashboard
+        from common import dashboard
         if not hal.isSimulation():
             # noinspection PyUnresolvedReferences
             from cscore import CameraServer, HttpCamera, MjpegServer, UsbCamera
