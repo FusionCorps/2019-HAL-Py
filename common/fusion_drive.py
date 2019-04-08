@@ -8,6 +8,8 @@ import robotmap
 
 
 class FusionDrive(DifferentialDrive):
+    """Class that implements the logistic drive accelerated drivetrain."""
+
     def __init__(self, l_motor, r_motor):
         super().__init__(l_motor, r_motor)
         self.l_motor = l_motor
@@ -56,7 +58,7 @@ class FusionDrive(DifferentialDrive):
     def get_logistic(self, spd_max, spd_current, time_step) -> float:
         """Returns results of logistic calculations from certain preconditions"""
         z = (robotmap.accel_chassis_max / 2)  # Maximum accel must be divided by 2 because of shrinking
-        z_d = (robotmap.decel_chassis_max / 2)  # Unused variable for maximum deceleration
+        z_d = (robotmap.decel_chassis_max / 2)  # Unused constant for maximum deceleration
         c = self.shrink(spd_max)
         v = self.shrink(spd_current)
 
@@ -70,13 +72,13 @@ class FusionDrive(DifferentialDrive):
         else:
             raise ValueError
 
-    def logistic_drive(self, x_spd, z_rot):
+    def logistic_drive(self, x_spd, z_rot, clear_accumulator=False):
         """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
         # if self.timer.running is False:
         #     self.timer.start()
 
         current_time = self.timer.getFPGATimestamp()
-        time_differential = current_time - self.logistic_last_called
+        time_differential = (current_time - self.logistic_last_called) if not clear_accumulator else 0.02
 
         l_output, r_output = self.normalize_spd(x_spd + z_rot, x_spd - z_rot)
 
@@ -85,20 +87,29 @@ class FusionDrive(DifferentialDrive):
         #         f'Added (L {str(round(x_spd + z_rot, 2))} R {str(round(x_spd - z_rot, 2))}) Normalized (L {round(
         #         l_output, 2)} R {round(r_output, 2)})')
 
-        self.set_left(self.get_logistic(l_output * robotmap.spd_chassis_drive, self.get_left(), time_differential))
-        self.set_right(self.get_logistic(r_output * robotmap.spd_chassis_drive, self.get_right(), time_differential))
+        self.set_left(self.get_logistic(l_output, self.get_left(), time_differential))
+        self.set_right(self.get_logistic(r_output, self.get_right(), time_differential))
 
         self.logistic_last_called = self.timer.getFPGATimestamp()
         self.feed()
 
     def set_left(self, spd):
+        """Sets left motor speed"""
         self.l_motor.set(-spd)
 
     def set_right(self, spd):
+        """Sets right motor speed"""
         self.r_motor.set(spd)
 
     def get_left(self):
+        """Returns left motor speed (-1.0 to 1.0)"""
         return -self.l_motor.get()
 
     def get_right(self):
+        """Returns right motor speed (-1.0 to 1.0)"""
         return self.r_motor.get()
+
+    def curvatureDrive(
+            self, xSpeed: float, zRotation: float, isQuickTurn: bool
+    ) -> None:
+        super().curvatureDrive(xSpeed, zRotation, isQuickTurn)

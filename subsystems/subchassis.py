@@ -15,21 +15,25 @@ class SubChassis(Subsystem):
         super().__init__("Chassis")
         self.logger = logging.getLogger("Chassis")
 
-        self._talon_FL = WPI_TalonSRX(robotmap.talon_front_left)
-        self._talon_FR = WPI_TalonSRX(robotmap.talon_front_right)
-        self._talon_BL = WPI_TalonSRX(robotmap.talon_back_left)
-        self._talon_BR = WPI_TalonSRX(robotmap.talon_back_right)
+        self._talon_f_l = WPI_TalonSRX(robotmap.talon_f_l)
+        self._talon_f_r = WPI_TalonSRX(robotmap.talon_f_r)
+        self._talon_b_l = WPI_TalonSRX(robotmap.talon_b_l)
+        self._talon_b_r = WPI_TalonSRX(robotmap.talon_b_r)
 
-        self._talons = [self._talon_FL, self._talon_FR, self._talon_BL, self._talon_BR]
+        self._talons = [self._talon_f_l, self._talon_f_r, self._talon_b_l, self._talon_b_r]
 
         for talon in self._talons:
-            talon.configMotionCruiseVelocity(30000, 0)
-            talon.configMotionAcceleration(1000, 0)
+            talon.configMotionCruiseVelocity(
+                int((robotmap.chassis_max_vel / robotmap.chassis_whl_diameter)
+                    * robotmap.chassis_encoder_counts_per_rev), 0)
+            talon.configMotionAcceleration(
+                int((robotmap.chassis_max_vel / robotmap.chassis_whl_diameter)
+                    * robotmap.chassis_encoder_counts_per_rev), 0)
 
-            talon.config_kP(0, 0.8, 0)
-            talon.config_kI(0, 0, 0)
-            talon.config_kD(0, 0, 0)
-            talon.config_kF(0, 0, 0)
+            talon.config_kF(0, robotmap.chassis_fpid[0], 0)
+            talon.config_kP(0, robotmap.chassis_fpid[1], 0)
+            talon.config_kI(0, robotmap.chassis_fpid[2], 0)
+            talon.config_kD(0, robotmap.chassis_fpid[3], 0)
             talon.config_IntegralZone(0, 0, 0)
 
             talon.configPeakOutputForward(1.0, 0)
@@ -38,9 +42,9 @@ class SubChassis(Subsystem):
             talon.set(0.0)
 
         # Drive class instance & following
-        self.drive = FusionDrive(self._talon_FL, self._talon_FR)
-        self._talon_BL.follow(self._talon_FL)
-        self._talon_BR.follow(self._talon_FR)
+        self.drive = FusionDrive(self._talon_f_l, self._talon_f_r)
+        self._talon_b_l.follow(self._talon_f_l)
+        self._talon_b_r.follow(self._talon_f_r)
 
         # Sensors
         self.sonar = Ultrasonic(
@@ -60,16 +64,7 @@ class SubChassis(Subsystem):
         if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
 
-        self.accel_rate_l = 0.0
-        self.accel_rate_r = 0.0
-
-        self.l_output = 0.0
-        self.r_output = 0.0
-
-        self.jerk_rate = 0.05
-
         self.timer = Timer()
-        self.last_called = 0
 
     def get_x(self):
         """Returns relative x position"""
@@ -95,22 +90,26 @@ class SubChassis(Subsystem):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
-    def get_left_position(self, target=0):
+    def get_left_position(self, target=0) -> int:
         if target == 0:
-            return self._talon_FL.getQuadraturePosition()
+            return self._talon_f_l.getQuadraturePosition()
         elif target == 1:
-            return self._talon_FL.getPulseWidthPosition()
+            return self._talon_f_l.getPulseWidthPosition()
 
-    def get_right_position(self, target=0):
+    def get_right_position(self, target=0) -> int:
         if target == 0:
-            return self._talon_FR.getQuadraturePosition()
+            return self._talon_f_r.getQuadraturePosition()
         elif target == 1:
-            return self._talon_FR.getPulseWidthPosition()
+            return self._talon_f_r.getPulseWidthPosition()
+
+    def get_distance(self) -> float:
+        """Gets Ultrasonic distance in MM"""
+        return self.sonar.getRangeMM()
 
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
-            talon.setQuadraturePosition(0, 50)
+            talon.setQuadraturePosition(0, 20)
 
     def reset_gyro(self):
         """Zeroes the gyro"""
@@ -127,14 +126,10 @@ class SubChassis(Subsystem):
         self.sonar.setEnabled(state)
 
     def set_left(self, spd_new):
-        self._talon_FL.set(-spd_new)
+        self._talon_f_l.set(-spd_new)
 
     def set_right(self, spd_new):
-        self._talon_FR.set(spd_new)
-
-    def get_distance(self):
-        """Gets Ultrasonic distance in MM"""
-        return self.sonar.getRangeMM()
+        self._talon_f_r.set(spd_new)
 
     def initDefaultCommand(self):
         from commands.chassis.joystick_drive import JoystickDrive

@@ -1,16 +1,33 @@
-from wpilib.command import InstantCommand
+from wpilib.command import Command
 
 import oi
+import robotmap
 import subsystems
 
 
-class JoystickDrive(InstantCommand):
+class JoystickDrive(Command):
     def __init__(self):
         super().__init__("Joystick_Drive")
         self.requires(subsystems.chassis)
 
+    def initialize(self):
+        pass
+
     def execute(self):
-        subsystems.chassis.drive.logistic_drive(oi.joystick.getRawAxis(1), -oi.joystick.getRawAxis(4))
+        if robotmap.chassis_drive_mode is 'curvature':
+            subsystems.chassis.drive.curvatureDrive(-robotmap.spd_chassis_drive * oi.joystick.getRawAxis(1),
+                                                    robotmap.spd_chassis_rotate * oi.joystick.getRawAxis(4), True)
+        elif robotmap.chassis_drive_mode is 'logistic':
+            subsystems.chassis.drive.logistic_drive(-oi.joystick.getRawAxis(1) * robotmap.spd_chassis_drive,
+                                                    oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate)
+        else:
+            raise ValueError("Cannot drive using joystick control!")
 
     def interrupted(self):
         self.end()
+
+    def isFinished(self):
+        pass
+
+    def end(self):
+        pass

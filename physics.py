@@ -38,7 +38,7 @@ class PhysicsEngine(object):
 
     @staticmethod
     def encode(item, tm_diff, rate=1.0, ticks=4096):
-        """Updates encoder pos and velocity in simulation"""
+        """Updates encoder pos and velocity in simulation."""
         spd = int(ticks * rate * item["value"] * tm_diff)
         item["quad_position"] += spd
         item["quad_velocity"] = spd
@@ -75,11 +75,11 @@ class PhysicsEngine(object):
         )
         self.physics_controller.distance_drive(x, y, angle)
 
-        if abs(f_lift["quad_position"]) + 800 > robotmap.lift_height:
+        if abs(f_lift["quad_position"]) + 580 > robotmap.lift_height:
             f_switch["value"] = False
         else:
             f_switch["value"] = True
-        if abs(b_lift["quad_position"]) + 800 > robotmap.lift_height:
+        if abs(b_lift["quad_position"]) + 580 > robotmap.lift_height:
             b_switch["value"] = False
         else:
             b_switch["value"] = True

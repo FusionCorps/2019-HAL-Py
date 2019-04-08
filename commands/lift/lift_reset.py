@@ -15,7 +15,7 @@ class LiftReset(Command):
         self.target = target
 
     def initialize(self):
-        self.logger.warning("Lift is driving up to reset")
+        self.logger.warning("Lift is driving up to reset.")
         if self.target is 1:
             subsystems.lift.set_back(-robotmap.spd_lift_back, target=1)
         elif self.target is 0:
@@ -33,6 +33,7 @@ class LiftReset(Command):
     def end(self):
         subsystems.lift.stop_front()
         subsystems.lift.stop_back()
-        self.logger.warning(str(subsystems.lift.get_front_position()) + " " + str(subsystems.lift.get_back_position()))
+        self.logger.warning(f"Lift stopped driving up. Encoders resetting from ("
+                            f"{str(subsystems.lift.get_front_position()):>6}, "
+                            f"{str(subsystems.lift.get_back_position()):>6})")
         subsystems.lift.reset_encoders()
-        self.logger.warning("Lift has stopped driving up, encoders reset")
