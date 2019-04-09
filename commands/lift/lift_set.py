@@ -11,7 +11,7 @@ from subsystems.sublift import Position
 class LiftSet(Command):
     """Sets the position of the lift using CTRE's MotionMagic system"""
 
-    def __init__(self, target_position, can_finish=True):
+    def __init__(self, target_position: Position, can_finish=True):
         super().__init__(f"{self.__class__.__name__} {str(target_position.name)}")
         self.requires(subsystems.lift)
         self.target_position = target_position

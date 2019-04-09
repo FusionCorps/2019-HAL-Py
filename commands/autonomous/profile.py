@@ -7,45 +7,7 @@ from wpilib.timer import Timer
 
 import robotmap
 import subsystems
-
-
-class ProfileGenerator(object):
-    """Creates trajectory csv files to be used by the executing MotionProfile program."""
-
-    def __init__(self):
-        self.logger = logging.getLogger("ProfileGenerator")
-        self.logger.setLevel(level=logging.DEBUG)
-
-    # TODO Check if trajectory exists already
-    def generate(self, *args, **kwargs):
-        self.logger.warning(f"ProfileGenerator called with args: {args}. Called with kwargs: {kwargs}.")
-
-        # Trajectory generation conditions (all units SI)
-        conditions = {
-            'name': f"{str(args).strip(' ')}",
-            'v': robotmap.chassis_max_vel,
-            'a': robotmap.chassis_max_acceleration,
-            'j': robotmap.chassis_max_jerk
-        }
-
-        # Updates conditions if changed in kwargs
-        for key, value in kwargs.items():
-            conditions.update(key=value)
-
-        try:
-            info, trajectory = pf.generate((pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args),
-                                           pf.FIT_HERMITE_CUBIC,
-                                           pf.SAMPLES_HIGH,
-                                           0.05,
-                                           conditions['v'],
-                                           conditions['a'],
-                                           conditions['j'])
-        except ValueError as e:
-            self.logger.error(f"Trajectory generation failed! {e}")
-        else:
-            self.logger.warning("Trajectory generated.")
-            pf.serialize_csv(f"AutoProfile_{conditions['name']}", trajectory)
-            self.logger.warning("Trajectory saved.")
+from .generator import Generator
 
 
 class ProfileFollower(Command):
@@ -72,7 +34,7 @@ class ProfileFollower(Command):
         self.requires(subsystems.chassis)
 
         if generate:
-            ProfileGenerator().generate(args, kwargs)
+            Generator().generate(args, kwargs)
 
     def initialize(self):
         self.timer.reset()
@@ -116,11 +78,14 @@ class ProfileFollower(Command):
     def execute(self):
         if not self.critical_error:
             heading = subsystems.chassis.gyro.getAngle()
+
             output_l = self.left.calculate(-subsystems.chassis.get_left_position())
             output_r = self.right.calculate(subsystems.chassis.get_right_position())
+
             heading_target = pf.r2d(self.left.getHeading())
             heading_diff = pf.boundHalfDegrees(heading_target - heading)
             turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
+
             subsystems.chassis.set_left((output_l - turn_output))
             subsystems.chassis.set_right((output_r - turn_output))
 

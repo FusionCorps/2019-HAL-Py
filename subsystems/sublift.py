@@ -24,6 +24,7 @@ class Position(Enum):
 
 class SubLift(Subsystem):
     """Subsystem used to raise robot to Hab 3"""
+
     def __init__(self):
         super().__init__("Lift")
         self.logger = logging.getLogger("Lift")
@@ -81,35 +82,35 @@ class SubLift(Subsystem):
     def is_motion_magic_active(self) -> bool:
         return (self.get_back()[1] is ControlMode.MotionMagic) and (self.get_front()[1] is ControlMode.MotionMagic)
 
-    def set_front_characteristics(self, chars):
+    def set_front_characteristics(self, chars: (int, int)):
         self.logger.info(f"Front characteristics to {str(chars)}")
         self._talon_lift_front.configMotionCruiseVelocity(chars[0])
         self._talon_lift_front.configMotionAcceleration(chars[1])
 
-    def set_back_characteristics(self, chars):
+    def set_back_characteristics(self, chars: (int, int)):
         self.logger.info(f"Back  characteristics to {str(chars)}")
         self._talon_lift_back.configMotionCruiseVelocity(chars[0])
         self._talon_lift_back.configMotionAcceleration(chars[1])
 
-    def set_both_characteristics(self, chars):
+    def set_both_characteristics(self, chars: (int, int)):
         self.set_front_characteristics(chars)
         self.set_back_characteristics(chars)
 
-    def set_back_fpid(self, fpid):
+    def set_back_fpid(self, fpid: [float, float, float, float]):
         self.logger.info(f"Back  FPID to {str(fpid)}")
         self._talon_lift_back.config_kF(0, fpid[0], 0)
         self._talon_lift_back.config_kP(0, fpid[1], 0)
         self._talon_lift_back.config_kI(0, fpid[2], 0)
         self._talon_lift_back.config_kD(0, fpid[3], 0)
 
-    def set_front_fpid(self, fpid):
+    def set_front_fpid(self, fpid: [float, float, float, float]):
         self.logger.info(f"Front FPID to {str(fpid)}")
         self._talon_lift_front.config_kF(0, fpid[0], 0)
         self._talon_lift_front.config_kP(0, fpid[1], 0)
         self._talon_lift_front.config_kI(0, fpid[2], 0)
         self._talon_lift_front.config_kD(0, fpid[3], 0)
 
-    def set_back(self, target_magnitude, target=0):
+    def set_back(self, target_magnitude, target: int = 0):
         """Sets Back Lift Talon to new MotionMagic position specified in `pos_new`
         Parameters
         ---
@@ -119,7 +120,7 @@ class SubLift(Subsystem):
         elif target is 1:
             self._talon_lift_back.set(ControlMode.PercentOutput, -target_magnitude)
 
-    def set_front(self, target_magnitude, target=0):
+    def set_front(self, target_magnitude, target: int = 0):
         """Sets Front Lift Talon to new MotionMagic position specified in `pos_new`
         Parameters
         ---
@@ -145,7 +146,7 @@ class SubLift(Subsystem):
         ):
             self._talon_lift_front.set(ControlMode.PercentOutput, 0.0)
 
-    def set_drive(self, target_magnitude, target=0):
+    def set_drive(self, target_magnitude, target: int = 0):
         """Sets Lift Drive Talon to new speed
         Parameters
         ---
@@ -157,7 +158,7 @@ class SubLift(Subsystem):
         else:
             pass
 
-    def set_position(self, position_target=None):
+    def set_position(self, position_target: Position = None):
         """Sets the position (from the `Position` enum) of the lift"""
         if position_target is not None:
             if position_target is not self.position_current:
@@ -175,13 +176,13 @@ class SubLift(Subsystem):
         """Returns the internal target Lift position"""
         return self.position_current
 
-    def get_front(self) -> [bool, bool]:
+    def get_front(self) -> (float, ControlMode):
         return self._talon_lift_front.get(), self._talon_lift_front.getControlMode()
 
-    def get_back(self) -> [bool, bool]:
+    def get_back(self) -> (float, ControlMode):
         return self._talon_lift_back.get(), self._talon_lift_back.getControlMode()
 
-    def get_drive(self) -> [bool, bool]:
+    def get_drive(self) -> (float, ControlMode):
         return self._talon_lift_drive.get(), self._talon_lift_drive.getControlMode()
 
     def get_front_limit(self) -> bool:

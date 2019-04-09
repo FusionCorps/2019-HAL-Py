@@ -28,7 +28,7 @@ class SubDuckbill(Subsystem):
         self.state = None
         self.set_state(StateDuckbill.UP)
 
-    def set_state(self, state_target):
+    def set_state(self, state_target: StateDuckbill):
         """Sets the state of the Duckbill subsystem using the StateDuckBill Enum.
         Parameters
         ---

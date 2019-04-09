@@ -90,13 +90,13 @@ class SubChassis(Subsystem):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
-    def get_left_position(self, target=0) -> int:
+    def get_left_position(self, target: int = 0) -> int:
         if target == 0:
             return self._talon_f_l.getQuadraturePosition()
         elif target == 1:
             return self._talon_f_l.getPulseWidthPosition()
 
-    def get_right_position(self, target=0) -> int:
+    def get_right_position(self, target: int = 0) -> int:
         if target == 0:
             return self._talon_f_r.getQuadraturePosition()
         elif target == 1:
@@ -121,14 +121,14 @@ class SubChassis(Subsystem):
         self.accel_y = self._get_y()
         self.accel_z = self._get_z()
 
-    def set_ultrasonic(self, state):
+    def set_ultrasonic(self, state: bool):
         """Sets Ultrasonic state"""
         self.sonar.setEnabled(state)
 
-    def set_left(self, spd_new):
+    def set_left(self, spd_new: float):
         self._talon_f_l.set(-spd_new)
 
-    def set_right(self, spd_new):
+    def set_right(self, spd_new: float):
         self._talon_f_r.set(spd_new)
 
     def initDefaultCommand(self):
