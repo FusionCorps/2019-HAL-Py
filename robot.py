@@ -10,7 +10,7 @@ import subsystems
 class Hal(CommandBasedRobot):
     def robotInit(self):
         import subsystems
-        import oi
+        from oi import oi
         import commands
         from common import dashboard
         if not hal.isSimulation():

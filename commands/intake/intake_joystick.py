@@ -1,8 +1,8 @@
 from wpilib.command import Command
 
-import oi
 import robotmap
 import subsystems
+from oi import oi
 
 
 class IntakeJoystick(Command):

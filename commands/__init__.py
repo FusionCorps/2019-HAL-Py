@@ -2,8 +2,8 @@ import logging
 
 import hal
 
-import oi
 import robotmap
+from oi import oi
 from subsystems.sublift import Position
 from .autonomous.profile import ProfileFollower
 from .chassis.chassis_drive import ChassisDrive
