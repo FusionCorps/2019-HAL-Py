@@ -13,13 +13,10 @@ class ChassisSwapMode(InstantCommand):
 
     def initialize(self):
         if self.mode is None:
-            if robotmap.chassis_drive_mode is 'logistic':
-                robotmap.chassis_drive_mode = 'curvature'
-            elif robotmap.chassis_drive_mode is 'curvature':
-                robotmap.chassis_drive_mode = 'logistic'
+            if robotmap.chassis_drive_mode is 'Logistic':
+                robotmap.chassis_drive_mode = 'Curvature'
+            elif robotmap.chassis_drive_mode is 'Curvature':
+                robotmap.chassis_drive_mode = 'Logistic'
         elif self.mode is not None:
             robotmap.chassis_drive_mode = self.mode
-        self.logger.warning(f"Mode is now {str(robotmap.chassis_drive_mode)}")
-
-    def end(self):
-        pass
+        self.logger.warning(f"{str(robotmap.chassis_drive_mode)} Mode")

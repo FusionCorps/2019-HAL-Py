@@ -2,7 +2,7 @@ from wpilib.command import Command
 
 import robotmap
 import subsystems
-from oi import oi
+from inputs import controller
 
 
 class JoystickDrive(Command):
@@ -14,12 +14,12 @@ class JoystickDrive(Command):
         pass
 
     def execute(self):
-        if robotmap.chassis_drive_mode is 'curvature':
-            subsystems.chassis.drive.curvatureDrive(-robotmap.spd_chassis_drive * oi.joystick.getRawAxis(1),
-                                                    robotmap.spd_chassis_rotate * oi.joystick.getRawAxis(4), True)
-        elif robotmap.chassis_drive_mode is 'logistic':
-            subsystems.chassis.drive.logistic_drive(-oi.joystick.getRawAxis(1) * robotmap.spd_chassis_drive,
-                                                    oi.joystick.getRawAxis(4) * robotmap.spd_chassis_rotate)
+        if robotmap.chassis_drive_mode is 'Curvature':
+            subsystems.chassis.drive.curvatureDrive(-robotmap.spd_chassis_drive * controller.getRawAxis(1),
+                                                    robotmap.spd_chassis_rotate * controller.getRawAxis(4), True)
+        elif robotmap.chassis_drive_mode is 'Logistic':
+            subsystems.chassis.drive.logistic_drive(-controller.getRawAxis(1) * robotmap.spd_chassis_drive,
+                                                    controller.getRawAxis(4) * robotmap.spd_chassis_rotate)
         else:
             raise ValueError("Cannot drive using joystick control!")
 

@@ -9,10 +9,10 @@ class XBoxController(Joystick):
         super().__init__(port)
 
         buttons = {
-            'A': 1,
-            'B': 2,
-            'X': 3,
-            'Y': 4,
+            'a': 1,
+            'b': 2,
+            'x': 3,
+            'y': 4,
             'bumper_l': 5,
             'bumper_r': 6,
             'back': 7,
@@ -21,5 +21,5 @@ class XBoxController(Joystick):
             'stick_r': 10
             }
 
-        for button, port in buttons:
-            self.__dict__[button] = JoystickButton(self, port)
+        for button, number in buttons.items():
+            self.__dict__[str(button)] = JoystickButton(self, number)
