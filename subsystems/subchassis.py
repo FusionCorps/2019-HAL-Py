@@ -60,6 +60,7 @@ class SubChassis(Subsystem):
         self.reset_accelerometer()
 
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
+        self.gyro.calibrate()
 
         if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
@@ -110,10 +111,12 @@ class SubChassis(Subsystem):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
             talon.setQuadraturePosition(0, 20)
+        self.logger.info("Encoders reset")
 
     def reset_gyro(self):
         """Zeroes the gyro"""
         self.gyro.reset()
+        self.logger.info("Gyro reset")
 
     def reset_accelerometer(self):
         """Zeroes all accelerometer values"""

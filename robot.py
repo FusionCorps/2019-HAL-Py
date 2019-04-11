@@ -1,17 +1,16 @@
 import logging
 
-import hal
-import wpilib
 from commandbased import CommandBasedRobot
-
-import subsystems
+from wpilib import run
 
 
 class Hal(CommandBasedRobot):
     def robotInit(self):
-        import subsystems
+        import hal
         import commands
         from common import dashboard
+
+        self.logger = logging.getLogger("Core")
 
         if not hal.isSimulation():
             # noinspection PyUnresolvedReferences
@@ -24,35 +23,30 @@ class Hal(CommandBasedRobot):
             usb_1 = cs.startAutomaticCapture(dev=1)
             limelight_http = cs.startAutomaticCapture(camera=limelight_http)
 
-        self.logger = logging.getLogger("Core")
-
-        subsystems.init()
         commands.init()
         dashboard.init()
 
-        self.logger.info("Robot initialized")
-
-        subsystems.chassis.gyro.calibrate()
-        subsystems.chassis.reset_encoders()
         self.watchdog.setTimeout(1)
+
+        self.logger.info("Robot initialized")
 
     def robotPeriodic(self):
         pass
 
     def autonomousInit(self):
-        subsystems.chassis.reset_encoders()
+        from commands.chassis.encoders_reset import EncodersReset
+        EncodersReset().start()
 
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
-        subsystems.chassis.drive.feedWatchdog()
 
     def teleopInit(self):
-        subsystems.chassis.reset_encoders()
+        from commands.chassis.encoders_reset import EncodersReset
+        EncodersReset().start()
 
     def teleopPeriodic(self):
         super().teleopPeriodic()
-        subsystems.chassis.drive.feedWatchdog()
 
 
 if __name__ == "__main__":
-    wpilib.run(Hal)
+    run(Hal)
