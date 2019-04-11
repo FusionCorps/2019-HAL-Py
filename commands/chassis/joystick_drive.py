@@ -15,11 +15,9 @@ class JoystickDrive(Command):
 
     def execute(self):
         if robotmap.chassis_drive_mode is 'Curvature':
-            subsystems.chassis.drive.curvatureDrive(-robotmap.spd_chassis_drive * controller.getRawAxis(1),
-                                                    robotmap.spd_chassis_rotate * controller.getRawAxis(4), True)
+            subsystems.chassis.drive.curvatureDrive(controller.get_x(), controller.get_y(), multiply_by=True)
         elif robotmap.chassis_drive_mode is 'Logistic':
-            subsystems.chassis.drive.logistic_drive(-controller.getRawAxis(1) * robotmap.spd_chassis_drive,
-                                                    controller.getRawAxis(4) * robotmap.spd_chassis_rotate)
+            subsystems.chassis.drive.logistic_drive(controller.get_x(), controller.get_y(), multiply_by=True)
         else:
             raise ValueError("Cannot drive using joystick control!")
 
