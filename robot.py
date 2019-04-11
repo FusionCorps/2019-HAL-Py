@@ -26,8 +26,6 @@ class Hal(CommandBasedRobot):
         commands.init()
         dashboard.init()
 
-        self.watchdog.setTimeout(1)
-
         self.logger.info("Robot initialized")
 
     def robotPeriodic(self):

@@ -3,6 +3,7 @@ import logging
 from wpilib.command import CommandGroup
 
 from commands.chassis.chassis_drive import ChassisDrive
+from commands.chassis.chassis_stop import ChassisStop
 from commands.lift.lift_drive import LiftDrive, LiftDrive2
 from commands.lift.lift_set import LiftSet
 from subsystems.sublift import Position
@@ -15,10 +16,12 @@ class ClimbHab3(CommandGroup):
         super().__init__("ClimbHab3")
         self.logger = logging.getLogger("ClimbHab3")
 
+        self.addParallel(ChassisStop())
         self.addSequential(LiftSet(Position.CLIMB))
         self.addSequential(LiftDrive(0.6, 2))
         self.addSequential(LiftSet(Position.LBACK))
         self.addSequential(ChassisDrive(0.35, 0.0, 1.8))
+        self.addParallel(ChassisStop())
         self.addSequential(LiftSet(Position.FLUSH))
         self.addSequential(ChassisDrive(0.35, 0.0, 0.8))
 
@@ -45,10 +48,12 @@ class ClimbHab2(CommandGroup):
         super().__init__("ClimbHab2")
         self.logger = logging.getLogger("ClimbHab2")
 
+        self.addParallel(ChassisStop())
         self.addSequential(LiftSet(Position.CLIMB2))
         self.addSequential(LiftDrive2(0.5, 2))
         self.addSequential(LiftSet(Position.LBACK2))
         self.addSequential(ChassisDrive(0.3, 0.0, 2))
+        self.addParallel(ChassisStop())
         self.addSequential(LiftSet(Position.FLUSH))
         self.addSequential(ChassisDrive(0.3, 0.0, 2))
 

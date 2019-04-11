@@ -107,6 +107,10 @@ class SubChassis(Subsystem):
         """Gets Ultrasonic distance in MM"""
         return self.sonar.getRangeMM()
 
+    def get_talon_spds(self):
+        """Returns a list of talon speeds"""
+        return (talon.get() for talon in self._talons)
+
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
