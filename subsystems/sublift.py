@@ -67,6 +67,7 @@ class SubLift(Subsystem):
         self._talon_lift_front.config_kP(0, robotmap.lift_front_fpid[1], 0)
         self._talon_lift_front.config_kI(0, robotmap.lift_front_fpid[2], 0)
         self._talon_lift_front.config_kD(0, robotmap.lift_front_fpid[3], 0)
+
         self._talon_lift_back.config_kF(0, robotmap.lift_back_fpid[0], 0)
         self._talon_lift_back.config_kP(0, robotmap.lift_back_fpid[1], 0)
         self._talon_lift_back.config_kI(0, robotmap.lift_back_fpid[2], 0)
