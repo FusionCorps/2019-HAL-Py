@@ -1,8 +1,8 @@
 from wpilib.command import Command
 
-import oi
 import robotmap
 import subsystems
+from inputs import controller
 
 
 class IntakeJoystick(Command):
@@ -15,7 +15,8 @@ class IntakeJoystick(Command):
 
     def execute(self):
         subsystems.intake.set_victor(
-            (oi.joystick.getRawAxis(2) * robotmap.spd_intake) - (oi.joystick.getRawAxis(3) * robotmap.spd_intake))
+            (controller.get_l_trigger() * robotmap.spd_intake) - (
+                    controller.get_r_trigger() * robotmap.spd_intake))
 
     def isFinished(self):
         return False

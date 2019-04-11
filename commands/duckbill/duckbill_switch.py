@@ -1,14 +1,14 @@
 import logging
 
-from wpilib.command import Command
+from wpilib.command import InstantCommand
 
 import subsystems
 from subsystems.subduckbill import StateDuckbill
 
 
-class DuckbillSwitch(Command):
-    def __init__(self, time=0):
-        super().__init__(self.__class__.__name__, timeout=time)
+class DuckbillSwitch(InstantCommand):
+    def __init__(self):
+        super().__init__(self.__class__.__name__)
         self.requires(subsystems.duckbill)
         self.logger = logging.getLogger("DuckbillSet")
 
@@ -19,15 +19,5 @@ class DuckbillSwitch(Command):
             subsystems.duckbill.set_state(StateDuckbill.DOWN)
         elif subsystems.duckbill.get_state() is StateDuckbill.HALT:
             subsystems.duckbill.set_state(StateDuckbill.DOWN)
-
-    def isFinished(self):
-        return True
-
-    def execute(self):
-        pass
-
-    def interrupted(self):
-        self.end()
-
-    def end(self):
-        pass
+        else:
+            raise ValueError

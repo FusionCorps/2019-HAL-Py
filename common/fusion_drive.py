@@ -72,7 +72,7 @@ class FusionDrive(DifferentialDrive):
         else:
             raise ValueError
 
-    def logistic_drive(self, x_spd, z_rot, clear_accumulator=False):
+    def logistic_drive(self, x_spd: float, z_rot: float, clear_accumulator: bool = False, multiply_by: bool = False):
         """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
         # if self.timer.running is False:
         #     self.timer.start()
@@ -80,7 +80,16 @@ class FusionDrive(DifferentialDrive):
         current_time = self.timer.getFPGATimestamp()
         time_differential = (current_time - self.logistic_last_called) if not clear_accumulator else 0.02
 
-        l_output, r_output = self.normalize_spd(x_spd + z_rot, x_spd - z_rot)
+        x_target, z_target = None, None
+
+        if multiply_by:
+            x_target = x_spd * robotmap.spd_chassis_drive
+            z_target = z_rot * robotmap.spd_chassis_rotate
+        else:
+            x_target = x_spd
+            z_target = z_rot
+
+        l_output, r_output = self.normalize_spd(x_target + z_target, x_target - z_target)
 
         # if self.timer.hasPeriodPassed(5):
         #     self.logger.info(
@@ -109,7 +118,10 @@ class FusionDrive(DifferentialDrive):
         """Returns right motor speed (-1.0 to 1.0)"""
         return self.r_motor.get()
 
-    def curvatureDrive(
-            self, xSpeed: float, zRotation: float, isQuickTurn: bool
-    ) -> None:
-        super().curvatureDrive(xSpeed, zRotation, isQuickTurn)
+    def curvatureDrive(self, xSpeed: float, zRotation: float, isQuickTurn: bool = True,
+                       multiply_by: bool = False) -> None:
+        if multiply_by:
+            super().curvatureDrive(xSpeed * robotmap.spd_chassis_drive, zRotation * robotmap.spd_chassis_rotate,
+                                   isQuickTurn)
+        else:
+            super().curvatureDrive(xSpeed, zRotation, isQuickTurn)

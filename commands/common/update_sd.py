@@ -3,7 +3,7 @@ import logging
 from wpilib import Notifier
 from wpilib.command import InstantCommand
 
-import dashboard
+from common import dashboard
 
 
 class UpdateClass(object):

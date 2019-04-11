@@ -60,6 +60,7 @@ class SubChassis(Subsystem):
         self.reset_accelerometer()
 
         self.gyro = ADXRS450_Gyro(robotmap.gyro)
+        self.gyro.calibrate()
 
         if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
@@ -90,13 +91,13 @@ class SubChassis(Subsystem):
         """Internal method that returns the accelerometer z position"""
         return self.accelerometer_internal.getZ()
 
-    def get_left_position(self, target=0) -> int:
+    def get_left_position(self, target: int = 0) -> int:
         if target == 0:
             return self._talon_f_l.getQuadraturePosition()
         elif target == 1:
             return self._talon_f_l.getPulseWidthPosition()
 
-    def get_right_position(self, target=0) -> int:
+    def get_right_position(self, target: int = 0) -> int:
         if target == 0:
             return self._talon_f_r.getQuadraturePosition()
         elif target == 1:
@@ -106,14 +107,20 @@ class SubChassis(Subsystem):
         """Gets Ultrasonic distance in MM"""
         return self.sonar.getRangeMM()
 
+    def get_talon_spds(self):
+        """Returns a list of talon speeds"""
+        return (talon.get() for talon in self._talons)
+
     def reset_encoders(self):
         """Sets all talon quadrature encoders to 0"""
         for talon in self._talons:
             talon.setQuadraturePosition(0, 20)
+        self.logger.info("Encoders reset")
 
     def reset_gyro(self):
         """Zeroes the gyro"""
         self.gyro.reset()
+        self.logger.info("Gyro reset")
 
     def reset_accelerometer(self):
         """Zeroes all accelerometer values"""
@@ -121,14 +128,14 @@ class SubChassis(Subsystem):
         self.accel_y = self._get_y()
         self.accel_z = self._get_z()
 
-    def set_ultrasonic(self, state):
+    def set_ultrasonic(self, state: bool):
         """Sets Ultrasonic state"""
         self.sonar.setEnabled(state)
 
-    def set_left(self, spd_new):
+    def set_left(self, spd_new: float):
         self._talon_f_l.set(-spd_new)
 
-    def set_right(self, spd_new):
+    def set_right(self, spd_new: float):
         self._talon_f_r.set(spd_new)
 
     def initDefaultCommand(self):

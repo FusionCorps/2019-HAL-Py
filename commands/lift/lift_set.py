@@ -11,11 +11,10 @@ from subsystems.sublift import Position
 class LiftSet(Command):
     """Sets the position of the lift using CTRE's MotionMagic system"""
 
-    def __init__(self, target_position, can_finish=True):
+    def __init__(self, target_position: Position):
         super().__init__(f"{self.__class__.__name__} {str(target_position.name)}")
         self.requires(subsystems.lift)
         self.target_position = target_position
-        self.can_finish = can_finish
         self.logger = logging.getLogger("LiftSet")
         self.timer = Timer()
 
@@ -63,29 +62,26 @@ class LiftSet(Command):
                 subsystems.lift.stop_front()
 
     def isFinished(self):
-        if self.can_finish is False:
-            return False
-        elif self.can_finish is True:
-            if self.target_position == Position.FLUSH:
-                return (abs(subsystems.lift.get_front_position()) <= 1000) and (
-                        abs(subsystems.lift.get_back_position()) <= 1000)
-            elif self.target_position == Position.CLIMB:
-                return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
-            elif self.target_position == Position.FRONT:
-                return not subsystems.lift.get_front_limit() and (
-                        abs(subsystems.lift.get_back_position()) <= 1000)
-            elif self.target_position == Position.LBACK:
-                return not subsystems.lift.get_back_limit() and (
-                        abs(subsystems.lift.get_front_position()) <= 1000)
-            elif self.target_position == Position.CLIMB2:
-                return abs(subsystems.lift.get_front_position()) > robotmap.lift_height_2 and abs(
-                    subsystems.lift.get_back_position()) > robotmap.lift_height_2
-            elif self.target_position == Position.FRONT2:
-                return abs(subsystems.lift.get_back_position()) <= 1000 and abs(
-                    subsystems.lift.get_front_position()) > robotmap.lift_height_2
-            elif self.target_position == Position.LBACK2:
-                return abs(subsystems.lift.get_front_position()) <= 1000 and abs(
-                    subsystems.lift.get_back_position()) > robotmap.lift_height_2
+        if self.target_position == Position.FLUSH:
+            return (abs(subsystems.lift.get_front_position()) <= 1000) and (
+                    abs(subsystems.lift.get_back_position()) <= 1000)
+        elif self.target_position == Position.CLIMB:
+            return not subsystems.lift.get_front_limit() and not subsystems.lift.get_back_limit()
+        elif self.target_position == Position.FRONT:
+            return not subsystems.lift.get_front_limit() and (
+                    abs(subsystems.lift.get_back_position()) <= 1000)
+        elif self.target_position == Position.LBACK:
+            return not subsystems.lift.get_back_limit() and (
+                    abs(subsystems.lift.get_front_position()) <= 1000)
+        elif self.target_position == Position.CLIMB2:
+            return abs(subsystems.lift.get_front_position()) > robotmap.lift_height_2 and abs(
+                subsystems.lift.get_back_position()) > robotmap.lift_height_2
+        elif self.target_position == Position.FRONT2:
+            return abs(subsystems.lift.get_back_position()) <= 1000 and abs(
+                subsystems.lift.get_front_position()) > robotmap.lift_height_2
+        elif self.target_position == Position.LBACK2:
+            return abs(subsystems.lift.get_front_position()) <= 1000 and abs(
+                subsystems.lift.get_back_position()) > robotmap.lift_height_2
 
     def interrupted(self):
         self.logger.warning(f"{str(self)} Interrupted")

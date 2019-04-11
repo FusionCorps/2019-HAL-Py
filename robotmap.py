@@ -58,7 +58,7 @@ chassis_whl_diameter = 0.2032
 chassis_encoder_counts_per_rev = 4096
 chassis_zero_acceleration_on_start = True
 chassis_fpid = (0.0, 0.8, 0.0, 0.0)
-chassis_drive_mode = 'curvature'
+chassis_drive_mode = 'Curvature'
 
 # Lift constants
 lift_height = 22000

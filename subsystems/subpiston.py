@@ -24,7 +24,7 @@ class SubPiston(Subsystem):
         self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_r)
         self.set_state(StatePiston.IN)
 
-    def set_state(self, state_target):
+    def set_state(self, state_target: StatePiston):
         """Sets the state of the Piston subsystem using the StatePiston Enum
         Parameters
         ---
