@@ -23,7 +23,6 @@ class SubIntake(Subsystem):
     def __init__(self):
         super().__init__("Intake")
         self._victor = VictorSPX(robotmap.talon_intake)
-        self.state = None
         self.set_state(StateIntake.HALT)
 
     def set_victor(self, spd_target: float, mode: ControlMode = ControlMode.PercentOutput):
@@ -45,7 +44,7 @@ class SubIntake(Subsystem):
         for name, value in StateIntake.__members__.items():
             if self._victor.getMotorOutputPercent() == value.value:
                 return value
-        raise LookupError
+        raise LookupError("Could not retrieve Intake state!")
 
     def initDefaultCommand(self):
         from commands.intake.intake_joystick import IntakeJoystick

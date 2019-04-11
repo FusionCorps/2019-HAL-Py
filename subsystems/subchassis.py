@@ -1,7 +1,7 @@
 import logging
 
 from ctre import WPI_TalonSRX
-from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, Timer, Ultrasonic
+from wpilib import ADXRS450_Gyro, BuiltInAccelerometer, Ultrasonic
 from wpilib.command import Subsystem
 
 import robotmap
@@ -64,8 +64,6 @@ class SubChassis(Subsystem):
 
         if robotmap.chassis_zero_acceleration_on_start:
             self.gyro.calibrate()
-
-        self.timer = Timer()
 
     def get_x(self):
         """Returns relative x position"""

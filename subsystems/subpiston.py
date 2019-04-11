@@ -20,8 +20,8 @@ class SubPiston(Subsystem):
 
     def __init__(self):
         super().__init__("Piston")
-        self.solenoid_piston_L = Solenoid(robotmap.solenoid_piston_l)
-        self.solenoid_piston_R = Solenoid(robotmap.solenoid_piston_r)
+        self._solenoid_l = Solenoid(robotmap.solenoid_piston_l)
+        self._solenoid_r = Solenoid(robotmap.solenoid_piston_r)
         self.set_state(StatePiston.IN)
 
     def set_state(self, state_target: StatePiston):
@@ -30,16 +30,16 @@ class SubPiston(Subsystem):
         ---
         `state_target`: (StatePiston) Value to set (e.g. `OUT`)"""
         if self.get_state().value[0] is not state_target.value[0]:
-            self.solenoid_piston_L.set(state_target.value[0])
+            self._solenoid_l.set(state_target.value[0])
         if self.get_state().value[1] is not state_target.value[1]:
-            self.solenoid_piston_R.set(state_target.value[1])
+            self._solenoid_r.set(state_target.value[1])
 
     def get_state(self) -> StatePiston:
         """Gets the current `StatePiston` of the Piston"""
         for name, value in StatePiston.__members__.items():
-            if self.solenoid_piston_L.get() == value.value[0] and self.solenoid_piston_R.get() == value.value[1]:
+            if self._solenoid_l.get() == value.value[0] and self._solenoid_r.get() == value.value[1]:
                 return value
-        raise LookupError
+        raise LookupError("Could not retrieve Piston State!")
 
     def initDefaultCommand(self):
         from commands.piston.piston_set import PistonSet
