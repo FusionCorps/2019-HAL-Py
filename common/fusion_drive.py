@@ -48,17 +48,16 @@ class FusionDrive(DifferentialDrive):
     @staticmethod
     def normalize_spd(l_spd, r_spd):
         """Takes an expanded value and ensures it's within a -1.0 to 1.0 range."""
-        l, r = l_spd, r_spd
-        maximum = max(abs(l), abs(r))
+        left, right = l_spd, r_spd
+        maximum = max(abs(left), abs(right))
         if maximum > 1.0:
-            l = l_spd / maximum
-            r = r_spd / maximum
-        return round(l, 2), round(r, 2)
+            left = l_spd / maximum
+            right = r_spd / maximum
+        return round(left, 2), round(right, 2)
 
     def get_logistic(self, spd_max, spd_current, time_step) -> float:
         """Returns results of logistic calculations from certain preconditions"""
-        z = (robotmap.accel_chassis_max / 2)  # Maximum accel must be divided by 2 because of shrinking
-        z_d = (robotmap.decel_chassis_max / 2)  # Unused constant for maximum deceleration
+        z = (robotmap.chassis_max_acceleration / 2)  # Maximum accel must be divided by 2 because of shrinking
         c = self.shrink(spd_max)
         v = self.shrink(spd_current)
 
@@ -79,8 +78,6 @@ class FusionDrive(DifferentialDrive):
 
         current_time = self.timer.getFPGATimestamp()
         time_differential = (current_time - self.logistic_last_called) if not clear_accumulator else 0.02
-
-        x_target, z_target = None, None
 
         if multiply_by:
             x_target = x_spd * robotmap.spd_chassis_drive
