@@ -51,11 +51,11 @@ class SubChassis(Subsystem):
             robotmap.ultrasonic_ping,
             robotmap.ultrasonic_echo,
             Ultrasonic.Unit.kMillimeters,
-        )
+            )
 
         self.accelerometer_internal = BuiltInAccelerometer(
             BuiltInAccelerometer.Range.k4G
-        )
+            )
         self.accel_x, self.accel_y, self.accel_z = None, None, None
         self.reset_accelerometer()
 
