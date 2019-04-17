@@ -8,7 +8,7 @@ from common.decorate_logging import DecorateLogging
 
 class Hal(CommandBasedRobot):
     @DecorateLogging((0, "Core", "warning", "ROBOT STARTING"),
-                     (1, "Core", "warning", f"ROBOT INITIALIZED on {sys.platform}"))
+                     (1, "Core", "warning", f"ROBOT INITIALIZED on a {sys.platform} system"))
     def robotInit(self):
         import hal
         import commands

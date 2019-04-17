@@ -54,7 +54,7 @@ class Generator(object):
         else:
             self.logger.warning("Trajectory generated.")
             pf.serialize_csv(f"trajectories/AutoProfile_{self.conditions['name']}", trajectory)
-            self.logger.warning("Trajectory saved.")
+            self.logger.warning("Trajectory serialized.")
 
 
 if __name__ == "__main__":

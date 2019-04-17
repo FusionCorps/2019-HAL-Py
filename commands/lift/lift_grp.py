@@ -20,10 +20,10 @@ class ClimbHab3(CommandGroup):
         self.addSequential(LiftSet(Position.CLIMB))
         self.addSequential(LiftDrive(0.6, 2))
         self.addSequential(LiftSet(Position.LBACK))
-        self.addSequential(ChassisDrive(0.35, 0.0, 1.8))
+        self.addSequential(ChassisDrive(0.3, 0.0, 1.4))
         self.addParallel(ChassisStop())
         self.addSequential(LiftSet(Position.FLUSH))
-        self.addSequential(ChassisDrive(0.35, 0.0, 0.8))
+        self.addSequential(ChassisDrive(0.3, 0.0, 0.8))
 
     def initialize(self):
         self.logger.warning("Starting to climb Hab 3")

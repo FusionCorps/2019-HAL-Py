@@ -89,8 +89,8 @@ class ProfileFollower(Command):
             heading_diff = pf.boundHalfDegrees(heading_target - heading)
             turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-            subsystems.chassis.set_left((output_l - turn_output))
-            subsystems.chassis.set_right((output_r - turn_output))
+            subsystems.chassis.set_left(output_l - turn_output)
+            subsystems.chassis.set_right(output_r - turn_output)
             subsystems.chassis.drive.feed()
 
             if self.timer.hasPeriodPassed(1):
