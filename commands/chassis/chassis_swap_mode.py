@@ -19,4 +19,4 @@ class ChassisSwapMode(InstantCommand):
                 robotmap.chassis_drive_mode = 'Logistic'
         elif self.mode is not None:
             robotmap.chassis_drive_mode = self.mode
-        self.logger.warning(f"{str(robotmap.chassis_drive_mode)} Mode")
+        self.logger.warning(f"{str(robotmap.chassis_drive_mode)}")

@@ -113,7 +113,7 @@ class FusionDrive(DifferentialDrive):
     def curvatureDrive(self, xSpeed: float, zRotation: float, isQuickTurn: bool = True,
                        multiply_by: bool = False) -> None:
         if multiply_by:
-            super().curvatureDrive(xSpeed * robotmap.spd_chassis_drive, zRotation * robotmap.spd_chassis_rotate,
+            super().curvatureDrive(-xSpeed * robotmap.spd_chassis_drive, -zRotation * robotmap.spd_chassis_rotate,
                                    isQuickTurn)
         else:
             super().curvatureDrive(xSpeed, zRotation, isQuickTurn)
