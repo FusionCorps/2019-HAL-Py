@@ -41,8 +41,10 @@ class Generator(object):
         for key, value in kwargs.items():
             self.conditions[key] = value
 
+        points = [pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args]
+
         try:
-            info, trajectory = pf.generate([pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args],
+            info, trajectory = pf.generate(points,
                                            pf.FIT_HERMITE_CUBIC,
                                            pf.SAMPLES_HIGH,
                                            0.02,

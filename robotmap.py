@@ -45,9 +45,9 @@ limelight_x_fov = 54
 limelight_y_fov = 41
 
 # Chassis Constants
-chassis_max_vel = 5.0  # (m/s) maximum chassis velocity used for profile generation
-chassis_max_acceleration = 5.0  # (m/s^2) maximum chassis acceleration used for profile generation
-chassis_max_jerk = 1.0  # (m/s^3) maximum chassis jerk used for profile generation
+chassis_max_vel = 3.4  # (m/s) maximum chassis velocity used for profile generation
+chassis_max_acceleration = 1.7  # (m/s^2) maximum chassis acceleration used for profile generation
+chassis_max_jerk = 0.8  # (m/s^3) maximum chassis jerk used for profile generation
 chassis_whl_diameter = 0.2032  # (m) drivetrain wheel diameter
 chassis_encoder_counts_per_rev = 4096
 chassis_zero_acceleration_on_start = True

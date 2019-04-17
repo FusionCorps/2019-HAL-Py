@@ -21,7 +21,7 @@ class ProfileFollower(Command):
         file_name = generate = None, None
 
         file_loc = "C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/trajectories/" if \
-            (sys.platform == "win32") else "/home/lvuser/py/commands/autonomous/trajectories/"
+            sys.platform == "win32" else "/home/lvuser/py/commands/autonomous/trajectories/"
 
         for key in kwargs.keys():
             if key == 'file_loc':
@@ -55,12 +55,12 @@ class ProfileFollower(Command):
             self.right = EncoderFollower(self.modifier.getRightTrajectory())
 
             self.left.configureEncoder(
-                subsystems.chassis.get_right_position(),
+                -subsystems.chassis.get_left_position(),
                 robotmap.chassis_encoder_counts_per_rev,
                 robotmap.chassis_whl_diameter,
                 )
             self.right.configureEncoder(
-                -subsystems.chassis.get_left_position(),
+                subsystems.chassis.get_right_position(),
                 robotmap.chassis_encoder_counts_per_rev,
                 robotmap.chassis_whl_diameter,
                 )
@@ -89,13 +89,13 @@ class ProfileFollower(Command):
             heading_diff = pf.boundHalfDegrees(heading_target - heading)
             turn_output = 0.8 * (-1.0 / 80.0) * heading_diff
 
-            subsystems.chassis.set_left(output_l - turn_output)
+            subsystems.chassis.set_left(output_l + turn_output)
             subsystems.chassis.set_right(output_r - turn_output)
             subsystems.chassis.drive.feed()
 
-            if self.timer.hasPeriodPassed(1):
-                self.logger.info(f"Left is {round(output_l, 2): ^4}. Right is {round(output_r, 2): ^4}."
-                                 f" Turn is {round(turn_output, 2): ^4}")
+            if self.timer.hasPeriodPassed(0.5):
+                self.logger.info(f"L {round(output_l, 2): ^4} | R {round(output_r, 2): ^4}"
+                                 f" | T {round(turn_output, 2): ^4} | H {round(heading, 2): ^4}")
         else:
             pass
 

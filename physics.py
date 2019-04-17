@@ -54,8 +54,10 @@ class PhysicsEngine(object):
         """
 
         # Simulate the drivetrain
-        l_motor = hal_data["CAN"][21]
+        l_motor = hal_data["CAN"][20]
+        l_motor_b = hal_data["CAN"][21]
         r_motor = hal_data["CAN"][11]
+        r_motor_b = hal_data["CAN"][10]
 
         # Simulate lift system
         f_lift = hal_data["CAN"][2]
@@ -67,6 +69,8 @@ class PhysicsEngine(object):
         PhysicsEngine.encode(b_lift, tm_diff, rate=3.0)
         PhysicsEngine.encode(l_motor, tm_diff)
         PhysicsEngine.encode(r_motor, tm_diff)
+        PhysicsEngine.encode(l_motor_b, tm_diff)
+        PhysicsEngine.encode(r_motor_b, tm_diff)
 
         # gyro = hal_data["Spi"][0]
 
