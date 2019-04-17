@@ -33,7 +33,7 @@ class PhysicsEngine(object):
             23 * units.inch + bumper_width * 2,  # robot width
             32 * units.inch + bumper_width * 2,  # robot length
             8 * units.inch,  # wheel diameter
-        )
+            )
         # fmt: on
 
     @staticmethod
@@ -56,30 +56,24 @@ class PhysicsEngine(object):
         # Simulate the drivetrain
         l_motor = hal_data["CAN"][21]
         r_motor = hal_data["CAN"][11]
+
         # Simulate lift system
         f_lift = hal_data["CAN"][2]
         b_lift = hal_data["CAN"][3]
-
         f_switch = hal_data["dio"][5]
         b_switch = hal_data["dio"][6]
 
-        self.encode(f_lift, tm_diff, rate=3.0)
-        self.encode(b_lift, tm_diff, rate=3.0)
-        self.encode(l_motor, tm_diff)
-        self.encode(r_motor, tm_diff)
+        PhysicsEngine.encode(f_lift, tm_diff, rate=3.0)
+        PhysicsEngine.encode(b_lift, tm_diff, rate=3.0)
+        PhysicsEngine.encode(l_motor, tm_diff)
+        PhysicsEngine.encode(r_motor, tm_diff)
 
         # gyro = hal_data["Spi"][0]
 
         x, y, angle = self.drivetrain.get_distance(
             l_motor["value"], r_motor["value"], tm_diff
-        )
+            )
         self.physics_controller.distance_drive(x, y, angle)
 
-        if abs(f_lift["quad_position"]) + 580 > robotmap.lift_height:
-            f_switch["value"] = False
-        else:
-            f_switch["value"] = True
-        if abs(b_lift["quad_position"]) + 580 > robotmap.lift_height:
-            b_switch["value"] = False
-        else:
-            b_switch["value"] = True
+        f_switch["value"] = False if (abs(f_lift["quad_position"]) + 580 > robotmap.lift_height) else True
+        b_switch["value"] = False if (abs(b_lift["quad_position"]) + 580 > robotmap.lift_height) else True

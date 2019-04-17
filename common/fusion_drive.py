@@ -21,7 +21,7 @@ class FusionDrive(DifferentialDrive):
         self.logger = logging.getLogger("FusionDrive")
 
     @staticmethod
-    def logistic(c, z, v, x):
+    def calculate_logistic(c, z, v, x):
         """Logistic curve function used to calculate the next output speed. `c` and `v` must be shrunk beforehand.
 
         :param c: Speed target/max (0 to 1.0)
@@ -55,26 +55,26 @@ class FusionDrive(DifferentialDrive):
             right = r_spd / maximum
         return round(left, 2), round(right, 2)
 
-    def get_logistic(self, spd_max, spd_current, time_step) -> float:
+    @staticmethod
+    def get_logistic(spd_max, spd_current, time_step) -> float:
         """Returns results of logistic calculations from certain preconditions"""
+
         z = (robotmap.chassis_max_acceleration / 2)  # Maximum accel must be divided by 2 because of shrinking
-        c = self.shrink(spd_max)
-        v = self.shrink(spd_current)
+        c = FusionDrive.shrink(spd_max)
+        v = FusionDrive.shrink(spd_current)
 
         # Cases for logistic curve calculations to satisfy
         if c > v:  # If spd_target > spd_current
-            return self.expand(self.logistic(c, z, v, time_step))
+            return FusionDrive.expand(FusionDrive.calculate_logistic(c, z, v, time_step))
         elif c < v:  # If spd_target < spd_current
-            return self.expand(-self.logistic((1 - c), z, (1 - v), time_step) + 1)
+            return FusionDrive.expand(-FusionDrive.calculate_logistic((1 - c), z, (1 - v), time_step) + 1)
         elif c == v:  # If they are equal, then the spd_target has been met
-            return self.expand(v)
+            return FusionDrive.expand(v)
         else:
-            raise ValueError
+            raise ValueError("Logistic acquisition edge case!")
 
     def logistic_drive(self, x_spd: float, z_rot: float, clear_accumulator: bool = False, multiply_by: bool = False):
         """Driving system that uses a logistic curve to accelerate/decelerate the drivetrain."""
-        # if self.timer.running is False:
-        #     self.timer.start()
 
         current_time = self.timer.getFPGATimestamp()
         time_differential = (current_time - self.logistic_last_called) if not clear_accumulator else 0.02
@@ -86,15 +86,10 @@ class FusionDrive(DifferentialDrive):
             x_target = x_spd
             z_target = z_rot
 
-        l_output, r_output = self.normalize_spd(x_target + z_target, x_target - z_target)
+        l_output, r_output = FusionDrive.normalize_spd(x_target + z_target, x_target - z_target)
 
-        # if self.timer.hasPeriodPassed(5):
-        #     self.logger.info(
-        #         f'Added (L {str(round(x_spd + z_rot, 2))} R {str(round(x_spd - z_rot, 2))}) Normalized (L {round(
-        #         l_output, 2)} R {round(r_output, 2)})')
-
-        self.set_left(self.get_logistic(l_output, self.get_left(), time_differential))
-        self.set_right(self.get_logistic(r_output, self.get_right(), time_differential))
+        self.set_left(FusionDrive.get_logistic(l_output, self.get_left(), time_differential))
+        self.set_right(FusionDrive.get_logistic(r_output, self.get_right(), time_differential))
 
         self.logistic_last_called = self.timer.getFPGATimestamp()
         self.feed()
