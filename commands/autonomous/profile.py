@@ -20,8 +20,8 @@ class ProfileFollower(Command):
         self.left = self.right = self.trajectory = self.encoder_followers = self.modifier = None
         file_name = generate = None, None
 
-        file_loc = "C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/" if (sys.platform == "win32") else (
-            "/home/lvuser/py/commands/autonomous/")
+        file_loc = "C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/trajectories/" if \
+            (sys.platform == "win32") else "/home/lvuser/py/commands/autonomous/trajectories/"
 
         for key in kwargs.keys():
             if key == 'file_loc':
@@ -91,6 +91,7 @@ class ProfileFollower(Command):
 
             subsystems.chassis.set_left((output_l - turn_output))
             subsystems.chassis.set_right((output_r - turn_output))
+            subsystems.chassis.drive.feed()
 
             if self.timer.hasPeriodPassed(1):
                 self.logger.info(f"Left is {round(output_l, 2): ^4}. Right is {round(output_r, 2): ^4}."

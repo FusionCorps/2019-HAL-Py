@@ -7,7 +7,8 @@ from common.decorate_logging import DecorateLogging
 
 
 class Hal(CommandBasedRobot):
-    @DecorateLogging((0, "Core", "warning", "ROBOT STARTING"), (1, "Core", "warning", "ROBOT INITIALIZED"))
+    @DecorateLogging((0, "Core", "warning", "ROBOT STARTING"),
+                     (1, "Core", "warning", f"ROBOT INITIALIZED on {sys.platform}"))
     def robotInit(self):
         import hal
         import commands
@@ -37,7 +38,6 @@ class Hal(CommandBasedRobot):
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
 
-    @DecorateLogging((0, "System", "info", f"System is {sys.platform}"))
     def teleopInit(self):
         from commands.chassis.encoders_reset import EncodersReset
         EncodersReset().start()

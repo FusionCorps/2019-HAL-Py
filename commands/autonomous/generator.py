@@ -45,7 +45,7 @@ class Generator(object):
             info, trajectory = pf.generate([pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args],
                                            pf.FIT_HERMITE_CUBIC,
                                            pf.SAMPLES_HIGH,
-                                           0.05,
+                                           0.02,
                                            self.conditions['v'],
                                            self.conditions['a'],
                                            self.conditions['j'])
@@ -53,7 +53,7 @@ class Generator(object):
             self.logger.error(f"Trajectory generation failed! {e}")
         else:
             self.logger.warning("Trajectory generated.")
-            pf.serialize_csv(f"AutoProfile_{self.conditions['name']}", trajectory)
+            pf.serialize_csv(f"trajectories/AutoProfile_{self.conditions['name']}", trajectory)
             self.logger.warning("Trajectory saved.")
 
 

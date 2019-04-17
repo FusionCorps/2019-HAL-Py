@@ -25,10 +25,10 @@ class XBoxController(Joystick):
             self.__dict__[str(button)] = JoystickButton(self, number)
 
     def get_x(self):
-        return -self.getRawAxis(1)
+        return self.getRawAxis(1)
 
     def get_y(self):
-        return self.getRawAxis(4)
+        return -self.getRawAxis(4)
 
     def get_l_trigger(self):
         return self.getRawAxis(2)
