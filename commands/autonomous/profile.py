@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import pathfinder as pf
 from pathfinder.followers import EncoderFollower
@@ -15,22 +16,24 @@ class ProfileFollower(Command):
         self.logger = logging.getLogger("ProfileFollower")
 
         self.timer = Timer()  # Used to log output after certain time
-
         self.critical_error = False
-
         self.left = self.right = self.trajectory = self.encoder_followers = self.modifier = None
-        file_loc, file_name, generate = None, None, None
+        file_name = generate = None, None
 
-        for key, value in kwargs:
-            file_loc = value if key == 'file_loc' else None
-            file_name = value if key == 'file_name' else None
-            generate = value if key == 'generate' else False
+        file_loc = "C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/" if (sys.platform == "win32") else (
+            "/home/lvuser/py/commands/autonomous/")
 
-        self.file_name = f"{file_loc}AutoProfile_{file_name}"
-        if self.file_name == "AutoProfile_none":
-            raise ValueError
+        for key in kwargs.keys():
+            if key == 'file_loc':
+                file_loc = kwargs[key]
+            file_name = kwargs[key] if key is 'file_name' else 'none'
+            generate = kwargs[key] if key is 'generate' else False
+        if file_name is 'none':
+            raise ValueError("File name cannot be 'none'!")
+        self.file_name = file_name
+        self.path = f"{file_loc}AutoProfile_{file_name}"
 
-        super().__init__(str(self.file_name))
+        super().__init__(str(self.path))
         self.requires(subsystems.chassis)
 
         if generate:
@@ -40,12 +43,12 @@ class ProfileFollower(Command):
         self.timer.reset()
         self.timer.start()
 
-        self.logger.warning(f"File name is {self.file_name}")
+        self.logger.warning(f"File path is {self.path}")
 
         try:
-            self.trajectory = pf.deserialize_csv(f"{self.file_name}")
+            self.trajectory = pf.deserialize_csv(f"{self.path}")
 
-            self.logger.warning(f"{self.file_name} Profile is starting...")
+            self.logger.warning(f"Profile {self.file_name} is starting...")
             self.modifier = pf.modifiers.TankModifier(self.trajectory).modify(robotmap.chassis_whl_diameter)
 
             self.left = EncoderFollower(self.modifier.getLeftTrajectory())
@@ -55,12 +58,12 @@ class ProfileFollower(Command):
                 subsystems.chassis.get_right_position(),
                 robotmap.chassis_encoder_counts_per_rev,
                 robotmap.chassis_whl_diameter,
-            )
+                )
             self.right.configureEncoder(
                 -subsystems.chassis.get_left_position(),
                 robotmap.chassis_encoder_counts_per_rev,
                 robotmap.chassis_whl_diameter,
-            )
+                )
 
             self.left.configurePIDVA(0.8, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0.0)
             self.right.configurePIDVA(0.8, 0.0, 0.0, (1 / robotmap.chassis_max_vel), 0.0)

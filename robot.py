@@ -1,3 +1,5 @@
+import sys
+
 from commandbased import CommandBasedRobot
 from wpilib import run
 
@@ -35,6 +37,7 @@ class Hal(CommandBasedRobot):
     def autonomousPeriodic(self):
         super().autonomousPeriodic()
 
+    @DecorateLogging((0, "System", "info", f"System is {sys.platform}"))
     def teleopInit(self):
         from commands.chassis.encoders_reset import EncodersReset
         EncodersReset().start()
