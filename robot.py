@@ -1,16 +1,18 @@
-import logging
+import sys
 
 from commandbased import CommandBasedRobot
 from wpilib import run
 
+from common.decorate_logging import DecorateLogging
+
 
 class Hal(CommandBasedRobot):
+    @DecorateLogging((0, "Core", "warning", "ROBOT STARTING"),
+                     (1, "Core", "warning", f"ROBOT INITIALIZED on a {sys.platform} system"))
     def robotInit(self):
         import hal
         import commands
         from common import dashboard
-
-        self.logger = logging.getLogger("Core")
 
         if not hal.isSimulation():
             # noinspection PyUnresolvedReferences
@@ -25,8 +27,7 @@ class Hal(CommandBasedRobot):
 
         commands.init()
         dashboard.init()
-
-        self.logger.info("Robot initialized")
+        self.watchdog.setTimeout(0.04)
 
     def robotPeriodic(self):
         pass

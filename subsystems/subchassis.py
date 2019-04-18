@@ -51,11 +51,11 @@ class SubChassis(Subsystem):
             robotmap.ultrasonic_ping,
             robotmap.ultrasonic_echo,
             Ultrasonic.Unit.kMillimeters,
-        )
+            )
 
         self.accelerometer_internal = BuiltInAccelerometer(
             BuiltInAccelerometer.Range.k4G
-        )
+            )
         self.accel_x, self.accel_y, self.accel_z = None, None, None
         self.reset_accelerometer()
 
@@ -106,7 +106,7 @@ class SubChassis(Subsystem):
         return self.sonar.getRangeMM()
 
     def get_talon_spds(self):
-        """Returns a list of talon speeds"""
+        """Returns a genexpr of talon speeds"""
         return (talon.get() for talon in self._talons)
 
     def reset_encoders(self):

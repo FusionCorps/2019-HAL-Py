@@ -17,7 +17,7 @@ class ChassisDrive(Command):
         self.logger.info("Starting")
 
     def execute(self):
-        subsystems.chassis.drive.logistic_drive(self.spd_x, self.spd_z, clear_accumulator=True)
+        subsystems.chassis.drive.logistic_drive(-self.spd_x, self.spd_z, clear_accumulator=True)
 
     def interrupted(self):
         self.logger.info("Interrupted")
