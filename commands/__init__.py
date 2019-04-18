@@ -42,22 +42,9 @@ def init():
         controller.x.whenPressed(LiftSet(Position.FRONT2))
         controller.y.whenPressed(LiftSet(Position.LBACK2))
 
-    # inputs.bumper_L.toggleWhenPressed(DuckbillSet(StateDuckbill.DOWN))
-    # inputs.bumper_R.whenReleased(PistonSet(StatePiston.IN))
+    controller.stick_l.whenPressed(ProfileFollower(file_name="down"))
 
     # inputs.bumper_L.toggleWhenPressed(LiftReset(0))
     # inputs.bumper_R.toggleWhenPressed(LiftReset(1))
-
-    controller.stick_l.whenPressed(
-        # ProfileFollower(file_loc="/home/lvuser/py/commands/autonomous/", name="diagonal"))
-        ProfileFollower(file_name="straight_down_1"))
-
-    # inputs.stick_R.whenPressed(ProfileFollower((1, 0, 0), (2, 0, 0), (5, 5, 45), name="tiny",
-    #                                        file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/",
-    #                                        file_name="tiny", generate=True))
-
-    # # inputs.X.whileHeld(ChassisDrive(0.8, 0.0))
-    # inputs.stick_L.whenPressed(AutoProfile((1, 0, 0), (3, 0, 0)))
-    # # inputs.stick_L.toggleWhenPressed(LiftDrive(0.5, 1))
 
     logger.info("Commands initialized")
