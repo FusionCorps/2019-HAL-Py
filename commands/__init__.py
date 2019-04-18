@@ -50,7 +50,7 @@ def init():
 
     controller.stick_l.whenPressed(
         # ProfileFollower(file_loc="/home/lvuser/py/commands/autonomous/", name="diagonal"))
-        ProfileFollower(file_name="straight_2"))
+        ProfileFollower(file_name="straight_down_1"))
 
     # inputs.stick_R.whenPressed(ProfileFollower((1, 0, 0), (2, 0, 0), (5, 5, 45), name="tiny",
     #                                        file_loc="C:/Users/winst/Documents/Code/2019-Hal-Py/commands/autonomous/",

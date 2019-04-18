@@ -1,6 +1,7 @@
 import argparse
 import ast
 import logging
+import os
 
 import hal
 import pathfinder as pf
@@ -34,14 +35,21 @@ class Generator(object):
                 }
 
     def generate(self, *args, **kwargs):
-        self.logger.warning(f"ProfileGenerator called with args: {args}. Called with kwargs: {kwargs}.")
+        self.logger.info(f"ProfileGenerator called with args: {args}. Called with kwargs: {kwargs}.")
+
         self.conditions['name'] = f"{str(args).strip(' ')}"
 
         # Updates conditions if changed in kwargs
         for key, value in kwargs.items():
             self.conditions[key] = value
 
+        for fname in os.listdir('./trajectories/'):
+            if fname == f"AutoProfile_{self.conditions['name']}":
+                os.remove(f"./trajectories/AutoProfile_{self.conditions['name']}")
+                self.logger.warning(f"Removed duplicate trajectory '{self.conditions['name']}.'")
+
         points = [pf.Waypoint(loc[0], loc[1], loc[2]) for loc in args]
+        print("Generating trajectory.", end="\r")
 
         try:
             info, trajectory = pf.generate(points,
@@ -54,9 +62,11 @@ class Generator(object):
         except ValueError as e:
             self.logger.error(f"Trajectory generation failed! {e}")
         else:
-            self.logger.warning("Trajectory generated.")
+            print("\rTrajectory generated.", end="\r")
+            print("\rSerializing trajectory...", end="\r")
             pf.serialize_csv(f"trajectories/AutoProfile_{self.conditions['name']}", trajectory)
-            self.logger.warning("Trajectory serialized.")
+            print("\rSerialized trajectory.", end="\r")
+            print("\rDone.                           ")
 
 
 if __name__ == "__main__":
